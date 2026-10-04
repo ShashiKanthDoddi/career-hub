@@ -8,7 +8,7 @@ from .jobsites import allowed, challenged, pace, site_of, start_cooling_off
 from .launch import launch_chrome
 from .bridge import StopRun, UI, check_stop, log
 from .config import BROWSER_DIR, DRAFT_DIR
-from .filler import SUCCESS_RE, empty_required, fill_page, find_buttons, fingerprint, page_info, page_text, safe_click, settle
+from .filler import SUCCESS_RE, empty_captcha, empty_required, fill_page, find_buttons, fingerprint, page_info, page_text, safe_click, settle
 from .page_js import ERRORS_JS, JOB_BADGE_JS
 from .records import already_applied, already_applied_same_job, guess_company, tracker_add
 from .reports import send_report
@@ -185,6 +185,8 @@ async def apply_one(ctx, link, db, n, total):
     await page.bring_to_front()
     rows = table_rows([(r["label"], r["value"], r["source"]) for p_ in draft for r in p_["fields"]])
     missing = await empty_required(page)
+    if await empty_captcha(page):
+        missing = ["Captcha (type it yourself in Chrome)"] + missing
     warn = ("\n\n⚠ These required boxes on this page are still empty: " + ", ".join(missing[:8])) if missing else ""
     UI.status(job=n, total=total, company=company, title=title, detail="Waiting for your decision", link=link)
     while True:
@@ -195,6 +197,11 @@ async def apply_one(ctx, link, db, n, total):
                          choices=[("Submit it for me", "submit", "primary"), ("I submitted it myself", "mine", "ghost"),
                                   ("Don't submit (keep as draft)", "draft", "ghost")], kind="submit")
         if v == "submit":
+            if await empty_captcha(page):                  # the site rejects an empty captcha, so she types it first
+                await page.bring_to_front()
+                await UI.ask(title="Type the captcha first",
+                             message="This page has a captcha (the squiggly letters). Type it in Chrome, then come back here.",
+                             choices=[("I typed it – submit now", "ok", "primary")], kind="help")
             _, sub = await find_buttons(page)
             if not sub:
                 await UI.ask(title="Submit button not found", message="Please click Submit yourself in Chrome.",

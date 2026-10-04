@@ -25,6 +25,7 @@ COLLECT_JS = r"""
     const lg = g.querySelector('legend, label'); return lg ? T(lg) : '';
   };
   // Text shown next to a field that is not tied to it in the HTML (e.g. Keka: <div>Company Name</div><input placeholder="Keka">)
+  const HINT = /\b(max(imum)?\s+(file\s+)?size|\d+\s*(mb|kb)\b|accepted|allowed|supported formats?|drag|drop|browse)/i;   // a size / format hint, not a field name
   const visualLabel = el => {
     let node = el;
     for (let depth = 0; depth < 4 && node; depth++) {
@@ -33,7 +34,7 @@ COLLECT_JS = r"""
       const cands = [...p.querySelectorAll('label, legend, span, div, p, h3, h4, h5, h6, strong, b')]
         .filter(c => !c.contains(el) && !c.querySelector('input, select, textarea, button') &&
                      (c.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING));
-      for (let i = cands.length - 1; i >= 0; i--) { const t = T(cands[i]); if (t && /[A-Za-z]{2}/.test(t) && t.length <= 90 && shown(cands[i])) return t; }
+      for (let i = cands.length - 1; i >= 0; i--) { const t = T(cands[i]); if (t && /[A-Za-z]{2}/.test(t) && t.length <= 90 && !HINT.test(t) && shown(cands[i])) return t; }
       node = p;
     }
     return '';
@@ -77,7 +78,8 @@ COLLECT_JS = r"""
       return;
     }
     if (['hidden', 'submit', 'button', 'reset', 'image', 'search', 'password'].includes(type)) return;
-    if (el.readOnly && type !== 'file') return;
+    const picker = /datepicker|datetimepicker|flatpickr|date-picker/i.test(el.className || '') || el.hasAttribute('data-provide');
+    if (el.readOnly && type !== 'file' && !picker) return;      // read-only date pickers are filled by script
 
     if (type === 'radio') {
       const key = el.name || groupLabel(el) || 'radio';
@@ -112,7 +114,7 @@ COLLECT_JS = r"""
     const combo = el.getAttribute('role') === 'combobox' || el.getAttribute('aria-autocomplete') === 'list'
                   || el.dataset.automationId === 'searchBox';
     out.push({id: tag(el), kind: combo ? 'combo' : (el.tagName === 'TEXTAREA' ? 'textarea' : 'text'),
-              label, value: el.value || '', required: isReq(el, label), auto: el.dataset.automationId || '', itype: type});
+              label, value: el.value || '', required: isReq(el, label), auto: el.dataset.automationId || '', itype: type, picker: !!picker});
   });
   Object.values(radios).forEach(g => out.push(g));
   out.forEach(o => {

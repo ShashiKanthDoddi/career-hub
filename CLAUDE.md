@@ -55,6 +55,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Not done yet / known limits
 
+- Captchas are never solved: if one is empty, the app asks her to type it in Chrome before it clicks Submit.
+- Calendar pop-up date boxes are set by script (jQuery datepicker if present, else dd/mm/yyyy); other picker libraries are untested.
 - Workday work-history and education sections are not filled from the resume.
 - Windows is untested on real hardware. LinkedIn/Indeed/Naukri: pasted links work with a daily limit (default 10 per site),
   pacing and rest-on-robot-check (`careerhub/jobsites.py`), alert-email links feed Find jobs; none of it is tested on a real login.

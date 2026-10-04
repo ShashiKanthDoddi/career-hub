@@ -10,6 +10,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `Open Career Hub (Mac).command` / `(Windows).bat` | Launchers. Loop while the app exits with 42 (restart after update). The .bat must not use brackets inside IF blocks. |
 | `Setup (Mac).command` / `(Windows).bat` | One-time install of Python packages and Chromium. |
 | `tools/selftest.py` | Run before every release. Add a CASES line for every label a real site answered wrongly. |
+| `tools/make_icon.py` | Draws the gold H icon in 7 pixel-aligned sizes and writes them into the `<link rel="icon">` tags of `ui/index.html`. |
 | `tools/make_guide.py` | Turns `docs/Career_Hub_Guide.docx` (the guide's source, edit this) into `Career_Hub_Guide.pdf`. Needs Word or LibreOffice. Refuses if the docx header version differs from APP_VERSION. |
 | `tools/make_release.py` | Writes `release.json` (version, changelog, SHA-256 of every file) for auto-updates. |
 
@@ -66,6 +67,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | Make a profile answer match a new label wording | `careerhub/answers.py` FIELD_ALIASES (then add a case to `tools/selftest.py`) |
 | Add a new profile/settings box | `careerhub/profile_form.py` PROFILE_FORM (+ default in `store.py` if needed) |
 | Fix how a field's label is read on a site | `careerhub/page_js.py` COLLECT_JS (`labelOf`, `visualLabel`) |
+| Dropdown pre-selected by the site, read-only calendar boxes, captcha before Submit | `careerhub/filler.py` (`plan_field`, `fill_field`, `empty_captcha`), `careerhub/apply_run.py`, `COLLECT_JS` `picker` flag |
 | Change filling / asking behaviour | `careerhub/filler.py` (`plan_field`, `ask_batch`, `fill_field`) |
 | Next / Submit button not found | `careerhub/config.py` NEXT_WORDS, `careerhub/filler.py` `find_buttons` |
 | Login / sign-up problem | `careerhub/auth.py` |

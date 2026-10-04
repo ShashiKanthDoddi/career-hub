@@ -110,6 +110,11 @@ def main():
           and gmail.process_mail(_bulk("Acme Careers <careers@acme.com>", "Interview invitation: Marketing Manager", "Please share your availability"), [], set())[0]["type"] == "interview"
           and gmail.classify_mail("Next steps", "We would like to invite you to an interview") == "interview",
           "newsletters and interview-tips mails are not interviews; real invites still are")
+    check(gmail.process_mail(_bulk("LinkedIn <jobs-noreply@linkedin.com>", "Your application to Marketing Manager at Acme",
+                                   "Unfortunately, Acme has decided not to move forward with your application."), [], set())[0]["type"] == "rejection"
+          and gmail.process_mail(_bulk("Acme Careers <careers@acme.com>", "Update on your application", "We regret to inform you that the role has been filled."), [], set())[0]["type"] == "rejection"
+          and not gmail.process_mail(_bulk("Reddit <noreply@redditmail.com>", "Trending on r/marketing", "Unfortunately this post was removed"), [], set()),
+          "rejections sent through LinkedIn or a mailing system are read; newsletters still aren't")
     check(gmail.classify_mail("Thank you for applying", "We received your application. If shortlisted, we will contact you for an interview.") == "received"
           and gmail.classify_mail("Re: Marketing role", "Thanks for the update.\nOn Mon, Sep 28 Harshitha wrote:\n> Can we schedule the interview?") == "other"
           and gmail.classify_mail("Thank you for interviewing", "Unfortunately we are moving forward with other candidates.") == "rejection"

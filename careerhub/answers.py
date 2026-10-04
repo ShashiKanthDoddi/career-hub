@@ -28,7 +28,7 @@ class Answers:
                 total = str(val or "")
         if not re.search(r"\d", total):
             return None
-        y = re.search(r"(\d+(?:\.\d+)?)\s*(?:\+)?\s*(?:years?|yrs?|y)", total, re.I)
+        y = re.search(r"(\d+(?:\.\d+)?)\s*(?:\+)?\s*(?:years?|yrs?|y\b)", total, re.I)
         m = re.search(r"(\d+)\s*(?:months?|mos?)", total, re.I)
         if y or m:
             years = float(y.group(1)) if y else 0.0
@@ -50,7 +50,7 @@ class Answers:
     def lookup(self, f):
         """Answer for a field from memory or profile, without asking. Returns (value, source) or (None, None)."""
         key = norm(f["label"])
-        if f.get("unit") and re.search(r"experience|exp|tenure|how long|duration", key):
+        if f.get("unit") and re.search(r"experience|\bexp\b|tenure|how long|duration", key):
             part = self._experience_part(f["unit"])
             if part is not None:
                 return part, "profile"

@@ -73,7 +73,12 @@ BOARD_SENDERS = ALERT_SENDERS + ("ambitionbox", "glassdoor", "foundit", "monster
 
 
 ATS_SENDERS = ("myworkday", "greenhouse", "lever.co", "ashbyhq", "smartrecruiters", "workable", "icims", "taleo",
-               "successfactors", "bamboohr", "jobvite", "recruitee")
+               "successfactors", "bamboohr", "jobvite", "recruitee", "darwinbox", "zohorecruit", "keka", "freshteam",
+               "turbohire", "recruitcrm", "hirequotient", "teamtailor", "personio", "pinpointhq")
+
+
+OWN_APPLICATION = re.compile(r"your application|your candidacy|application (status|update)|regarding your (application|"
+                             r"candidature)|update on your|\bapplication (to|for|at)\b", re.I)
 
 
 MAIL_LABELS = {}          # gmail id -> her Gmail labels (filled by imap_fetch)
@@ -167,8 +172,8 @@ def mail_body(msg):
     return re.sub(r"\s+", " ", plain or htm).strip()
 
 
-COMPANY_WORDS = re.compile(r"(?i)(inc|ltd|llc|llp|pvt|corp|co|services|technologies|solutions|consulting|group|systems|labs|bank|"
-                           r"software|global|india|limited)")
+COMPANY_WORDS = re.compile(r"(?i)\b(inc|ltd|llc|llp|pvt|corp|co|services|technologies|solutions|consulting|group|systems|labs|bank|"
+                           r"software|global|india|limited)\b")
 
 
 SUBJECT_JOB = re.compile(r"(?i)your application (?:to|for|was sent to|to the)\s+(.+?)\s+(?:at|with|@)\s+(.+?)\s*$")
@@ -183,8 +188,8 @@ def job_from_subject(subject):
 
 
 def company_from_sender(name, addr):
-    n = re.sub(r"(?i)(recruiting|recruitment|careers?|talent( acquisition)?|hiring( team)?|team|hr|jobs|people|"
-               r"no.?reply|notifications?|via \w+|workday)", " ", name or "")
+    n = re.sub(r"(?i)\b(recruiting|recruitment|careers?|talent( acquisition)?|hiring( team)?|team|hr|jobs|people|"
+               r"no.?reply|notifications?|via \w+|workday)\b", " ", name or "")
     n = re.sub(r"[^\w&.' -]", " ", n).strip(" -.")
     n = re.sub(r"\s+", " ", n).strip()
     dom = (addr or "").split("@")[-1].lower()
@@ -234,6 +239,9 @@ def process_mail(items, rows, known_ids):
             kind = lk
         elif bulk:                                      # 2. job-board digests and newsletters: the subject only
             kind = classify_mail(subject, "")
+            if kind not in ("interview", "assessment", "offer", "rejection") and (app or OWN_APPLICATION.search(subject or "")):
+                kind = classify_mail(subject, body)     # ...unless it is about her own application (LinkedIn "Your application to X at Y")
+                kind = kind if kind in ("offer", "rejection") else None
             if kind not in ("interview", "assessment", "offer", "rejection"):
                 continue
         elif app or ats or reply:                       # 3. about her applications: read the whole mail
@@ -380,9 +388,10 @@ async def check_mail(manual=False):
         updates = data()["email_updates"]
         updates[:] = [u for u in updates                # drop "you applied for 5 jobs" digests from job boards
                       if not (any(b.split(".")[0] in (u.get("from") or "").lower() for b in BOARD_SENDERS)
+                              and u.get("type") != "rejection"     # a board's "Your application to X" rejection stays
                               and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"))]
         old_unmatched = {}
-        if st.get("label_scan") != 6:                   # re-read unmatched, "received"/"update" and interview cards (6: new sorting)
+        if st.get("label_scan") != 7:                   # re-read unmatched, "received"/"update" and interview cards (7: board rejections)
             old_unmatched = {u["id"]: u for u in updates if not u.get("link")
                              or u.get("type") in ("received", "other", "interview", "assessment")}
             updates[:] = [u for u in updates if u["id"] not in old_unmatched]
@@ -393,7 +402,7 @@ async def check_mail(manual=False):
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)
         except Exception:
             last = datetime.datetime.now() - datetime.timedelta(days=60)
-        if st.get("label_scan") != 6:                   # one wider pass so labelled mail from before label reading is sorted
+        if st.get("label_scan") != 7:                   # one wider pass so labelled mail from before label reading is sorted
             last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
         rows = list(reversed(tracker_rows()))
         log("📬 Checking the job inbox for updates…")
@@ -440,7 +449,7 @@ async def check_mail(manual=False):
         if booked:
             log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
         save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="",
-                       label_scan=6)
+                       label_scan=7)
         counts = {}
         for u in new:
             counts[u["type"]] = counts.get(u["type"], 0) + 1

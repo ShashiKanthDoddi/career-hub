@@ -301,10 +301,9 @@ main{height:100vh}
 .item.todo{align-items:center}.item.todo.done .body b{text-decoration:line-through;color:var(--muted);font-weight:500}
 #todoForm{margin-bottom:6px}
 
-/* centred "checking email" spinner */
-.spin-wrap{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(20,24,28,.35)}
-.spin-wrap[hidden]{display:none}
-.spin-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--shadow-1);padding:28px 40px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:pop .2s ease}
-.spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--line-2);border-top-color:var(--violet);animation:spin .8s linear infinite;margin-bottom:6px}
+/* "checking email" spinner, shown inside the Inbox box */
+.inbox-spin{display:flex;flex-direction:column;align-items:center;gap:6px;padding:26px 0}
+.inbox-spin[hidden]{display:none}
+.spinner{width:40px;height:40px;border-radius:50%;border:4px solid var(--line-2);border-top-color:var(--violet);animation:spin .8s linear infinite;margin-bottom:4px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .cols>.panel{margin-top:0}.cols .panel-head{min-height:34px}

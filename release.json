@@ -1,8 +1,16 @@
 {
- "version": "2.6.2",
+ "version": "2.6.3",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.3",
+   "title": "Calmer email check",
+   "new": [],
+   "fixed": [
+    "The spinning circle for Check email now shows inside the Inbox box instead of over the whole page"
+   ]
+  },
   {
    "version": "2.6.2",
    "title": "Reads more kinds of resumes",
@@ -87,19 +95,6 @@
     "Search the web found nothing because search engines blocked it",
     "Removed the duplicate \"Paste a job link\" bar from Home (use Apply), and the confusing dot and \"1\" in the sidebar"
    ]
-  },
-  {
-   "version": "2.3",
-   "title": "Safer LinkedIn, Indeed and Naukri",
-   "new": [
-    "Paste LinkedIn, Indeed or Naukri links on Apply: the app keeps to a daily limit (default 10 per site) so your accounts stay safe",
-    "The app waits a little between jobs on these sites, like a person would",
-    "If a site asks you to prove you are human, the app waits for you and rests from that site if it keeps happening",
-    "Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs",
-    "New default look (Emerald: deep green with gold) plus new Peach and Mint themes; the other themes are still in Settings, Appearance",
-    "A gold \"H\" icon for the app window in the taskbar"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -137,11 +132,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "bb0108d90f791e372a0bfece7a33a5afa810d2cb916d0b419d693269ab38bfa8"
+   "sha256": "a511350478cbbbc11eccdffc0f1c20e5af6b0c7ed01bead379a9001c6d6d798f"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b17a8c658016f748db954ecab67363437e5680793823d5521265f5f3668380fd"
+   "sha256": "b8be4f5939fdef0f00c491a7cfd3c7ae09a6b63e6b6cf95e8014ce7b23875e39"
   },
   {
    "path": "careerhub/filler.py",
@@ -225,11 +220,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "747e0ac0cddebf90a4e2cd940853b460da61b3ce6771d4a79c14ff85b5095f43"
+   "sha256": "309caa7e3b3184f975ab4111aabfad325eae24c08183837b00b62fca079d660a"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "6c2123ec537099a8cfda9f24e514bb3c4a07341710cfe5dd405baf780be230c7"
+   "sha256": "033860a6a2fcc5cd579b6c315e7ef2fdd1230d43b23efec6ddca6b4fbceea109"
   },
   {
    "path": "ui/js/apply.js",
@@ -257,7 +252,7 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "57ff15dad8381da83bc541b89c7b4dfb4929e972c661bea6fdb174dd7401962e"
+   "sha256": "9e6f14ae46c91201bc21160fdab9980782a4a5e97e0cfef8ebfcf43b037f8a64"
   },
   {
    "path": "ui/js/jobs.js",

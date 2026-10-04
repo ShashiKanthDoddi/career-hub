@@ -52,9 +52,39 @@ def _candidates(text, sent):
     return sorted(out)
 
 
+# Offsets in minutes from UTC. Ambiguous ones (CST, which is also China and Cuba) are left out on purpose.
+ZONES = {"ist": 330, "utc": 0, "gmt": 0, "bst": 60, "cet": 60, "cest": 120, "eet": 120, "est": -300, "edt": -240,
+         "cdt": -300, "mst": -420, "mdt": -360, "pst": -480, "pdt": -420, "sgt": 480, "jst": 540, "gst": 240,
+         "aest": 600, "aedt": 660, "india standard time": 330, "eastern": -300, "pacific": -480, "central european": 60}
+ZONE_RE = re.compile(r"\b(?:(?:utc|gmt)\s*([+-])\s*(\d{1,2})(?::?(\d{2}))?|(india standard time|central european|eastern|pacific|ist|utc|gmt|bst|cest|cet|eet|est|edt|cdt|mst|mdt|pst|pdt|sgt|jst|gst|aest|aedt))\b", re.I)
+
+
+def _zone_minutes(text, pos):
+    """UTC offset (minutes) written next to the time, or None. US zones follow daylight saving for the given date by name only."""
+    m = ZONE_RE.search(text[max(0, pos - 60): pos + 200])
+    if not m:
+        return None
+    if m.group(2):
+        return (1 if m.group(1) == "+" else -1) * (int(m.group(2)) * 60 + int(m.group(3) or 0))
+    return ZONES.get(m.group(4).lower())
+
+
+def _to_local(d, hhmm, zone_min):
+    """Moves a date and time written in another zone to this computer's own time."""
+    h, mi = int(hhmm[:2]), int(hhmm[3:])
+    when = datetime.datetime(d.year, d.month, d.day, h, mi, tzinfo=datetime.timezone(datetime.timedelta(minutes=zone_min)))
+    local = when.astimezone()
+    return local.date(), local.strftime("%H:%M")
+
+
+RANGE_END = re.compile(r"\s*(?:-|–|to|until)\s*(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m\b", re.I)
+
+
 def _time_near(text, pos):
     window = text[max(0, pos - 60): pos + 140]
-    m = TIME_RE.search(window) or TIME_RE.search(text)
+    m = TIME_RE.search(window)
+    if not m:
+        window, m = text, TIME_RE.search(text)
     if not m:
         return ""
     if m.group(3):
@@ -64,6 +94,13 @@ def _time_near(text, pos):
         h = h % 12 + (12 if m.group(3).lower() == "p" else 0)
     else:
         h, mi = int(m.group(4)), int(m.group(5))
+        end = RANGE_END.match(window, m.end())              # "3:30 - 4:00pm": only the end says am / pm
+        if end and 1 <= h <= 12:
+            eh = int(end.group(1))
+            pm = end.group(3).lower() == "p"
+            if h % 12 > eh % 12:
+                pm = not pm
+            h = h % 12 + (12 if pm else 0)
     return f"{h:02d}:{mi:02d}"
 
 
@@ -72,5 +109,21 @@ def find_meeting(text, sent):
     found = _candidates(re.sub(r"\s+", " ", text or ""), sent)
     if not found:
         return None
+    flat = re.sub(r"\s+", " ", text)
     pos, d = found[0]
-    return {"date": d.isoformat(), "time": _time_near(re.sub(r"\s+", " ", text), pos)}
+    t = _time_near(flat, pos)
+    zone = _zone_minutes(flat, pos) if t else None
+    if zone is not None:
+        d, t = _to_local(d, t, zone)
+    return {"date": d.isoformat(), "time": t}
+
+
+CANCEL_RE = re.compile(r"\b(cancel(l)?ed|cancell?ation|no longer (going|able) to (hold|proceed)|called off)\b", re.I)
+CHANGE_RE = re.compile(r"\b(re-?schedul\w*|new (date|time)|changed? (the )?(date|time)|updated? (the )?(date|time|invitation)|postponed|moved to|revised)\b", re.I)
+
+
+def find_change(text):
+    """'cancel', 'reschedule' or '' for an interview email."""
+    if CANCEL_RE.search(text or ""):
+        return "cancel"
+    return "reschedule" if CHANGE_RE.search(text or "") else ""

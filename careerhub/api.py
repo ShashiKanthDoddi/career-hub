@@ -12,7 +12,7 @@ from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
 from .finder import run_find
 from .gmail import check_mail, mail_settings
-from . import planner
+from . import history, planner
 from .overview import jobs_overview
 from .profile_form import profile_values
 from .records import add_to_jobs_file, read_jobs_file
@@ -245,6 +245,27 @@ def cheer_due():
 async def api_cheer_seen(n):
     save_app_state(cheer_at=int(n))
     return True
+
+
+async def api_history():
+    return history.get_history()
+
+
+async def api_save_history(h):
+    history.save_history(h or {})
+    return history.get_history()
+
+
+async def api_read_history():
+    """A draft from the resume for her to check. Nothing is saved until she presses Save."""
+    from .resume import read_resume
+    text = await asyncio.to_thread(read_resume, Answers())
+    if not text:
+        return {"ok": False, "error": "I can't find your resume. Add it under Your files first."}
+    h = history.parse_history(text)
+    if not h["work"] and not h["education"]:
+        return {"ok": False, "error": "I couldn't find work or education sections in the resume. You can type them in below."}
+    return {"ok": True, **h}
 
 
 async def api_jobs():

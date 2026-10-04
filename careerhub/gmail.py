@@ -9,7 +9,7 @@ import re
 from . import planner
 from .bridge import log, notify
 from .jobsites import ALERT_SENDERS, alert_jobs
-from .meetings import find_meeting
+from .meetings import find_change, find_meeting
 from .records import save_found, seen_links, tracker_rows
 from .state import MAIL
 from .store import app_state, data, load_profile, save_app_state, save_data
@@ -153,7 +153,7 @@ def process_mail(items, rows, known_ids):
                     "company": (app or {}).get("Company") or company_from_sender(from_name, from_addr),
                     "title": (app or {}).get("Job title", ""), "link": (app or {}).get("Link", ""),
                     "snippet": body[:300], "done": kind in ("received", "rejection", "other"),
-                    "meeting": meeting})
+                    "meeting": meeting, "change": find_change(f"{subject} {body[:6000]}") if kind == "interview" else ""})
     return out
 
 

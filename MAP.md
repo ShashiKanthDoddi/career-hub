@@ -39,6 +39,8 @@ Read this first, then open only the file you need. Each Python module is small a
 | `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. | `make_report`, `smtp_send`, `send_report` |
 | `planner.py` | 75 | Home calendar events and to-do list (data keys `events`, `todos`); events from interview emails and from cards moved to Interview/Test. | `add_event`, `set_job_event`, `events_from_mail`, `add_todo` |
 | `meetings.py` | 85 | Reads an interview date and time out of an email (`find_meeting`). Add a selftest case for every wording it misses. | `find_meeting` |
+| `history.py` | 190 | Work history and education: `parse_history` (resume text -> draft), saved under data key `history`. | `parse_history`, `get_history`, `save_history` |
+| `workday.py` | 150 | Workday "My Experience" page: adds and fills one block per job and degree from `history`. Not yet tried on a live Workday. | `fill_history` |
 | `overview.py` | 38 | Combines applications + emails into stages for Home and My jobs. | `jobs_overview`, `STAGE_ORDER` |
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
 | `updater.py` | 177 | Automatic updates from GitHub: check, download, verify SHA-256, install, rollback info. | `vt`, `source_base`, `safe_path`, `check_for_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
@@ -54,6 +56,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `ui/js/core.js` | 60 | Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
 | `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
+| `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |
 | `ui/js/apply.js` | 38 | Apply: the one job list (add links, apply to one/selected/all). |
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
 | `ui/js/questions.js` | 59 | Question cards from Python: single questions and the all-at-once form (showForm). |
@@ -74,6 +77,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | Change filling / asking behaviour | `careerhub/filler.py` (`plan_field`, `ask_batch`, `fill_field`) |
 | Next / Submit button not found | `careerhub/config.py` NEXT_WORDS, `careerhub/filler.py` `find_buttons` |
 | Login / sign-up problem | `careerhub/auth.py` |
+| Workday work history / education not filled | `careerhub/workday.py` (automation ids), `careerhub/history.py` (resume reading) |
 | Interview date not read from an email | `careerhub/meetings.py` (then add a case to `tools/selftest.py`) |
 | Email sorted wrongly | `careerhub/gmail.py` MAIL_TYPES |
 | Job search | `careerhub/finder.py` |

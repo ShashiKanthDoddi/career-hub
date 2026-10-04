@@ -1,8 +1,21 @@
 {
- "version": "2.5.1",
+ "version": "2.6",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6",
+   "title": "Work history on Workday, and smarter interview dates",
+   "new": [
+    "Profile has a new Work and education section. \"Read from my resume\" fills it in for you to check",
+    "On Workday applications the app now adds each job and degree from that section",
+    "Interview times given in another time zone (for example EST or PST) are shown in your own time",
+    "A reschedule email moves the interview on the calendar, and a cancellation removes it"
+   ],
+   "fixed": [
+    "Times written like 3:30 - 4:00pm are read as pm"
+   ]
+  },
   {
    "version": "2.5.1",
    "title": "A shorter kind note",
@@ -114,22 +127,6 @@
    "fixed": [
     "Unsaved changes are now clearly shown, with Save and Discard buttons"
    ]
-  },
-  {
-   "version": "2.0",
-   "title": "Your own Career Hub",
-   "new": [
-    "Renamed to Harshitha's Career Hub, with a personal greeting on Home",
-    "Everything personal now lives in one place: the “Harshitha's Data” folder with a single data file",
-    "Your old data is moved in automatically (and a copy of the old files is kept in Backups)",
-    "Dark mode: switch between Auto, Light and Dark with the button at the top",
-    "This “What's new” list, shown once after every update",
-    "Add resumes and cover letters from Profile → Files (no more copying files into folders)",
-    "“Open in Excel / Numbers” now makes a fresh copy of the list each time"
-   ],
-   "fixed": [
-    "Profile settings can no longer get out of order when you clear and refill a box"
-   ]
   }
  ],
  "files": [
@@ -151,7 +148,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "f416ba4108c3f337c7d1cea6d0a99027ddfed982a04282826301ed19d84a2cbb"
+   "sha256": "56543cc4da00c63964952f0ae31c5c655c070206169a707ce282c525ad5456f5"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -167,15 +164,15 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "e007a8e7379de062321e96f6d28c842247d1702313af242783ed5e03e78056f2"
+   "sha256": "51ce51e2f441e22cf91c5f517e62b2d55593493973f3df736789edf0243c48f1"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "fef6f9581a81af03d29c838394479ce5ded67f839abe466b76c58b04db48f335"
+   "sha256": "dcb8f20e615477776b427a820e0db1313d9c0648eaa964bb8aee4404d7f9c5de"
   },
   {
    "path": "careerhub/filler.py",
-   "sha256": "626ab6de5f13a12409d9964dcea2a49fa20aecf556a1a60cdf6cb09d8973bde3"
+   "sha256": "fe9ceba9505f49a9225afc58a8372d0058be44e1e3bfa5b5b3326c4d33dd135b"
   },
   {
    "path": "careerhub/finder.py",
@@ -183,7 +180,11 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "8be43e14da15ad969cc4b2bfe6b8d656f637ca7f990b7a98df086079d026d432"
+   "sha256": "26c6d7b634e5902c9621887f7327e9c2ea4659b1b52f62bd661d680d4c92b30e"
+  },
+  {
+   "path": "careerhub/history.py",
+   "sha256": "99830f1880ecf2405a8f2bffe131a88aeb15a8d74944036f772b8586c2edcb05"
   },
   {
    "path": "careerhub/jobsites.py",
@@ -199,7 +200,7 @@
   },
   {
    "path": "careerhub/meetings.py",
-   "sha256": "5de0d8ac91ae6f7720b86f5e54fa75518b9ece82ff1c39c9be04d8ab1babaff2"
+   "sha256": "460725bb010bffb5cbd5626037f231d42ea7e006f683d5521331cd75fb74a64b"
   },
   {
    "path": "careerhub/overview.py",
@@ -211,7 +212,7 @@
   },
   {
    "path": "careerhub/planner.py",
-   "sha256": "91ae2f736df45595cf2581d641c320d0050158e43edc8e4c9652221623fdf075"
+   "sha256": "a3cd98e2239a91758b38ea0c271e5639832dd4deea0fbd2ad0b5e09d260b76e8"
   },
   {
    "path": "careerhub/profile_form.py",
@@ -235,7 +236,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "0934d8737329d85499cc6ab22de9ebaa37c0d9262855d3bd073d774bf468825e"
+   "sha256": "3e493d87664a4a037ea71c980aa955e347e674974fec0f0d2c72b05edd35734a"
   },
   {
    "path": "careerhub/textutil.py",
@@ -246,8 +247,12 @@
    "sha256": "8053eb534d285f9a1127c8aee142cab4950e2fc3c0c879294e783a3888857c0b"
   },
   {
+   "path": "careerhub/workday.py",
+   "sha256": "4de9b22c704102ec0bcd9a57cf85b454fc56f26d3fd3aeeca4b1325a5cb0ed5f"
+  },
+  {
    "path": "ui/index.html",
-   "sha256": "7a0da222bb414f2b64f05ee075bd966547a6dc17acef33f4bb9a0e95516f6e83"
+   "sha256": "5d552f60cfc76f97d2c5490a6a462ed740c746146f08721fdd9d7171a8c723dc"
   },
   {
    "path": "ui/styles.css",
@@ -259,7 +264,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "2d5a27ec713fde1e929c0d24a233ca3e579ed711519863524b600437aa6f03e4"
+   "sha256": "8fc93f57b4364792d30f6860549816ad11375e81a44d4cc70b1b7133ce44f13b"
   },
   {
    "path": "ui/js/events.js",
@@ -271,7 +276,11 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "60d94f58df1d301ba4ae071e8039c6aa4c97d9fe14406b236de2cbcf9b644c70"
+   "sha256": "b904682a75f9f7a485fc2bd50c0b1e2ab916b97da4d40d3d33e5ea66a13e0ef0"
+  },
+  {
+   "path": "ui/js/history.js",
+   "sha256": "9b0a2a17acee82e8d3d791252399b8e54d06ede800f81ea00c3cc9b380a7dae6"
   },
   {
    "path": "ui/js/home.js",
@@ -311,23 +320,23 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "1f95f2dab764b3f4e732314aaef24dcd9a20051bb6663a257407155b2d2b5e6b"
+   "sha256": "21b4066b76587b6c923f1f91ffea5a8bb8bb59f5388ad5c264fdd7f1ff1b67da"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "641a8dc032bb6e97ee2fdd1a900f4234f5ed209e822dd4dfc002f94e6a559b34"
+   "sha256": "7dbf5e6003a17b88d88b239f754b5d5a7c72ecdba1bb6691be7871824b85703e"
   },
   {
    "path": "MAP.md",
-   "sha256": "d9fab42612ed3b6ddc2ef4271d3af9e39775b676d87bcbd51a9a381e820bba36"
+   "sha256": "e0876548093bb36cb9045c206905d4d9c0588c8a7fc02dc43e9137f51e6e81f1"
   },
   {
    "path": "Setup (Mac).command",
-   "sha256": "54db4b61015172008382b452e347dab0e015c667f00e44aab9b5dd2d4d20c1ea"
+   "sha256": "1b3e550e837aee85d542be04c20a883e01e8f3eef09f81ccd31dea891c1e4ac4"
   },
   {
    "path": "Open Career Hub (Mac).command",
-   "sha256": "363e7f05c9c7ecc5606e1092da61f75a66488aef6cab461fa7c484e492efb8db"
+   "sha256": "282188229ca39bda08417a78bbdd4ac039ad1457b8a70ac32beb3d2cb41c305a"
   },
   {
    "path": "Setup (Windows).bat",

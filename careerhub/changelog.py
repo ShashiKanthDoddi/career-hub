@@ -1,6 +1,13 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.5.1',
+CHANGELOG = [{'version': '2.6',
+  'title': 'Work history on Workday, and smarter interview dates',
+  'new': ['Profile has a new Work and education section. "Read from my resume" fills it in for you to check',
+          'On Workday applications the app now adds each job and degree from that section',
+          'Interview times given in another time zone (for example EST or PST) are shown in your own time',
+          'A reschedule email moves the interview on the calendar, and a cancellation removes it'],
+  'fixed': ['Times written like 3:30 - 4:00pm are read as pm']},
+ {'version': '2.5.1',
   'title': 'A shorter kind note',
   'new': [],
   'fixed': ['The note shown after many rejection emails is now just two short lines']},

@@ -8,6 +8,7 @@ from .config import NEXT_AUTOMATION_IDS, NEXT_WORDS, SKIP, CLICKABLE
 from .page_js import BUTTONS_JS, COLLECT_JS, TITLE_JS
 from .records import answer_mentions_other_company
 from .resume import resume_for_job
+from .workday import fill_history
 from .state import CURRENT_JOB
 from .store import folder_files, resolve_path
 from .textutil import adapt_value, clean_label, norm, pick, pretty_label, to_iso_date, truthy
@@ -219,6 +220,8 @@ async def scan(page):
 async def fill_page(page, db):
     """Fills the visible page. Unknown questions are asked together on one card. Returns [(label, value, source)]."""
     records, done, manual = {}, set(), []
+    for r in await fill_history(page, db):            # Workday "My Experience": jobs and degrees from Profile
+        records[r[0]] = r
     for _ in range(3):                # extra passes catch follow-up questions that appear after answers
         fields = [f for f in await scan(page) if (id(f["frame"]), f["id"]) not in done]
         if not fields:

@@ -101,6 +101,24 @@ def main():
           "job-board digest mails are not marked as interviews")
     check(gmail.process_mail(_mail("Naukri <info@naukri.com>", "Interview invitation from Acme", "hello"), [], set())[0]["type"] == "interview",
           "job-board mail with interview in the subject still counts")
+    def _bulk(frm, subj, body):
+        m = email.message.EmailMessage(); m["From"], m["Subject"], m["Date"] = frm, subj, "Mon, 28 Sep 2026 10:00:00 +0000"
+        m["List-Unsubscribe"] = "<mailto:u@x.com>"; m.set_content(body); return [("b" + subj, m.as_bytes())]
+    check(not gmail.process_mail(_bulk("Thermo Fisher Scientific <opportunities@campaign.thermofisher.com>", "Jobs for you, interview tips & advancing research", "Recruiter interviewing tips, explore engineering jobs"), [], set())
+          and not gmail.process_mail(_mail("Anuj at CodeChef <contests@codechef.com>", "Interview Readiness: Practice Test Series", "first assessment on 1st August, placement interviews"), [], set())
+          and not gmail.process_mail(_bulk("Talenttitanletters <jobs@talenttitan.com>", "Hiring | Java skillset | Multiple Locations", "Shortlisted candidates will be called for interview"), [], set())
+          and gmail.process_mail(_bulk("Acme Careers <careers@acme.com>", "Interview invitation: Marketing Manager", "Please share your availability"), [], set())[0]["type"] == "interview"
+          and gmail.classify_mail("Next steps", "We would like to invite you to an interview") == "interview",
+          "newsletters and interview-tips mails are not interviews; real invites still are")
+    check(gmail.classify_mail("Thank you for applying", "We received your application. If shortlisted, we will contact you for an interview.") == "received"
+          and gmail.classify_mail("Re: Marketing role", "Thanks for the update.\nOn Mon, Sep 28 Harshitha wrote:\n> Can we schedule the interview?") == "other"
+          and gmail.classify_mail("Thank you for interviewing", "Unfortunately we are moving forward with other candidates.") == "rejection"
+          and gmail.classify_mail("Opportunity at Acme", "We may have an interview slot", strict=True) == "other",
+          "mail types are scored: hypotheticals, quoted replies and single weak hits don't make an interview")
+    gmail.BLOCKED.add("contests@codechef.com")
+    check(not gmail.process_mail(_mail("CodeChef <contests@codechef.com>", "Interview invitation", "x"), [], set()),
+          "a sender marked 'Not a job email' is ignored")
+    gmail.BLOCKED.clear()
     gmail.MAIL_LABELS["xRej"] = ["Applied", "Rejected"]; gmail.MAIL_LABELS["xJb"] = ["Job boards"]; gmail.MAIL_LABELS["xInt"] = ["Applied/Interviews"]
     check(gmail.process_mail([("xRej", _mail("Acme HR <hr@acme.com>", "Your application", "Thanks for your time")[0][1])], [], set())[0]["type"] == "rejection"
           and gmail.process_mail([("xInt", _mail("Acme HR <hr@acme.com>", "Next steps", "see you")[0][1])], [], set())[0]["type"] == "interview"

@@ -1,6 +1,13 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.8.1',
+CHANGELOG = [{'version': '2.8.2',
+  'title': 'Smarter email sorting',
+  'new': ['Cards in "Needs you" have a new ✕ button, "Not a job email": it hides the card and stops showing emails from that sender'],
+  'fixed': ['Newsletters and adverts (for example "interview tips" or "practice test" emails) are no longer shown as interviews',
+            "Emails in Gmail's Promotions and Social tabs are skipped, so checking email is quicker",
+            'Older cards are sorted again once with the new rules, and wrong ones are removed',
+            'Pasting a screenshot into Report a problem adds it only once']},
+ {'version': '2.8.1',
   'title': 'Check email shows its progress',
   'new': ['While Check email runs, Home shows how many emails it has scanned and read, for example "Reading emails: 25 of 40"'],
   'fixed': ['The first email check is much quicker: job emails are downloaded in groups instead of one by one']},

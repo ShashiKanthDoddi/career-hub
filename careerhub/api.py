@@ -302,6 +302,20 @@ async def api_dismiss(uid):
     return True
 
 
+async def api_not_job(uid):
+    """'Not a job email': hides the card, its calendar entry, and every later mail from that sender."""
+    u = next((x for x in data()["email_updates"] if x["id"] == uid), None)
+    if not u:
+        return {"ok": False}
+    who = (u.get("from_addr") or u.get("from") or "").strip().lower()
+    if who and who not in data()["mail_blocked"]:
+        data()["mail_blocked"].append(who)
+    data()["email_updates"][:] = [x for x in data()["email_updates"] if (x.get("from_addr") or x.get("from") or "").strip().lower() != who]
+    data()["events"][:] = [e for e in data()["events"] if e.get("mail_id") != uid]
+    save_data()
+    return {"ok": True, "who": u.get("from") or who}
+
+
 async def api_check_mail(manual=False):
     r = await check_mail(manual=manual)
     await UI.emit({"type": "mail_done", "manual": bool(manual), **r})

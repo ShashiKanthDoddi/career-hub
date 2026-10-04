@@ -43,6 +43,8 @@ async function loadHome(){
   if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
   $$("#attention [data-done]").forEach(b => b.onclick = async () => { const it = b.closest(".item"); it.classList.add("done-anim");
     await api_dismiss(b.dataset.done); setTimeout(loadHome, 330); });
+  $$("#attention [data-notjob]").forEach(b => b.onclick = async () => { const it = b.closest(".item"); it.classList.add("done-anim");
+    const r = await api_not_job(b.dataset.notjob); if (r.ok) toast(`Hidden. Emails from ${r.who} won't show here again.`); setTimeout(loadHome, 330); });
   renderPlanner(HOME);
   if (HOME.cheer) showCheer(HOME.cheer);
   setCount("#navAttn", HOME.attention.length); setCount("#navSaved", HOME.list_count);
@@ -65,7 +67,7 @@ function itemHTML(u, attn){
     <div class="body"><b>${esc(u.company || u.from)}${u.title ? `, ${esc(u.title)}` : ""}</b><span>${esc(u.subject)}</span><span>${when(u.date)}</span></div>
     <div class="side-acts"><a class="btn sm ghost" href="${esc(u.gmail || "#")}" target="_blank" title="Open in Gmail">${icon("ext")}</a>
     ${attn && (u.type === "interview" || u.type === "assessment") ? `<button class="btn sm ghost" data-cal="${esc(u.company || u.from)}|${esc(u.title || "")}" title="Put it on the calendar">${icon("cal")}</button>` : ""}
-    ${attn ? `<button class="btn sm" data-done="${esc(u.id)}">Done</button>` : ""}</div></div>`;
+    ${attn ? `<button class="btn sm ghost" data-notjob="${esc(u.id)}" title="Not a job email: hide it and stop showing mail from this sender">${icon("x")}</button><button class="btn sm" data-done="${esc(u.id)}">Done</button>` : ""}</div></div>`;
 }
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }

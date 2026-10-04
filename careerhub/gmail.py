@@ -6,8 +6,10 @@ import email.utils
 import html
 import imaplib
 import re
+from . import planner
 from .bridge import log, notify
 from .jobsites import ALERT_SENDERS, alert_jobs
+from .meetings import find_meeting
 from .records import save_found, seen_links, tracker_rows
 from .state import MAIL
 from .store import app_state, data, load_profile, save_app_state, save_data
@@ -146,10 +148,12 @@ def process_mail(items, rows, known_ids):
             when = email.utils.parsedate_to_datetime(msg.get("Date")).astimezone().isoformat(timespec="minutes")
         except Exception:
             when = datetime.datetime.now().isoformat(timespec="minutes")
+        meeting = find_meeting(f"{subject} {body[:6000]}", datetime.datetime.fromisoformat(when).date()) if kind == "interview" else None
         out.append({"id": gid, "date": when, "from": from_name or from_addr, "subject": subject[:200], "type": kind,
                     "company": (app or {}).get("Company") or company_from_sender(from_name, from_addr),
                     "title": (app or {}).get("Job title", ""), "link": (app or {}).get("Link", ""),
-                    "snippet": body[:300], "done": kind in ("received", "rejection", "other")})
+                    "snippet": body[:300], "done": kind in ("received", "rejection", "other"),
+                    "meeting": meeting})
     return out
 
 
@@ -271,7 +275,11 @@ async def check_mail(manual=False):
         if new:
             updates += new
             updates.sort(key=lambda u: u["date"], reverse=True)
+        booked = planner.events_from_mail(updates)
+        if new or booked:
             save_data()
+        if booked:
+            log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
         save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="")
         counts = {}
         for u in new:

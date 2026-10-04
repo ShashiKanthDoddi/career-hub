@@ -12,6 +12,7 @@ from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
 from .finder import run_find
 from .gmail import check_mail, mail_settings
+from . import planner
 from .overview import jobs_overview
 from .profile_form import profile_values
 from .records import add_to_jobs_file, read_jobs_file
@@ -198,7 +199,52 @@ async def api_home():
             "attention": [u for u in updates if not u.get("done")][:10],
             "feed": updates[:15], "mail_ready": bool(ms["addr"] and ms["pw"]), "mail_due": due,
             "mail_error": st.get("last_mail_error", ""),
-            "last_mail_check": st.get("last_mail_check", ""), "list_count": len(read_jobs_file())}
+            "last_mail_check": st.get("last_mail_check", ""), "list_count": len(read_jobs_file()),
+            "events": planner.list_events(), "todos": data()["todos"], "cheer": cheer_due()}
+
+
+async def api_add_event(title, date, time="", company="", note=""):
+    return planner.add_event(title, date, time, company, note)
+
+
+async def api_delete_event(eid):
+    planner.delete_event(eid)
+    return True
+
+
+async def api_set_job_event(key, stage, company, title, date, time=""):
+    return planner.set_job_event(key, stage, company, title, date, time)
+
+
+async def api_add_todo(text):
+    return planner.add_todo(text)
+
+
+async def api_set_todo(tid, done):
+    planner.set_todo(tid, done)
+    return True
+
+
+async def api_delete_todo(tid):
+    planner.delete_todo(tid)
+    return True
+
+
+async def api_clear_done_todos():
+    planner.clear_done_todos()
+    return True
+
+
+def cheer_due():
+    """True when more than 6 rejection emails are in, and again after every 5 more."""
+    n = sum(1 for u in data()["email_updates"] if u.get("type") == "rejection")
+    last = app_state().get("cheer_at", 0)
+    return n if n > 6 and n >= (last + 5 if last else 7) else 0
+
+
+async def api_cheer_seen(n):
+    save_app_state(cheer_at=int(n))
+    return True
 
 
 async def api_jobs():
@@ -207,7 +253,10 @@ async def api_jobs():
 
 
 async def api_set_note(key, stage, notes):
-    data()["notes"][key] = {"stage": stage or "", "notes": notes or ""}
+    auto = next((j["auto_stage"] for j in jobs_overview()[0] if j["key"] == key), "")
+    data()["notes"][key] = {"stage": stage or "", "notes": notes or "", "auto": auto}   # her choice holds until a newer email changes the auto stage
+    if stage in ("Applied", "Draft"):                  # moved back before any interview: its calendar entry goes too
+        planner.drop_job_event(key)
     save_data()
     return True
 

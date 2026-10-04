@@ -30,9 +30,30 @@ def jobs_overview():
             if u["type"] in ("offer", "interview", "assessment", "rejection"):
                 stage = TYPE_LABELS[u["type"]].replace("Rejected", "Rejected")
                 break
-        n = notes.get(key, {})
-        jobs.append({"key": key, "date": r.get("Date", ""), "company": r.get("Company", ""),
-                     "title": r.get("Job title", ""), "status": status, "link": link,
-                     "stage": n.get("stage") or stage, "auto_stage": stage, "notes": n.get("notes", ""),
-                     "latest": ups[0] if ups else None, "updates": len(ups)})
+        jobs.append(_job(key, r.get("Date", ""), r.get("Company", ""), r.get("Job title", ""), status, link, stage, ups, notes))
+    # Emails about a company that is not in the tracker (applied by hand, or on her phone) still get a card
+    known = {(j["company"] or "").strip().lower() for j in jobs}
+    loose = {}
+    for u in updates:
+        c = (u.get("company") or "").strip()
+        if not u.get("link") and c and c.lower() not in known and u["type"] in MAIL_STAGE:
+            loose.setdefault(c.lower(), []).append(u)
+    for ups in loose.values():
+        ups.sort(key=lambda u: u["date"], reverse=True)
+        stage = next((TYPE_LABELS[u["type"]] for u in ups if u["type"] in ("offer", "interview", "assessment", "rejection")), "Applied")
+        jobs.append(_job("mail:" + ups[0]["company"].strip().lower(), ups[-1]["date"][:10], ups[0]["company"].strip(),
+                         ups[0].get("title", ""), "Submitted (from email)", "", stage, ups, notes))
+    jobs.sort(key=lambda j: j["date"], reverse=True)
     return jobs, updates
+
+
+MAIL_STAGE = ("received", "interview", "assessment", "offer", "rejection")
+
+
+def _job(key, date, company, title, status, link, stage, ups, notes):
+    """One card. A stage she set by hand wins only until the emails say something new."""
+    n = notes.get(key, {})
+    chosen = n.get("stage") if n.get("stage") and n.get("auto", stage) == stage else ""
+    return {"key": key, "date": date, "company": company, "title": title, "status": status, "link": link,
+            "stage": chosen or stage, "auto_stage": stage, "notes": n.get("notes", ""),
+            "latest": ups[0] if ups else None, "updates": len(ups)}

@@ -8,7 +8,7 @@ window.onPy = ev => {
   else if (ev.type === "run_end") runEnd(ev);
   else if (ev.type === "filled") filledToast(ev.items);
   else if (ev.type === "manual") toast("Type these yourself in Chrome: " + ev.items.join(", "));
-  else if (ev.type === "mail_done"){ const b = $("#checkMailBtn"); b.disabled = false; b.lastChild.textContent = "Check email";
+  else if (ev.type === "mail_done"){ hideMailSpin(); const b = $("#checkMailBtn"); b.disabled = false; b.lastChild.textContent = "Check email";
     if (ev.manual) ev.ok ? toast("Email checked: " + ev.summary) : toast(ev.error, true);   // automatic checks stay quiet
     loadHome(); if (PAGE === "jobs") loadJobs(); }
   else if (ev.type === "update_check") updateResult(ev);
@@ -62,7 +62,6 @@ function renderUpdateInfo(){
   addLog("Welcome back. The app is ready.");
   if (STATE.first_run) api_seen_version(); else if (STATE.whats_new) showNews();
   if (STATE.needs_profile){ go("profile"); toast("Welcome! Start by adding your email and resume"); }
-  else { const h = await loadHome(); if (h.mail_due){ addLog("Checking the job inbox (automatic)"); api_check_mail(false); } }
-  setInterval(async () => { const h = await api_home(); if (h.mail_due) api_check_mail(false); }, 30 * 60 * 1000);
+  else await loadHome();   // the app reads the job Gmail itself on start and every hour
   if (!STATE.needs_profile && STATE.daily_due){ addLog("Checking for new jobs (daily search)"); api_start_find(STATE.find_roles, STATE.find_companies, STATE.find_auto); }
 })();

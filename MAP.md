@@ -37,6 +37,8 @@ Read this first, then open only the file you need. Each Python module is small a
 | `jobsites.py` | 100 | LinkedIn / Indeed / Naukri safety: daily limit, pacing between jobs, robot-check detection, rest-for-the-day, job links from alert emails. | `site_of`, `allowed`, `pace`, `challenged`, `alert_jobs`, `clean_job_link` |
 | `gmail.py` | 258 | Reads the job Gmail (IMAP, read-only), classifies replies, friendly errors. | `mail_settings`, `classify_mail`, `dec`, `mail_body`, `company_from_sender`, `match_application`, `process_mail`, `imap_fetch`, `gmail_link`, `MONTHS`, `MAIL_TYPES`, `MAIL_SKIP`, `JOB_WORDS` … |
 | `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. | `make_report`, `smtp_send`, `send_report` |
+| `planner.py` | 75 | Home calendar events and to-do list (data keys `events`, `todos`); events from interview emails and from cards moved to Interview/Test. | `add_event`, `set_job_event`, `events_from_mail`, `add_todo` |
+| `meetings.py` | 85 | Reads an interview date and time out of an email (`find_meeting`). Add a selftest case for every wording it misses. | `find_meeting` |
 | `overview.py` | 38 | Combines applications + emails into stages for Home and My jobs. | `jobs_overview`, `STAGE_ORDER` |
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
 | `updater.py` | 177 | Automatic updates from GitHub: check, download, verify SHA-256, install, rollback info. | `vt`, `source_base`, `safe_path`, `check_for_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
@@ -51,6 +53,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `ui/styles.css` | 285 | Design tokens, 5 colour themes (data-theme / data-mode), components, layout. |
 | `ui/js/core.js` | 60 | Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
 | `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
+| `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
 | `ui/js/apply.js` | 38 | Apply: the one job list (add links, apply to one/selected/all). |
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
 | `ui/js/questions.js` | 59 | Question cards from Python: single questions and the all-at-once form (showForm). |
@@ -71,6 +74,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | Change filling / asking behaviour | `careerhub/filler.py` (`plan_field`, `ask_batch`, `fill_field`) |
 | Next / Submit button not found | `careerhub/config.py` NEXT_WORDS, `careerhub/filler.py` `find_buttons` |
 | Login / sign-up problem | `careerhub/auth.py` |
+| Interview date not read from an email | `careerhub/meetings.py` (then add a case to `tools/selftest.py`) |
 | Email sorted wrongly | `careerhub/gmail.py` MAIL_TYPES |
 | Job search | `careerhub/finder.py` |
 | Store new data | `careerhub/store.py` `Store.upgrade()` + bump SCHEMA |

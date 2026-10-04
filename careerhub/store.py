@@ -8,7 +8,7 @@ import shutil
 from .config import BACKUP_DIR, BASE, BROWSER_DIR, DATA, DATA_FILE, DRAFT_DIR, EXPORT_DIR, FILES_DIR, LOG_DIR, REPORT_DIR
 
 
-SCHEMA = 3
+SCHEMA = 4
 NEW_IN_SCHEMA_3 = {'referred by|referral|referrer': ""}   # defaults added for existing data in v2.2
 
 
@@ -24,7 +24,8 @@ LEGACY_FILES = ["profile.yaml", "answers_memory.json", "applications.csv", "acco
 
 def empty_data():
     return {"schema": SCHEMA, "profile": json.loads(json.dumps(DEFAULT_PROFILE)), "answers": {}, "applications": [],
-            "accounts": [], "found_jobs": [], "email_updates": [], "notes": {}, "saved_links": [], "state": {}}
+            "accounts": [], "found_jobs": [], "email_updates": [], "notes": {}, "saved_links": [], "state": {},
+            "events": [], "todos": []}
 
 
 def _read_csv(path):

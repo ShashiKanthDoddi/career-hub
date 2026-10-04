@@ -47,6 +47,25 @@
     <div class="weekline" id="weekline"></div>
     <div class="cols">
       <div class="panel">
+        <div class="panel-head"><h2 class="grow">Calendar</h2><span class="muted small" id="calNext"></span>
+          <button class="btn sm" id="calAdd">+ Add interview</button></div>
+        <div class="cal-nav"><button class="btn sm ghost" id="calPrev" title="Previous month">&lsaquo;</button><b id="calTitle"></b>
+          <button class="btn sm ghost" id="calFwd" title="Next month">&rsaquo;</button><button class="btn sm ghost" id="calToday">Today</button></div>
+        <div class="cal" id="calGrid"></div>
+        <form class="cal-form" id="calForm" hidden>
+          <div class="row"><input type="text" id="evTitle" class="grow" placeholder="What, e.g. Phone interview"><input type="text" id="evCompany" class="grow" placeholder="Company"></div>
+          <div class="row"><input type="date" id="evDate"><input type="time" id="evTime"><button class="btn primary" type="submit">Save</button><button class="btn ghost" type="button" id="evCancel">Cancel</button></div>
+        </form>
+        <div id="calList"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2 class="grow">To-do</h2><button class="btn sm ghost" id="todoClear" hidden>Clear done</button></div>
+        <form class="row" id="todoForm"><input type="text" id="todoText" class="grow" placeholder="Add something to do, then press Enter" maxlength="200"><button class="btn primary" type="submit">Add</button></form>
+        <div id="todoList"></div>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="panel">
         <div class="panel-head"><h2 class="grow">Needs you</h2><span class="muted small" id="attnCount"></span></div>
         <div id="attention"></div>
       </div>
@@ -214,14 +233,17 @@
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v6H4V6h6"/></symbol>
   <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/></symbol>
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
 </svg>
 
+<div id="mailSpin" class="spin-wrap" hidden role="status" aria-live="polite"><div class="spin-card"><div class="spinner"></div><b>Checking your job email</b><span class="muted small">This takes a few seconds</span></div></div>
 <script src="js/core.js"></script>
 <script src="js/home.js"></script>
+<script src="js/planner.js"></script>
 <script src="js/apply.js"></script>
 <script src="js/run.js"></script>
 <script src="js/questions.js"></script>

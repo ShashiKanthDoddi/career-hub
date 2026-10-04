@@ -55,6 +55,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Not done yet / known limits
 
+- Mail is read on start and hourly (`main.mail_loop`). Interview dates are read by regex (`meetings.py`): other time zones are not converted and a reschedule email adds a second entry.
+- Cards from emails with no tracker row are made in `overview.py` (key `mail:<company>`); a stage she set by hand holds only until the auto stage changes.
 - Captchas are never solved: if one is empty, the app asks her to type it in Chrome before it clicks Submit.
 - Calendar pop-up date boxes are set by script (jQuery datepicker if present, else dd/mm/yyyy); other picker libraries are untested.
 - Workday work-history and education sections are not filled from the resume.

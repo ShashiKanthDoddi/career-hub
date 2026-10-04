@@ -1,6 +1,16 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.4.1',
+CHANGELOG = [{'version': '2.5',
+  'title': 'Calendar, to-do and a smarter inbox',
+  'new': ['Home has a calendar for interviews and a to-do list',
+          'The app reads your job Gmail when it opens and every hour, and puts interview dates from emails on the calendar',
+          'Moving a card to Interview or Test asks for the date and adds it to the calendar',
+          'My jobs now also shows companies that emailed you but were not applied to through the app',
+          'A spinning circle shows while Check email works, and it tells you the result',
+          'A kind note appears after more than 6 rejection emails'],
+  'fixed': ['A card you moved by hand now follows a newer email (for example a rejection after an interview)',
+            'The calendar and to-do update without reloading the whole Home page']},
+ {'version': '2.4.1',
   'title': 'Fixes for forms, captcha and the icon',
   'new': ['A sharper "H" icon in the taskbar',
           'Before submitting, the app now reminds you to type a captcha in Chrome, and waits for you'],

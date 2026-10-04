@@ -106,18 +106,8 @@ def main():
     check(find_meeting("Please share your availability. You applied on 1 Oct 2026", sent) is None, "interview email without a date: nothing added")
 
     from careerhub.history import parse_history
-    hh = parse_history("WORK EXPERIENCE
-Senior Manager
-Acme Corp, Bengaluru   Jan 2021 - Present
-• Led campaigns
-"
-                       "Executive | Beta Ltd, Mumbai  06/2018 - 12/2020
-• Ran SEO
-EDUCATION
-MBA in Marketing
-XYZ University, Pune
-2016 - 2018
-Percentage: 78%")
+    hh = parse_history("WORK EXPERIENCE\nSenior Manager\nAcme Corp, Bengaluru   Jan 2021 - Present\n- Led campaigns\n"
+                       "Executive | Beta Ltd, Mumbai  06/2018 - 12/2020\n- Ran SEO\nEDUCATION\nMBA in Marketing\nXYZ University, Pune\n2016 - 2018\nPercentage: 78%")
     check([(w["title"], w["company"], w["start"], w["current"]) for w in hh["work"]] ==
           [("Senior Manager", "Acme Corp", "2021-01", True), ("Executive", "Beta Ltd", "2018-06", False)], "resume: jobs read in both layouts")
     check(hh["education"] and (hh["education"][0]["degree"], hh["education"][0]["school"], hh["education"][0]["end"]) == ("MBA", "XYZ University", "2018"),

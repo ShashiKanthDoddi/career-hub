@@ -62,10 +62,7 @@ function showCheer(n){
   if (document.getElementById("cheerBox")) return;
   const box = document.createElement("div"); box.id = "cheerBox"; box.className = "modal"; box.style.zIndex = 80;
   box.innerHTML = `<div class="sheet" style="--k:var(--hi)"><div class="sh"><div class="kind" style="color:var(--hi-ink)">A note for you</div>
-    <h2>Don't give up, you can do this</h2></div>
-    <p>${n} companies have said no so far. That is part of every job search, even for the best people, and it says nothing about how good you are.</p>
-    <p>Each no moves you closer to the right yes. You keep showing up and sending applications, and that is the hard part. Take a short break, be proud of yourself, and keep going.</p>
-    <p><b>I believe in you.</b></p>
+    <h2>I know you can do it</h2></div><p>Don't give up.</p>
     <div class="row" style="margin-top:14px"><button class="btn primary" id="cheerOk">Thank you</button></div></div>`;
   document.body.appendChild(box);
   box.querySelector("#cheerOk").onclick = async () => { box.remove(); await api_cheer_seen(n); };

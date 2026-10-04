@@ -1,8 +1,16 @@
 {
- "version": "2.5",
+ "version": "2.5.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.5.1",
+   "title": "A shorter kind note",
+   "new": [],
+   "fixed": [
+    "The note shown after many rejection emails is now just two short lines"
+   ]
+  },
   {
    "version": "2.5",
    "title": "Calendar, to-do and a smarter inbox",
@@ -122,21 +130,6 @@
    "fixed": [
     "Profile settings can no longer get out of order when you clear and refill a box"
    ]
-  },
-  {
-   "version": "1.2",
-   "title": "Email updates and a home screen",
-   "new": [
-    "Reads your job Gmail and sorts replies into interview, assessment, offer, rejection or received",
-    "Home tab with your numbers and the emails that need your attention",
-    "My jobs tab: every application with its stage, latest email and your notes",
-    "Report a problem button: sends the log and screenshots to your helper",
-    "Install updates from inside the app, with automatic backups first, plus a daily backup"
-   ],
-   "fixed": [
-    "Closing the app no longer waits on a slow email check",
-    "Home cards no longer spill off the side of the window"
-   ]
   }
  ],
  "files": [
@@ -174,11 +167,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "f486be0bdc6cf736137a95bbde9a11987005cf29e9f706fbedb9652920eaa2cf"
+   "sha256": "e007a8e7379de062321e96f6d28c842247d1702313af242783ed5e03e78056f2"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "de716386e2a2faa530a46e393f24e322c1d08bebec5a9fc7c736fde46b9eebc0"
+   "sha256": "fef6f9581a81af03d29c838394479ce5ded67f839abe466b76c58b04db48f335"
   },
   {
    "path": "careerhub/filler.py",
@@ -206,7 +199,7 @@
   },
   {
    "path": "careerhub/meetings.py",
-   "sha256": "3f55c155682774922ff4491b58d51066b4f15b181bf69b450c34998c1434ef73"
+   "sha256": "5de0d8ac91ae6f7720b86f5e54fa75518b9ece82ff1c39c9be04d8ab1babaff2"
   },
   {
    "path": "careerhub/overview.py",
@@ -294,7 +287,7 @@
   },
   {
    "path": "ui/js/planner.js",
-   "sha256": "89c3f6b7e5402accca0c812f041d59fc193628cbf4ec89c9125cd54f25e4f7c3"
+   "sha256": "a5280c0bd9f6084d5a9689cba8461a6c61401daa9d86f7dec171cc6c183700fd"
   },
   {
    "path": "ui/js/questions.js",

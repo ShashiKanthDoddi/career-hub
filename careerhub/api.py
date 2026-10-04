@@ -264,6 +264,8 @@ async def api_read_history():
         return {"ok": False, "error": "I can't find your resume. Add it under Your files first."}
     h = history.parse_history(text)
     if not h["work"] and not h["education"]:
+        log("   Resume headings I saw: " + " | ".join(l.strip() for l in text.splitlines() if history._heading(l) or len(l.strip()) < 30)[:600])
+    if not h["work"] and not h["education"]:
         return {"ok": False, "error": "I couldn't find work or education sections in the resume. You can type them in below."}
     return {"ok": True, **h}
 

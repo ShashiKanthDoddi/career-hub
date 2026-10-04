@@ -18,11 +18,18 @@ BULLET = re.compile(r"^\s*[•●▪◦‣⁃*\-–·�?]\s*")
 
 
 def _heading(line):
-    """Section name for lines like 'P RO F ES SIO N A L  EX P ERIE N CE' (spaced capitals), else ''."""
-    letters = re.sub(r"[^A-Za-z]", "", line)
-    if len(letters) < 5 or len(line) > 70 or letters != letters.upper() or re.search(r"\d", line):
+    """Section kind for a heading line ('work', 'edu', 'other') or ''. Handles SPACED CAPITALS, Title Case and 'Work Experience:'."""
+    text = line.strip().rstrip(":")
+    letters = re.sub(r"[^A-Za-z]", "", text)
+    key = letters.upper()
+    if len(letters) < 5 or len(text) > 50 or re.search(r"\d", text) or text.endswith("."):
         return ""
-    return letters.upper()
+    words = len(re.findall(r"[A-Za-z]{2,}", text))
+    if key in WORK_HEAD or (words <= 4 and any(w in key for w in ("EXPERIENCE", "EMPLOYMENT", "WORKHISTORY", "CAREERHISTORY"))):
+        return "work"
+    if key in EDU_HEAD or (words <= 4 and any(w in key for w in ("EDUCATION", "ACADEMIC", "QUALIFICATION"))):
+        return "edu"
+    return "other" if letters == key else ""
 
 
 def _date(part):
@@ -46,7 +53,7 @@ def _sections(text):
             continue
         h = _heading(line)
         if h:
-            cur = "work" if h in WORK_HEAD else "edu" if h in EDU_HEAD else "other"
+            cur = h
             out.setdefault(cur, [])
             continue
         if cur in ("work", "edu"):
@@ -92,8 +99,8 @@ def _parse_work(lines):
         cur = not re.search(r"\d", m.group(2))
         ey, em = ("", "") if cur else _date(m.group(2))
         desc = "\n".join(BULLET.sub("", l).strip() for l in body if BULLET.match(l)).strip()
-        jobs.append({"title": title, "company": company, "location": loc, "start": f"{sy}-{sm}" if sy else "",
-                     "end": f"{ey}-{em}" if ey else "", "current": cur, "description": desc})
+        jobs.append({"title": title, "company": company, "location": loc, "start": (f"{sy}-{sm}" if sm else sy),
+                     "end": (f"{ey}-{em}" if em else ey), "current": cur, "description": desc})
     return jobs
 
 
@@ -123,6 +130,12 @@ def _parse_edu(lines):
                 else:
                     e["degree"] = t
                 break
+        if e["field"] and not schools:                              # "MBA, Marketing - XYZ University"
+            for part in re.split(r"\s+[-–—|]\s+|\s*,\s*", e["field"]):
+                if SCHOOL.search(part):
+                    schools = [part]
+                    e["field"] = re.sub(r"\s*[-–—|,]?\s*" + re.escape(part) + r"\s*$", "", e["field"]).strip(" -,")
+                    break
         if schools:
             sch = re.sub(r"\([^)]*\)", "", schools[0]).strip()
             if "," in sch and len(sch.rsplit(",", 1)[1].strip()) <= 20:
@@ -146,7 +159,12 @@ def _parse_edu(lines):
 def parse_history(text):
     """Best-effort draft from resume text: {'work': [...], 'education': [...]}."""
     sec = _sections(text or "")
-    return {"work": _parse_work(sec.get("work", [])), "education": _parse_edu(sec.get("edu", []))}
+    work = _parse_work(sec.get("work", []))
+    if not work:                                  # no clear heading: any line with a date range outside Education
+        lines = [l.strip() for l in (text or "").splitlines() if l.strip()]
+        edu_lines = set(sec.get("edu", []))
+        work = _parse_work([l for l in lines if l not in edu_lines])
+    return {"work": work, "education": _parse_edu(sec.get("edu", []))}
 
 
 def get_history():

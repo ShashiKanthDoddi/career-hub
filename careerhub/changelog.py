@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.8.2',
+CHANGELOG = [{'version': '2.8.3',
+  'title': 'Updates found right away',
+  'new': [],
+  'fixed': ['Check for updates now finds a new version as soon as it is published (before, it could say "no new updates" for a few minutes)']},
+ {'version': '2.8.2',
   'title': 'Smarter email sorting',
   'new': ['Cards in "Needs you" have a new ✕ button, "Not a job email": it hides the card and stops showing emails from that sender'],
   'fixed': ['Newsletters and adverts (for example "interview tips" or "practice test" emails) are no longer shown as interviews',

@@ -1,8 +1,16 @@
 {
- "version": "2.8.2",
+ "version": "2.8.3",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.8.3",
+   "title": "Updates found right away",
+   "new": [],
+   "fixed": [
+    "Check for updates now finds a new version as soon as it is published (before, it could say \"no new updates\" for a few minutes)"
+   ]
+  },
   {
    "version": "2.8.2",
    "title": "Smarter email sorting",
@@ -75,14 +83,6 @@
     "Settings has a new section, Your reports and ideas: everything you sent, with Open, Done or Not planned, and a link to read it"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.7.3",
-   "title": "Opens maximised",
-   "new": [
-    "The Career Hub window now always opens maximised, filling the screen"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -120,11 +120,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "9ec9cfe8ca0f1d17deec0c88ee9e64b1c55074f8f68dc5cd39bbe83286a5fbd0"
+   "sha256": "d106f61f09b31bfaf062cc78d917d3078af1a957aabea97a681ed142b9003a40"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "7b747589cb01f77a7618a8a519cf07d0c55f83aa3a07587f1e5f0a693dab781b"
+   "sha256": "02c9ae70070ed83e452f08ba5ced5d161d7ddb63497f533ef23c77128720a81e"
   },
   {
    "path": "careerhub/filler.py",
@@ -204,7 +204,7 @@
   },
   {
    "path": "careerhub/updater.py",
-   "sha256": "bc11c2f3d9a5f389c389b470b7ef7017f48c097265f37be60dfdbac10202e992"
+   "sha256": "3fc9268294f01c8f3b0bd8f344e97d2f46f0d9498281c9f6e22ffb8781105df1"
   },
   {
    "path": "careerhub/workday.py",
@@ -288,11 +288,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "fb327c6a570091b35496afc0fa950a363f30e9518f369fb4612ae37acc76233c"
+   "sha256": "db11a8c5ffa7a21ae9e561fad40e719e50fa40839869bc3ba4d65de5a22f9b27"
   },
   {
    "path": "MAP.md",
-   "sha256": "fea092a9e600c5fb90ddc2daf7602e8feb6ef9ec2276c5468294e7edf2965dae"
+   "sha256": "17f288be419e6c030a3adfbbe747eeafb4050bb1c18fc0be59c628c4884e044a"
   },
   {
    "path": "Setup (Mac).command",
@@ -311,5 +311,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "22EipAF0a0GPofyV1g4Ax0DsvD9FMiOjOUPP1uwLsmM5twPQMNZofbdHh3ahETlGoSCmp41U+HTL0kQI/e2kDg=="
+ "signature": "72x/rsiga4g50chodzcqPReoKxQXKFApoFFJZjfbRDVJjeDhrx4gD8VBjIXXzd4o7RgGeliliX08HiBnPW72Cw=="
 }

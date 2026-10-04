@@ -1,6 +1,12 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.7',
+CHANGELOG = [{'version': '2.6.8',
+  'title': 'Filters on your job lists',
+  'new': ['Find jobs results can be filtered by job, company or city, how recently posted, and minimum match, and sorted by best match, newest or company',
+          'The Apply list has a filter box',
+          'My jobs: search now works on Emails, Accounts and Found, and a stage list narrows the Board and List'],
+  'fixed': []},
+ {'version': '2.6.7',
   'title': 'Fewer wrong interview emails',
   'new': ['New versions now download quietly in the background, so Update now finishes in a moment'],
   'fixed': ["Daily emails from Naukri, AmbitionBox and other job sites were wrongly shown as Interview. They are now ignored, and the ones already in your list are cleaned up"]},

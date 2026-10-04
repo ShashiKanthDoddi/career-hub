@@ -94,6 +94,7 @@
       <div class="panel-head"><h2 class="grow">Your job list <span class="tag" id="listCount">0</span></h2>
         <label class="switch small"><input type="checkbox" id="allSaved" checked> Select all</label>
         <button class="btn sm ghost" id="clearListBtn">Clear</button></div>
+      <input type="text" id="savedQ" placeholder="Filter your list" style="margin-bottom:8px">
       <div class="saved-list" id="savedList"></div>
       <div class="row" style="margin-top:16px">
         <label class="switch grow"><input type="checkbox" id="pauseToggle"> Let me check each page</label>
@@ -129,6 +130,12 @@
     <div class="panel" id="foundPanel" hidden>
       <div class="panel-head"><h2 class="grow" id="foundTitle">Results</h2><label class="switch small"><input type="checkbox" id="allFound" checked> Select all</label></div>
       <p class="small muted" id="findDiag" style="margin:-6px 0 8px"></p>
+      <div class="row" id="foundFilters" style="margin-bottom:8px">
+        <input type="text" id="fQ" class="grow" placeholder="Filter by job, company or city" style="min-width:180px">
+        <select id="fAge" title="Posted"><option value="">Any date</option><option value="1">Today</option><option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option></select>
+        <select id="fMin" title="Match"><option value="">Any match</option><option value="50">50 and up</option><option value="60">60 and up</option><option value="70">70 and up</option><option value="80">80 and up</option></select>
+        <select id="fSort" title="Sort"><option value="">Best match first</option><option value="new">Newest first</option><option value="co">Company A to Z</option></select>
+      </div>
       <div id="foundList"></div>
       <div class="bulk" id="bulk"><span class="grow" id="bulkText"></span>
         <button class="btn sm" id="saveFoundBtn">Save for later</button><button class="btn sm hi" id="applyFoundBtn">Apply now</button></div>
@@ -142,7 +149,8 @@
       <div class="actions"><div class="seg" id="jobsTabs"><button data-t="board" class="on">Board</button><button data-t="list">List</button><button data-t="updates">Emails</button><button data-t="accounts">Accounts</button><button data-t="found">Found</button></div></div>
     </div>
     <div class="row" style="margin-bottom:14px">
-      <input type="text" id="jobSearch" placeholder="Search company or job" style="max-width:320px">
+      <input type="text" id="jobSearch" placeholder="Search company, job or email" style="max-width:320px">
+      <select id="jobStage" title="Stage"><option value="all">All stages</option><option value="replied">Heard back</option><option value="Applied">Applied</option><option value="Interview">Interview</option><option value="Offer">Offer</option><option value="Rejected">Not selected</option><option value="Draft">Draft</option></select>
       <span class="grow"></span>
       <button class="btn sm" id="exportBtn"><svg class="i"><use href="#i-download"/></svg>Open in Excel</button>
     </div>

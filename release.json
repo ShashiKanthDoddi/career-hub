@@ -1,8 +1,18 @@
 {
- "version": "2.6.7",
+ "version": "2.6.8",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.8",
+   "title": "Filters on your job lists",
+   "new": [
+    "Find jobs results can be filtered by job, company or city, how recently posted, and minimum match, and sorted by best match, newest or company",
+    "The Apply list has a filter box",
+    "My jobs: search now works on Emails, Accounts and Found, and a stage list narrows the Board and List"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.6.7",
    "title": "Fewer wrong interview emails",
@@ -63,19 +73,6 @@
    "fixed": [
     "The update source is set automatically, so the empty box is gone from Settings"
    ]
-  },
-  {
-   "version": "2.6",
-   "title": "Work history on Workday, and smarter interview dates",
-   "new": [
-    "Profile has a new Work and education section. \"Read from my resume\" fills it in for you to check",
-    "On Workday applications the app now adds each job and degree from that section",
-    "Interview times given in another time zone (for example EST or PST) are shown in your own time",
-    "A reschedule email moves the interview on the calendar, and a cancellation removes it"
-   ],
-   "fixed": [
-    "Times written like 3:30 - 4:00pm are read as pm"
-   ]
   }
  ],
  "files": [
@@ -113,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "713541a8d28e5df536518333ab1d09d2bea44df98d33d93c53b0445090a47d02"
+   "sha256": "05f0750e0fdc626e048578b7ed1746252baa16f34ed7e91ba8e357a6dc08fcbd"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "4b11ee0394844acbb30c5a82643a57f331fe1fbfbb2a8904abfcdacd31726f73"
+   "sha256": "7d71d87a8343c3334168404b004e4cb7352c51e9eeb2c7ba15d1d599130b34a6"
   },
   {
    "path": "careerhub/filler.py",
@@ -201,7 +198,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "0df0db88f6aebff744b3be7af5c8fa60d7147dcedd7f3aae27489dcd2bf52302"
+   "sha256": "51fff1f79d57527f1b245407824f0779b02bb44587a1c4b09955bd1ffeb3c9f3"
   },
   {
    "path": "ui/styles.css",
@@ -209,7 +206,7 @@
   },
   {
    "path": "ui/js/apply.js",
-   "sha256": "cdc3e53e8d33a29d128df898ed20315019e7ebe0e29aa7c45a85610b00aba582"
+   "sha256": "03e642d8fa191f30bc62d56a767e03e78a2c6b65d325a6da8c01cf3b72fae576"
   },
   {
    "path": "ui/js/core.js",
@@ -221,7 +218,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "4b814f40160f7828eb6e5d0ab0ff4e36b372f3d60af2f16245991ccbe246f816"
+   "sha256": "14fc3bcfbd88bf9b6879bc0ebac9336497e233058005c0485029ec510a15bcc2"
   },
   {
    "path": "ui/js/forms.js",
@@ -237,7 +234,7 @@
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "b50bc90a5bcaf45bcad87f9c58960a92d832264c94958f758fc12236bd658478"
+   "sha256": "08f94faf6c13eb70a4f38a4ffa86f70d519bc8c16147f89c59adf17a9e54b7a0"
   },
   {
    "path": "ui/js/palette.js",
@@ -277,7 +274,7 @@
   },
   {
    "path": "MAP.md",
-   "sha256": "a39f7b429a694324fe47886e60c619e764114ce33c110a51acf327ec61c8d867"
+   "sha256": "0cdb70512484952d1733ed44e09e28da110bdc4b36d6133629b23d99d417d6dd"
   },
   {
    "path": "Setup (Mac).command",

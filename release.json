@@ -1,8 +1,16 @@
 {
- "version": "2.6.13",
+ "version": "2.6.14",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.14",
+   "title": "Only jobs where you can work",
+   "new": [],
+   "fixed": [
+    "Find jobs no longer shows \"remote\" jobs tied to other countries, such as Germany remote or Remote in the US. Remote jobs open to India or anywhere still show"
+   ]
+  },
   {
    "version": "2.6.13",
    "title": "Labelled and rejected mail read properly",
@@ -67,15 +75,6 @@
    "fixed": [
     "Daily emails from Naukri, AmbitionBox and other job sites were wrongly shown as Interview. They are now ignored, and the ones already in your list are cleaned up"
    ]
-  },
-  {
-   "version": "2.6.6",
-   "title": "Experience in years and months",
-   "new": [],
-   "fixed": [
-    "Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",
-    "More ways of asking when you joined your current company are understood, and dates like June 2023 work"
-   ]
   }
  ],
  "files": [
@@ -113,11 +112,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "139d6a03ca442e83fdd32a8b5408aaee85f9135084be32bd5bd970c4b2631495"
+   "sha256": "d81aa2c9ec558fc95c6089d83d8fa002578f487d98c3bc0a59e15b8130c6f000"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "4aa58a20d9e31b6f4fc75148a9d5c0b95f49a97a0bd59a57c9a5c7baa8866f30"
+   "sha256": "5f54508dc25e11479c1121af2a5bdde34374410449aa6c4edabaf92202a9353b"
   },
   {
    "path": "careerhub/filler.py",
@@ -125,7 +124,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "c115792eedee8f75b680e390220ed810d2802dfed2150a5ea64c6b60420698e5"
+   "sha256": "e5b3eb9ca467c7f1aeb17ec7ca760c6690e358c981336a3f6debae932204b5e5"
   },
   {
    "path": "careerhub/gmail.py",
@@ -269,15 +268,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "424b65785ce5ca7275f81776115f47651700617f94102f16164d7ff52d17cc36"
+   "sha256": "9ab19e6822fc0fb602ada608816fc7093af0ad396020128abf9075b2baafacee"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "a91915b18733fda5a27398c1a19b643c43137aa8ec34cc3a77616ea2d478a5ef"
+   "sha256": "d5a97c34c8e17a971b6517cd9fd016241c3d0f05781e81458951db72bd072d60"
   },
   {
    "path": "MAP.md",
-   "sha256": "9711b44c1db521a94498be9b909b95fe3d67d0d93496ee2218a7f688db5e5fb0"
+   "sha256": "eb0bbc6a813ab3a67f8f503e965add9b5b18aa697b7e33516ce97adbe284b46c"
   },
   {
    "path": "Setup (Mac).command",

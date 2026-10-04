@@ -86,6 +86,11 @@ def main():
     check(jobsites.alert_jobs('<a href="https://www.naukri.com/job-listings-seo-manager-acme-123?src=m">SEO Manager</a>'
                               '<a href="https://www.naukri.com/jobs">More</a>') ==
           [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
+    from careerhub.finder import location_ok
+    check(location_ok("Remote, India", ["bengaluru", "remote"]) and location_ok("Remote", ["remote"])
+          and not location_ok("Munich, Germany remote", ["bengaluru", "remote"]) and not location_ok("Remote in the US", ["remote"]),
+          "remote jobs tied to another country are not shown")
+    check(__import__("careerhub.gmail", fromlist=["x"]).company_from_sender("Choragudi, Kamala A.", "k@accenture.com") == "Accenture", "a recruiter's name is not used as the company")
     import email.message
     from careerhub import gmail
     def _mail(frm, subj, body):

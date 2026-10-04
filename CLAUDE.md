@@ -66,6 +66,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Workday work history and education (2.6) come from Profile, Work and education (`history.py`, `workday.py`), but the selectors were only tested on a mock page, not a live Workday. Resume reading is a draft she must check.
 - Windows is untested on real hardware. LinkedIn/Indeed/Naukri: pasted links work with a daily limit (default 10 per site),
   pacing and rest-on-robot-check (`careerhub/jobsites.py`), alert-email links feed Find jobs; none of it is tested on a real login.
+- Location filter (`location_ok`): "remote" matches only plain "Remote", "anywhere" or remote with India; remote tied to another country is dropped. Jobs with no location are kept.
 - Web search for companies: DuckDuckGo and Bing block automatic requests, so `discover()` relies on `DEFAULT_BOARDS`
   (`careerhub/finder.py`, live-checked in 2.4; re-check now and then, boards come and go). Companies on their own hiring system
   (Nykaa, Swiggy, Zomato, Freshworks) can't be read: she can only add companies on the five supported systems.

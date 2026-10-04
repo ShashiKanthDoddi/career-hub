@@ -1,8 +1,16 @@
 {
- "version": "2.7.0",
+ "version": "2.7.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.1",
+   "title": "Reports reach GitHub on a Mac",
+   "new": [],
+   "fixed": [
+    "Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly"
+   ]
+  },
   {
    "version": "2.7.0",
    "title": "A fresher look",
@@ -64,17 +72,6 @@
     "My jobs has a \"No response\" column: jobs you applied to 30 or more days ago with no reply move there by itself"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.6.15",
-   "title": "Each rejection gets its own card",
-   "new": [
-    "You can add a second and third job Gmail in Settings, and the app reads all of them",
-    "Home shows a \"See all emails\" link, and the emails list shows 25 at a time with Show more"
-   ],
-   "fixed": [
-    "LinkedIn \"Not selected\" emails now show as separate cards in My jobs, with the right company and job title, instead of one \"LinkedIn\" card"
-   ]
   }
  ],
  "files": [
@@ -112,11 +109,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "e5b09ea632b02a1d0f62568b121ded24a20622964338f78bce4c50abca8ec259"
+   "sha256": "60e45b2db4c549b3565f55becac03d61e73c65103964be418cb3bba9d04b516a"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b2c8bc47982d8e228a52a1dd6a63224c4a5773ca6c0673d9197cf1cae5ef7cd6"
+   "sha256": "52474906c73cb8f6d0340b7e37a7f07ac1a37f91a702106060ff9d65598d6ddf"
   },
   {
    "path": "careerhub/filler.py",
@@ -172,7 +169,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "f9e1627a2b4db823a09aca9e4507c93dc8ff6a84421a3a7a0db15a308298a397"
+   "sha256": "46329574d74e81dc58e3c05786b3fd8aaff26f3de98c0fe1b3495eaefad740a2"
   },
   {
    "path": "careerhub/resume.py",

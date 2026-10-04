@@ -1,7 +1,5 @@
 """reports module of Career Hub. See MAP.md for what lives where."""
 from urllib.parse import quote
-import urllib.error
-import urllib.request
 import re
 import asyncio
 import base64
@@ -20,7 +18,7 @@ from .bridge import LOG, UI, log, os_open
 from .config import APP_NAME, APP_VERSION, DRAFT_DIR, OWNER, REPORT_DIR, ISSUES_SOURCE
 from .gmail import mail_settings
 from .records import tracker_rows
-from .state import JOB
+from .state import JOB, PW
 from .store import load_profile
 from .textutil import mask
 
@@ -102,43 +100,54 @@ def issue_repo():
     return m.group(1) if m else ""
 
 
-def github_issue(repo, token, title, body, label):
-    """Create an issue on GitHub. Returns its web link."""
-    req = urllib.request.Request(
-        f"https://api.github.com/repos/{repo}/issues", method="POST",
-        data=json.dumps({"title": title[:200], "body": body[:60000], "labels": [label]}).encode("utf-8"),
-        headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
-                 "Content-Type": "application/json", "User-Agent": "CareerHub"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r).get("html_url", "")
+class GhError(Exception):
+    def __init__(self, code, text=""):
+        super().__init__(f"HTTP {code} {text}".strip())
+        self.code = code
 
 
 FILES_BRANCH = "issue-files"
 
 
-def gh_call(method, url, token, payload=None):
-    req = urllib.request.Request(url, method=method, data=None if payload is None else json.dumps(payload).encode("utf-8"),
-                                 headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
-                                          "Content-Type": "application/json", "User-Agent": "CareerHub"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return json.load(r)
+async def gh_call(method, url, token, payload=None):
+    """One GitHub API call. Uses Playwright's request client (like the updater), because Python's own
+    urllib often has no root certificates on a Mac (SSL: CERTIFICATE_VERIFY_FAILED)."""
+    ctx = await PW["p"].request.new_context(extra_http_headers={
+        "Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json", "User-Agent": "CareerHub"})
+    try:
+        r = await ctx.fetch(url, method=method, timeout=60000, data=None if payload is None else json.dumps(payload),
+                            headers={"Content-Type": "application/json"})
+        if not r.ok:
+            raise GhError(r.status, (await r.text())[:100])
+        return await r.json()
+    finally:
+        await ctx.dispose()
 
 
-def upload_files(repo, token, folder, files):
+async def github_issue(repo, token, title, body, label):
+    """Create an issue on GitHub. Returns its web link."""
+    r = await gh_call("POST", f"https://api.github.com/repos/{repo}/issues", token,
+                      {"title": title[:200], "body": body[:60000], "labels": [label]})
+    return r.get("html_url", "")
+
+
+async def upload_files(repo, token, folder, files):
     """GitHub's API can't attach files to an issue, so they go on a side branch of the repo and the issue links them.
     Returns [(name, raw link, page link)]."""
     api = f"https://api.github.com/repos/{repo}"
     try:
-        gh_call("GET", f"{api}/git/ref/heads/{FILES_BRANCH}", token)
-    except urllib.error.HTTPError:
-        base = gh_call("GET", api, token).get("default_branch", "main")
-        sha = gh_call("GET", f"{api}/git/ref/heads/{base}", token)["object"]["sha"]
-        gh_call("POST", f"{api}/git/refs", token, {"ref": f"refs/heads/{FILES_BRANCH}", "sha": sha})
+        await gh_call("GET", f"{api}/git/ref/heads/{FILES_BRANCH}", token)
+    except GhError as e:
+        if e.code != 404:
+            raise
+        base = (await gh_call("GET", api, token)).get("default_branch", "main")
+        sha = (await gh_call("GET", f"{api}/git/ref/heads/{base}", token))["object"]["sha"]
+        await gh_call("POST", f"{api}/git/refs", token, {"ref": f"refs/heads/{FILES_BRANCH}", "sha": sha})
     out = []
     for name, raw in files.items():
         path = f"{folder}/{name}"
-        gh_call("PUT", f"{api}/contents/{path}", token, {"message": f"Files for {folder}", "branch": FILES_BRANCH,
-                                                          "content": base64.b64encode(raw).decode("ascii")})
+        await gh_call("PUT", f"{api}/contents/{path}", token, {"message": f"Files for {folder}", "branch": FILES_BRANCH,
+                                                                "content": base64.b64encode(raw).decode("ascii")})
         out.append((name, f"https://raw.githubusercontent.com/{repo}/{FILES_BRANCH}/{path}",
                     f"https://github.com/{repo}/blob/{FILES_BRANCH}/{path}"))
     return out
@@ -164,16 +173,16 @@ async def file_issue(kind, title, body, open_page=True, files=None):
             if files:
                 try:
                     folder = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
-                    body += files_markdown(await asyncio.to_thread(upload_files, repo, token, folder, files))
+                    body += files_markdown(await upload_files(repo, token, folder, files))
                 except Exception as e:
                     log(f"⚠  Couldn't attach files to the GitHub issue ({str(e)[:120]}).")
                     body += "\n\n(Files could not be attached.)"
-            url = await asyncio.to_thread(github_issue, repo, token, title, body, kind)
+            url = await github_issue(repo, token, title, body, kind)
             log(f"📨 GitHub issue created ({kind}): {url}")
             return {"ok": True, "created": True, "url": url}
         except Exception as e:
             why = f"GitHub said no ({str(e)[:100]})"
-            if isinstance(e, urllib.error.HTTPError):
+            if isinstance(e, GhError):
                 why = {401: "the token is wrong or has expired", 403: "the token is missing permission (Issues and Contents)",
                        404: "the token can't reach the reports repository"}.get(e.code, f"GitHub error {e.code}")
             log(f"⚠  Couldn't create the GitHub issue ({str(e)[:120]}).")

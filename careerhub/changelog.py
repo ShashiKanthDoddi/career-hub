@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.0',
+CHANGELOG = [{'version': '2.7.1',
+  'title': 'Reports reach GitHub on a Mac',
+  'new': [],
+  'fixed': ['Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly']},
+ {'version': '2.7.0',
   'title': 'A fresher look',
   'new': ['A cleaner design: separate coloured cards on Home, a lighter calendar, softer shadows and a tidier side bar'],
   'fixed': ['On My jobs the stage filter no longer stretches across the whole page']},

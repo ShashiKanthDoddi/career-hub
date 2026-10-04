@@ -117,14 +117,14 @@ def log(*args, **kwargs):
         print(text)
     except UnicodeEncodeError:
         print(text.encode("ascii", "replace").decode())
-    if LOG["file"] is not None and text.strip():
+    if LOG["file"] is not None and text.strip() and kwargs.get("file", True):
         try:
             with LOG["file"].open("a", encoding="utf-8") as fh:
                 fh.write(text + "\n")
         except Exception:
             pass
     if text.strip():
-        UI._send({"type": "log", "text": text})
+        UI._send({"type": "log", "text": text, "key": kwargs.get("key", "")})   # same key: replaces the line above (live counts)
 
 
 def check_stop():

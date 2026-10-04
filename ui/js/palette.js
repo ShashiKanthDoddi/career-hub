@@ -1,6 +1,8 @@
 /* ===== activity, report, palette ===== */
 let LOGTEXT = "";
-function addLog(t){ LOGTEXT += t + "\n"; const el = $("#log"); if (el){ el.textContent = LOGTEXT; el.parentElement.scrollTop = el.parentElement.scrollHeight; } }
+let LOGKEY = "", LOGPREV = "";
+function addLog(t, key){ if (key && key === LOGKEY) LOGTEXT = LOGPREV; else LOGPREV = LOGTEXT; LOGKEY = key || "";   // same key: live line, replaced
+  LOGTEXT += t + "\n"; const el = $("#log"); if (el){ el.textContent = LOGTEXT; el.parentElement.scrollTop = el.parentElement.scrollHeight; } }
 function openActivity(){
   $("#layer").innerHTML = `<div class="scrim" id="scrim"></div><aside class="drawer" aria-label="Activity"><div class="dh"><div class="grow"><h2>Activity</h2><div class="muted small">Everything the app is doing, step by step</div></div>
     <button class="btn sm" id="copyLog">Copy</button><button class="btn sm" data-open2="logs">Logs</button><button class="btn sm ghost" id="closeDrawer">${icon("x")}</button></div>

@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.12',
+CHANGELOG = [{'version': '2.6.13',
+  'title': 'Labelled and rejected mail read properly',
+  'new': [],
+  'fixed': ['Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once',
+            'An interview card shows the company (for example Accenture) instead of the name of the recruiter']},
+ {'version': '2.6.12',
   'title': 'Select all and Unselect all',
   'new': ['Find jobs has Select all and Unselect all buttons. They work on the jobs you can see after filtering'],
   'fixed': ['Changing a filter no longer ticks every job again; the ones you unticked stay unticked']},

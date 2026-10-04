@@ -1,8 +1,17 @@
 {
- "version": "2.6.12",
+ "version": "2.6.13",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.13",
+   "title": "Labelled and rejected mail read properly",
+   "new": [],
+   "fixed": [
+    "Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once",
+    "An interview card shows the company (for example Accenture) instead of the name of the recruiter"
+   ]
+  },
   {
    "version": "2.6.12",
    "title": "Select all and Unselect all",
@@ -67,14 +76,6 @@
     "Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",
     "More ways of asking when you joined your current company are understood, and dates like June 2023 work"
    ]
-  },
-  {
-   "version": "2.6.5",
-   "title": "Updates install again",
-   "new": [],
-   "fixed": [
-    "Updating failed with a 'didn't download correctly' message. Updates now install normally"
-   ]
   }
  ],
  "files": [
@@ -112,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "45e0949ae52c9b8b5a99c51864a69fcbf5cc12a8634832e2e4bc5b25bc1d31bb"
+   "sha256": "139d6a03ca442e83fdd32a8b5408aaee85f9135084be32bd5bd970c4b2631495"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "4f55759ec2fa994afd8a3adf0594cc20e4872a478f7d4f7bcea1cadae3e5b340"
+   "sha256": "4aa58a20d9e31b6f4fc75148a9d5c0b95f49a97a0bd59a57c9a5c7baa8866f30"
   },
   {
    "path": "careerhub/filler.py",
@@ -128,7 +129,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "ced5a5557a0ecf53b687e6fde87baaa700fee6c7ae4448260595588b76b5a495"
+   "sha256": "52415fd1adc4d86c3026c53cd053a428e75575cd41cfba4bc95ed377a8580298"
   },
   {
    "path": "careerhub/history.py",
@@ -272,11 +273,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "994c67457338a0a25df20affc7df1b34228d0e3c412378ce872b41f61c84aeb4"
+   "sha256": "a91915b18733fda5a27398c1a19b643c43137aa8ec34cc3a77616ea2d478a5ef"
   },
   {
    "path": "MAP.md",
-   "sha256": "42a45d1a201ccdc113eb52b57538792bd78c3be19a4f8453dc96c8cf53033c85"
+   "sha256": "9711b44c1db521a94498be9b909b95fe3d67d0d93496ee2218a7f688db5e5fb0"
   },
   {
    "path": "Setup (Mac).command",

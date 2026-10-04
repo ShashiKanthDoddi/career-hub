@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.17',
+CHANGELOG = [{'version': '2.6.18',
+  'title': 'Jobs outside India are hidden',
+  'new': [],
+  'fixed': ['Jobs found earlier in other countries (for example Remote - US or Dublin) no longer show in Find jobs']},
+ {'version': '2.6.17',
   'title': 'Rejection emails show again',
   'new': [],
   'fixed': ['Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card']},

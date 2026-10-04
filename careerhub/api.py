@@ -10,7 +10,7 @@ from .apply_run import run_apply
 from .bridge import UI, log, os_open
 from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
-from .finder import run_find
+from .finder import location_ok, run_find
 from .gmail import check_mail, mail_settings
 from . import history, planner
 from .overview import jobs_overview
@@ -19,8 +19,8 @@ from .records import add_to_jobs_file, read_jobs_file
 from .reports import send_report
 from .resume import resume_info
 from .state import TASKS
-from .store import ProfileError, app_state, data, export_csv, folder_files, save_app_state, save_data, table_of
-from .textutil import norm, norm_link
+from .store import ProfileError, app_state, data, export_csv, load_profile, folder_files, save_app_state, save_data, table_of
+from .textutil import norm, norm_link, split_list
 from .updater import check_for_update, install_latest, install_zip, prefetch_update
 from .ai import ai_answer
 from .state import APP
@@ -371,10 +371,11 @@ async def api_found():
     """Found jobs she hasn't applied to or dismissed (newest first), for the Find jobs page."""
     applied = {norm_link(r.get("Link")) for r in tracker_rows()}
     out, seen = [], set()
+    wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
     for j in reversed(data()["found_jobs"]):
         k = norm_link(j.get("Link"))
-        if k in applied or k in seen or j.get("Dismissed"):
-            continue
+        if k in applied or k in seen or j.get("Dismissed") or not location_ok(j.get("Location"), wanted):
+            continue                                   # also hides jobs saved before the location filter existed
         seen.add(k)
         out.append({"score": j.get("Match %"), "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,

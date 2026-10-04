@@ -1,8 +1,16 @@
 {
- "version": "2.6.17",
+ "version": "2.6.18",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.18",
+   "title": "Jobs outside India are hidden",
+   "new": [],
+   "fixed": [
+    "Jobs found earlier in other countries (for example Remote - US or Dublin) no longer show in Find jobs"
+   ]
+  },
   {
    "version": "2.6.17",
    "title": "Rejection emails show again",
@@ -65,16 +73,6 @@
    "fixed": [
     "The filters above the Find jobs results now sit in one neat row instead of four long boxes"
    ]
-  },
-  {
-   "version": "2.6.10",
-   "title": "Your Gmail labels are used",
-   "new": [
-    "The app reads your Gmail labels: mail labelled Interviews, Rejected or Offer is sorted that way, and mail labelled Job boards is ignored"
-   ],
-   "fixed": [
-    "\"You applied for 5 jobs\" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed"
-   ]
   }
  ],
  "files": [
@@ -96,7 +94,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "49c6608f9c09d449460e46fb797527824ae59f3760533fb0fca21132901d3af7"
+   "sha256": "8bc5097cad05a582abd243895a521c05bf9badf4502f546c27d9f0f3d289ceed"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -112,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "186a9c981662df84cd56060e152361706dee0fd9d5cf73b508d4a89656e0485d"
+   "sha256": "207840a175bd3353aa4760485fed2165471eb1e0a4a5340ff3a2e9dd4ba6c7b2"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "484a6dae22255a4c0c5a2a742e8d9a3c0cb5095f65ebc81688cf4b792285537b"
+   "sha256": "6ec45e6cb418efa7149e0fc36fc7c046c28ae690f7912f77d53e1a9e815f9fe5"
   },
   {
    "path": "careerhub/filler.py",
@@ -272,7 +270,7 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "5860e88fa7a876c13263fb0952ec5ffca7d1a1ef2df671ddb11c4cc9d26dabc6"
+   "sha256": "0d3fb2231ae93385fbffb4bacd72c9c472b23c0c7366b22b0698b15825ba997a"
   },
   {
    "path": "MAP.md",

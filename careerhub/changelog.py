@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.5',
+CHANGELOG = [{'version': '2.5.1',
+  'title': 'A shorter kind note',
+  'new': [],
+  'fixed': ['The note shown after many rejection emails is now just two short lines']},
+ {'version': '2.5',
   'title': 'Calendar, to-do and a smarter inbox',
   'new': ['Home has a calendar for interviews and a to-do list',
           'The app reads your job Gmail when it opens and every hour, and puts interview dates from emails on the calendar',

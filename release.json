@@ -1,8 +1,18 @@
 {
- "version": "2.6.9",
+ "version": "2.6.10",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.10",
+   "title": "Your Gmail labels are used",
+   "new": [
+    "The app reads your Gmail labels: mail labelled Interviews, Rejected or Offer is sorted that way, and mail labelled Job boards is ignored"
+   ],
+   "fixed": [
+    "\"You applied for 5 jobs\" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed"
+   ]
+  },
   {
    "version": "2.6.9",
    "title": "Updates keep working",
@@ -63,14 +73,6 @@
    "fixed": [
     "The spinning circle for Check email now shows inside the Inbox box instead of over the whole page"
    ]
-  },
-  {
-   "version": "2.6.2",
-   "title": "Reads more kinds of resumes",
-   "new": [],
-   "fixed": [
-    "Work and education: \"Read from my resume\" now finds sections written in normal capitals (like Professional Experience) and jobs without a heading"
-   ]
   }
  ],
  "files": [
@@ -108,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "f0cccb4dcf7f736d4cf2bebf23185ab3612ae583a01df1e2c460845c9b56fb58"
+   "sha256": "e2132748bfd887ae330c2773a3ddf7e8f0e5beff0d1104f6b6b058c1e77113d2"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "38514d84788544c6f083299c5acaac3076f75875a239eead5268b1ab032c3b15"
+   "sha256": "2659365ccfcdc78e24c4853db9aab86131b157157913c13afa708e60c09bea07"
   },
   {
    "path": "careerhub/filler.py",
@@ -124,7 +126,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "77cb2651c3782c1fdcabf8144f673fb6b089f3ebec135f8c1d1c28a25cbcb598"
+   "sha256": "ced5a5557a0ecf53b687e6fde87baaa700fee6c7ae4448260595588b76b5a495"
   },
   {
    "path": "careerhub/history.py",
@@ -264,15 +266,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "e867c6ac9a27205ab1485b3571fc1384fce5f3920fa76cd5cdfbf0d2411c94c7"
+   "sha256": "424b65785ce5ca7275f81776115f47651700617f94102f16164d7ff52d17cc36"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "678d5847a7a22cbb814169f1252e9e44b75612aff336841edd7cd6a228f27652"
+   "sha256": "994c67457338a0a25df20affc7df1b34228d0e3c412378ce872b41f61c84aeb4"
   },
   {
    "path": "MAP.md",
-   "sha256": "0cdb70512484952d1733ed44e09e28da110bdc4b36d6133629b23d99d417d6dd"
+   "sha256": "42a45d1a201ccdc113eb52b57538792bd78c3be19a4f8453dc96c8cf53033c85"
   },
   {
    "path": "Setup (Mac).command",

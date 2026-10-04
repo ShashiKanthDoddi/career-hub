@@ -29,6 +29,8 @@ async function loadHome(){
     : emptyHTML("check", "You're all caught up", "Interview invites, tests and offers from your inbox land here.");
   $("#feed").innerHTML = HOME.feed.length ? HOME.feed.slice(0, 8).map(u => itemHTML(u, false)).join("")
     : emptyHTML("inbox", HOME.mail_ready ? "No job emails yet" : "Connect your job Gmail", HOME.mail_ready ? "Replies from companies will show up here." : `Settings, then Job email. <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Open settings</a>`);
+  const more = (HOME.mail_total || HOME.feed.length) - 8;
+  if (more > 0) $("#feed").insertAdjacentHTML("beforeend", `<a href="#" class="feed-more" onclick="JVIEW='updates';go('jobs');return false">See all ${more + 8} emails</a>`);
   $("#mailInfo").textContent = HOME.mail_ready && HOME.last_mail_check ? "Checked " + when(HOME.last_mail_check).toLowerCase() + " at " + new Date(HOME.last_mail_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
   if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
   $$("#attention [data-done]").forEach(b => b.onclick = async () => { const it = b.closest(".item"); it.classList.add("done-anim");

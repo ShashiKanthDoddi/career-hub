@@ -67,6 +67,10 @@ PROFILE_FORM = [
     ("Finding jobs", "Ignore jobs older than (days)", "settings", "max_job_age_days", "range"),
     ("Job email (Gmail)", "Job Gmail address", "settings", "gmail_address", "text"),
     ("Job email (Gmail)", "Gmail app password", "settings", "gmail_app_password", "secret"),
+    ("Job email (Gmail)", "Second Gmail address (optional)", "settings", "gmail_address_2", "text"),
+    ("Job email (Gmail)", "Second Gmail app password", "settings", "gmail_app_password_2", "secret"),
+    ("Job email (Gmail)", "Third Gmail address (optional)", "settings", "gmail_address_3", "text"),
+    ("Job email (Gmail)", "Third Gmail app password", "settings", "gmail_app_password_3", "secret"),
     ("Job email (Gmail)", "Check this inbox automatically", "settings", "gmail_auto", "switch"),
     ("Help", "Send problem reports to (email)", "settings", "helper_email", "text"),
     ("AI helper (optional)", "Claude API key (from console.anthropic.com)", "settings", "claude_api_key", "secret"),
@@ -76,6 +80,7 @@ PROFILE_FORM = [
 
 FORM_HINTS = {
     "gmail_app_password": "Not the normal Gmail password: a 16-letter app password. The guide shows how to make one.",
+    "gmail_address_2": "Optional: Career Hub reads this inbox too. It needs its own 16-letter app password.",
     "helper_email": "Problem reports go here, e.g. the person who set this up for you.",
     "claude_api_key": "Optional. Enables ✨ AI drafts and cover letters.",
     "resume|cv|upload|attach|select files|file": "Not in the list? Drop the file into the box above, then pick it here.",

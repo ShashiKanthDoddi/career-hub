@@ -56,6 +56,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 ## Not done yet / known limits
 
 - Mail is read on start and hourly (`main.mail_loop`). Interview dates are read by regex (`meetings.py`): other time zones are not converted and a reschedule email adds a second entry.
+- Up to three job inboxes are read (settings `gmail_address`, `_2`, `_3`, each with its own app password); the first must work, extra ones are skipped with a log line if they fail.
+- Company and title of job-board mails like LinkedIn "Your application to X at Y" come from the subject (`job_from_subject`); other subject wordings still fall back to the sender (e.g. "LinkedIn").
 - Mail from job boards (`BOARD_SENDERS` in `gmail.py`: Naukri, AmbitionBox, LinkedIn…) is judged by subject only; digests never become interview cards.
 - Gmail labels (`X-GM-LABELS`, read from All Mail) decide the mail type via `label_kind` in `gmail.py`: names containing interview/assessment/reject/offer; "Job boards" is skipped. The whole label path counts (Rejected/Naukri), and one 180-day re-scan (`label_scan` in app state) re-sorts older mail. The company comes from the sender name only if it looks like a company; otherwise from the mail domain (`company_from_sender`). Job-board senders without a strong subject are dropped, not shown as Update.
 - A new version is downloaded in the background as soon as it is found (`prefetch_update`); "Update now" installs the cached files.

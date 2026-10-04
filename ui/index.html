@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" data-theme="lavender" data-mode="light">
+<head>
+<meta charset="utf-8">
+<title>Harshitha's Career Hub</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside class="side" aria-label="Main">
+  <div class="brand"><span class="mark">H</span><div><b>Harshitha's Career Hub</b><small id="verSide"></small></div></div>
+  <button class="nav on" data-go="home"><svg class="i"><use href="#i-home"/></svg><span>Home</span><kbd>1</kbd></button>
+  <button class="nav" data-go="apply"><svg class="i"><use href="#i-send"/></svg><span>Apply</span><span class="count" id="navSaved" hidden></span></button>
+  <button class="nav" data-go="find"><svg class="i"><use href="#i-search"/></svg><span>Find jobs</span><span class="count" id="navFound" hidden></span></button>
+  <button class="nav" data-go="jobs"><svg class="i"><use href="#i-board"/></svg><span>My jobs</span><span class="count" id="navAttn" hidden></span></button>
+  <button class="nav" data-go="profile"><svg class="i"><use href="#i-user"/></svg><span>Profile</span></button>
+  <button class="nav" data-go="settings"><svg class="i"><use href="#i-gear"/></svg><span>Settings</span><span class="count" id="navNew" hidden>new</span></button>
+  <div class="grow"></div>
+  <button class="nav" id="paletteBtn"><svg class="i"><use href="#i-command"/></svg><span>Quick actions</span><kbd>⌘K</kbd></button>
+  <button class="nav" id="activityBtn"><svg class="i"><use href="#i-activity"/></svg><span>Activity</span><span class="count" id="logDot" hidden>•</span></button>
+  <button class="nav" id="reportBtn"><svg class="i"><use href="#i-help"/></svg><span>Report a problem</span></button>
+  <div class="side-status"><i class="dot" id="statusDot"></i><span id="statusText">Ready</span></div>
+</aside>
+
+<main id="main">
+  <div class="runbar" id="runbar" hidden>
+    <div class="who"><b id="runTitle">Starting</b><span id="runDetail"></span><div class="steps" id="runSteps"></div></div>
+    <button class="btn sm" id="runActivity">Show activity</button>
+    <button class="btn sm" id="stopBtn">Stop</button>
+  </div>
+
+  <!-- HOME -->
+  <section class="page" id="p-home">
+    <div class="page-head">
+      <div><h1 id="hello">Hi Harshitha</h1><p id="helloSub"></p></div>
+    </div>
+    <div class="funnel" id="funnel"></div>
+    <div class="weekline" id="weekline"></div>
+    <div class="quick">
+      <svg class="i"><use href="#i-link"/></svg>
+      <input type="text" id="quickLink" placeholder="Paste a job link to apply right away" aria-label="Job link">
+      <button class="btn primary" id="quickGo">Apply</button>
+    </div>
+    <div class="cols">
+      <div class="panel">
+        <div class="panel-head"><h2 class="grow">Needs you</h2><span class="muted small" id="attnCount"></span></div>
+        <div id="attention"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2 class="grow">Inbox</h2><button class="btn sm" id="checkMailBtn"><svg class="i"><use href="#i-mail"/></svg>Check email</button></div>
+        <div class="muted small" id="mailInfo" style="margin:-6px 0 6px"></div>
+        <div id="feed"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section class="page" id="p-apply" hidden>
+    <div class="page-head"><div><h1>Apply</h1><p>One list for every job you want to apply to. The app does the clicking, typing and uploading, and always stops before Submit.</p></div></div>
+    <div class="panel">
+      <div class="panel-head"><h2 class="grow">Add jobs</h2></div>
+      <div class="row" style="align-items:flex-start">
+        <textarea id="links" rows="2" class="grow" style="min-height:52px" placeholder="Paste one or more job links (one per line), then Add"></textarea>
+        <button class="btn primary" id="addLinksBtn">Add to list</button>
+      </div>
+      <div class="chips" id="linkChips"></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="panel-head"><h2 class="grow">Your job list <span class="tag" id="listCount">0</span></h2>
+        <label class="switch small"><input type="checkbox" id="allSaved" checked> Select all</label>
+        <button class="btn sm ghost" id="clearListBtn">Clear</button></div>
+      <div class="saved-list" id="savedList"></div>
+      <div class="row" style="margin-top:16px">
+        <label class="switch grow"><input type="checkbox" id="pauseToggle"> Let me check each page</label>
+        <button class="btn primary" id="applyListBtn">Apply to selected</button>
+      </div>
+    </div>
+    <div class="panel" id="lastRun" hidden style="margin-top:16px">
+      <div class="panel-head"><h2 class="grow">Last run</h2></div>
+      <div class="tablewrap"><table id="lastTable"></table></div>
+    </div>
+  </section>
+
+  <!-- FIND -->
+  <section class="page" id="p-find" hidden>
+    <div class="page-head"><div><h1>Find jobs</h1><p>Matches new openings against your resume and shows only what fits.</p></div></div>
+    <div class="panel">
+      <div class="panel-head"><h2 class="grow">What I read in your resume</h2><span class="muted small" id="expLine"></span></div>
+      <div class="skillcloud" id="skills"></div>
+      <div class="field" style="margin-top:16px"><label>Job titles to look for</label>
+        <div class="taginput" id="rolesBox"><input type="text" id="roleInput" placeholder="Add a title and press Enter"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2 class="grow">Where to look</h2></div>
+      <div class="field"><label>Companies or careers-page links</label>
+        <div class="taginput" id="compBox"><input type="text" id="compInput" placeholder="e.g. Nykaa, then Enter"></div></div>
+      <div class="row" style="margin-top:14px">
+        <label class="switch"><input type="checkbox" id="autoSearch" checked> Also search the web for companies hiring</label>
+        <label class="switch grow"><input type="checkbox" id="dailyFind"> Repeat this search daily</label>
+        <button class="btn primary" id="findBtn"><svg class="i"><use href="#i-search"/></svg>Find jobs</button>
+      </div>
+    </div>
+    <div class="panel" id="foundPanel" hidden>
+      <div class="panel-head"><h2 class="grow" id="foundTitle">Results</h2><label class="switch small"><input type="checkbox" id="allFound" checked> Select all</label></div>
+      <p class="small muted" id="findDiag" style="margin:-6px 0 8px"></p>
+      <div id="foundList"></div>
+      <div class="bulk" id="bulk"><span class="grow" id="bulkText"></span>
+        <button class="btn sm" id="saveFoundBtn">Save for later</button><button class="btn sm hi" id="applyFoundBtn">Apply now</button></div>
+    </div>
+  </section>
+
+  <!-- MY JOBS -->
+  <section class="page" id="p-jobs" hidden style="max-width:1400px">
+    <div class="page-head">
+      <div><h1>My jobs</h1><p>Drag a card to change its stage. Click it for emails and notes.</p></div>
+      <div class="actions"><div class="seg" id="jobsTabs"><button data-t="board" class="on">Board</button><button data-t="list">List</button><button data-t="updates">Emails</button><button data-t="accounts">Accounts</button><button data-t="found">Found</button></div></div>
+    </div>
+    <div class="row" style="margin-bottom:14px">
+      <input type="text" id="jobSearch" placeholder="Search company or job" style="max-width:320px">
+      <span class="grow"></span>
+      <button class="btn sm" id="exportBtn"><svg class="i"><use href="#i-download"/></svg>Open in Excel</button>
+    </div>
+    <div id="jobsView"></div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="page" id="p-profile" hidden>
+    <div class="page-head"><div><h1>Profile</h1><p>Used to fill every application. Leave a box empty and the app asks when a site needs it.</p></div></div>
+    <div id="profileErr" class="panel" hidden style="border-color:var(--rose);color:var(--rose)"></div>
+    <div class="sectioned">
+      <nav class="secnav" id="profileNav"></nav>
+      <div>
+        <div id="profileForm"></div>
+        <div class="panel sec" id="sec-files">
+          <div class="panel-head"><h2 class="grow">Your files</h2></div>
+          <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
+          <input type="file" id="addFile" accept=".pdf,.doc,.docx" hidden>
+          <div class="filelist" id="fileList"></div>
+          <div class="formgrid" id="fileForm" style="margin-top:16px"></div>
+        </div>
+        <div class="panel sec" id="sec-answers">
+          <div class="panel-head"><h2 class="grow">Saved answers</h2><input type="text" id="ansSearch" placeholder="Search answers" style="max-width:220px"></div>
+          <p class="muted small" style="margin-top:-6px">Answers you gave to new questions. Edit one, clear it to be asked again, or switch off to never be asked.</p>
+          <div class="tablewrap"><table id="ansTable"></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="savebar" id="saveBar" hidden><span class="grow">You have unsaved changes</span><button class="btn" id="discardBtn">Discard</button><button class="btn primary" id="saveBtn">Save changes</button></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="p-settings" hidden>
+    <div class="page-head"><div><h1>Settings</h1><p>How the app looks, connects and updates.</p></div></div>
+    <div class="sectioned">
+      <nav class="secnav" id="settingsNav"></nav>
+      <div>
+        <div class="panel sec" id="set-appearance">
+          <div class="panel-head"><h2 class="grow">Appearance</h2></div>
+          <div class="themes" id="themes"></div>
+        </div>
+        <div id="settingsForm"></div>
+        <div class="panel sec" id="set-help">
+          <div class="panel-head"><h2 class="grow">Help</h2></div>
+          <p class="muted" style="margin-top:-6px">Something odd? Send a report: it includes the activity log and screenshots, never passwords.</p>
+          <div class="formgrid" id="helpFields" style="margin-bottom:14px"></div>
+          <div class="row"><button class="btn primary" id="reportBtn2">Report a problem</button><button class="btn" data-open="logs">Open logs</button></div>
+          <p class="kbdhint" style="margin-top:14px">Shortcuts: <kbd>⌘K</kbd> quick actions, <kbd>1</kbd>–<kbd>6</kbd> switch pages, <kbd>Esc</kbd> close.</p>
+        </div>
+        <div class="panel sec" id="set-updates">
+          <div class="panel-head"><h2 class="grow">Updates and backups</h2><span class="tag" id="verTag"></span></div>
+          <p class="muted" style="margin-top:-6px">New versions arrive by themselves from GitHub: checked when the app opens and every hour. You'll see what's new before anything changes. Your data is never touched, and a backup is made first.</p>
+          <p class="small muted" id="updInfo"></p>
+          <div class="row"><button class="btn primary" id="checkUpdBtn"><svg class="i"><use href="#i-download"/></svg><span>Check for updates</span></button>
+            <button class="btn" id="zipBtn">Install from a zip file</button>
+            <button class="btn" data-open="backups">Open backups</button><button class="btn" data-open="data">Open my data folder</button></div>
+          <input type="file" id="zipFile" accept=".zip" hidden>
+          <div class="formgrid" id="updateFields" style="margin-top:16px"></div>
+        </div>
+        <div class="panel sec" id="set-news">
+          <div class="panel-head"><h2 class="grow">What's new</h2></div>
+          <div id="changelog"></div>
+        </div>
+      </div>
+    </div>
+    <div class="savebar" id="saveBar2" hidden><span class="grow">You have unsaved changes</span><button class="btn" id="discardBtn2">Discard</button><button class="btn primary" id="saveBtn2">Save changes</button></div>
+  </section>
+</main>
+
+<div id="layer"></div>
+<div class="toasts" id="toasts"></div>
+<div id="filledBox"></div>
+<canvas id="confetti"></canvas>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"/></symbol>
+  <symbol id="i-command" viewBox="0 0 24 24"><path d="M9 6a3 3 0 10-3 3h12a3 3 0 10-3-3v12a3 3 0 103-3H6a3 3 0 103 3z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1"/><path d="M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 20h16"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v6H4V6h6"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+</svg>
+
+<script src="js/core.js"></script>
+<script src="js/home.js"></script>
+<script src="js/apply.js"></script>
+<script src="js/run.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/find.js"></script>
+<script src="js/jobs.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/palette.js"></script>
+<script src="js/events.js"></script>
+</body>
+</html>

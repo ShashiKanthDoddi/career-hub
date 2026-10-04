@@ -1,0 +1,317 @@
+{
+ "version": "2.2",
+ "date": "2026-10-04",
+ "urgent": false,
+ "changelog": [
+  {
+   "version": "2.2",
+   "title": "Smarter forms and automatic updates",
+   "new": [
+    "Updates install themselves from GitHub: checked at start, every hour, or with Check for updates",
+    "All new questions on a page come together on one card, with AI drafts per question",
+    "A small pop-up shows what was filled on each page",
+    "Profile knows many more ways sites ask the same thing: experience, notice period, current location, location preference, company, job title, education",
+    "New profile fields: gender, date of birth, current location, education, currently employed, key skills",
+    "Eight colour themes in Settings, Appearance",
+    "One job list on Apply: add links, apply to one, some or all; sent jobs leave the list",
+    "Find jobs keeps every found job on the page and explains why jobs were skipped",
+    "Install an update from a zip file if GitHub isn't set up"
+   ],
+   "fixed": [
+    "Windows launcher failed when the folder name had brackets",
+    "Removed the --no-sandbox warning bar in Chrome",
+    "Example text inside empty boxes was treated as a question",
+    "The privacy / terms tick box wasn't ticked",
+    "Captcha boxes are left for you instead of asked as a question",
+    "Phone country code didn't match '+91'",
+    "Clear message when Gmail needs an app password; automatic checks no longer pop up errors",
+    "Sidebar didn't reach the bottom of the window",
+    "Version 2.1 was listed twice in What's new"
+   ]
+  },
+  {
+   "version": "2.1",
+   "title": "A fresh new look",
+   "new": [
+    "Redesigned app with a sidebar, a job-hunt funnel on Home and calmer, clearer screens",
+    "My jobs is now a board: drag a card to change its stage, click it for emails and notes",
+    "New Settings page: appearance, job email, logins, job search, AI helper, help, updates and what's new",
+    "Quick actions: press ⌘K (Ctrl+K on Windows) to jump anywhere or run a command",
+    "Pasted links turn into chips that show the job site, and you can save them for later in one click",
+    "Find jobs shows a match ring for every result, with select-all and one-click apply or save",
+    "Drop your resume onto Profile to add it",
+    "Questions can be answered with the number keys",
+    "A small celebration when an application is sent or an offer comes in",
+    "Press 1 to 6 to switch pages"
+   ],
+   "fixed": [
+    "Unsaved changes are now clearly shown, with Save and Discard buttons"
+   ]
+  },
+  {
+   "version": "2.0",
+   "title": "Your own Career Hub",
+   "new": [
+    "Renamed to Harshitha's Career Hub, with a personal greeting on Home",
+    "Everything personal now lives in one place: the “Harshitha's Data” folder with a single data file",
+    "Your old data is moved in automatically (and a copy of the old files is kept in Backups)",
+    "Dark mode: switch between Auto, Light and Dark with the button at the top",
+    "This “What's new” list, shown once after every update",
+    "Add resumes and cover letters from Profile → Files (no more copying files into folders)",
+    "“Open in Excel / Numbers” now makes a fresh copy of the list each time"
+   ],
+   "fixed": [
+    "Profile settings can no longer get out of order when you clear and refill a box"
+   ]
+  },
+  {
+   "version": "1.2",
+   "title": "Email updates and a home screen",
+   "new": [
+    "Reads your job Gmail and sorts replies into interview, assessment, offer, rejection or received",
+    "Home tab with your numbers and the emails that need your attention",
+    "My jobs tab: every application with its stage, latest email and your notes",
+    "Report a problem button: sends the log and screenshots to your helper",
+    "Install updates from inside the app, with automatic backups first, plus a daily backup"
+   ],
+   "fixed": [
+    "Closing the app no longer waits on a slow email check",
+    "Home cards no longer spill off the side of the window"
+   ]
+  },
+  {
+   "version": "1.1",
+   "title": "Smarter and safer",
+   "new": [
+    "Mac notification and sound when the app needs you",
+    "Copy and Logs buttons for the activity panel",
+    "Required boxes that are still empty are flagged before you submit",
+    "Old written answers that mention another company are shown for review, not pasted",
+    "Edit or delete remembered answers in Profile",
+    "Checks for the “thank you” message after submitting",
+    "Best-guess dropdown answers are highlighted in orange",
+    "Label on the job window so you can tell the two Chrome windows apart",
+    "Spots the same job opened through a different link",
+    "Better date fields (e.g. “Immediately”, “15/11/2026”)",
+    "Optional AI helper: drafts written answers and tailored cover letters",
+    "Second and third resumes, chosen automatically by job title",
+    "Daily automatic job search",
+    "Windows support"
+   ],
+   "fixed": [
+    "The AI button no longer appears on date and link fields",
+    "Submit confirmation now reads the application page, not the summary tab"
+   ]
+  },
+  {
+   "version": "1.0",
+   "title": "The app",
+   "new": [
+    "A proper app window with tabs instead of typing in Terminal",
+    "Questions pop up as cards with buttons",
+    "Profile form instead of editing a text file",
+    "Tracker of applications, accounts and found jobs"
+   ],
+   "fixed": []
+  },
+  {
+   "version": "0.4",
+   "title": "Job finder",
+   "new": [
+    "Reads your resume and finds matching marketing jobs at companies you name or ones it discovers"
+   ],
+   "fixed": []
+  },
+  {
+   "version": "0.3",
+   "title": "Logins handled",
+   "new": [
+    "Clicks Apply, creates accounts and signs in by itself (Workday and others)",
+    "One password for job sites, and a list of every account"
+   ],
+   "fixed": []
+  }
+ ],
+ "files": [
+  {
+   "path": "career_hub.py",
+   "sha256": "84c9b3acbca88bffd985d2e413605a2e7ac4d5baaeb2abe7e3b623812158ef2f"
+  },
+  {
+   "path": "careerhub/__init__.py",
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "path": "careerhub/ai.py",
+   "sha256": "a03f5e47e51e7a918cbbe9780291aff4850156e9e4521da4c35ec28efda5b042"
+  },
+  {
+   "path": "careerhub/answers.py",
+   "sha256": "5eb10fd3b1b8516968ac55fdda8b362175f3cc62b1b8b1c7f1b1ceb1f1efec57"
+  },
+  {
+   "path": "careerhub/api.py",
+   "sha256": "b2541d8880aa455c414bdd70412060255f3d3b5dff8623e748877bd78c6e4695"
+  },
+  {
+   "path": "careerhub/apply_run.py",
+   "sha256": "5851ef67a394a37c58f619ed1c2a5840fa9960eb6a014e2e49e0765dcf0351f8"
+  },
+  {
+   "path": "careerhub/auth.py",
+   "sha256": "da29e3c7e60277e5c08e2d71ccfd35e709ee898ea41bf4b9f5a052b9ab7ce640"
+  },
+  {
+   "path": "careerhub/bridge.py",
+   "sha256": "a50e12939d635f7f10f68aa6377139703d03e47ac3c3f4b6f261de35a2a759ea"
+  },
+  {
+   "path": "careerhub/changelog.py",
+   "sha256": "6153a7b2fb4ff8d184df92ea0a001398c3d781f1fba3b7ead316552989e71583"
+  },
+  {
+   "path": "careerhub/config.py",
+   "sha256": "91c2e957d68b96ac8fbd2cd41210b541127a8d96c9b91b4753506f7cebae2e3d"
+  },
+  {
+   "path": "careerhub/filler.py",
+   "sha256": "49dab11c5ab907674478c4537d6ef17dee4470b83980336000b316714b0b36dc"
+  },
+  {
+   "path": "careerhub/finder.py",
+   "sha256": "a0f3dd32ff98918d7d7b576d2ffe8945a15144dc13f5727c076fdba25d855679"
+  },
+  {
+   "path": "careerhub/gmail.py",
+   "sha256": "341070e04d6f9477eadafd781b7af6b73d42e33e8c3a011633854e237d725b08"
+  },
+  {
+   "path": "careerhub/launch.py",
+   "sha256": "1580f745c2d019f80f1c16cadbf86c2e7a2dd50fe40e449f22f79909fec01751"
+  },
+  {
+   "path": "careerhub/main.py",
+   "sha256": "ebc42c632c858da7fc95528962c571244d16c70fb8088af09845ffc2e0ba6a14"
+  },
+  {
+   "path": "careerhub/overview.py",
+   "sha256": "8d41c384c2a1c3f7c10f97bce4d6de0c4c96d6c1b310d384200a7c74bb33a4bb"
+  },
+  {
+   "path": "careerhub/page_js.py",
+   "sha256": "df9446bc521a3bacf28e277e5e01a5ac0125cd63de034cd2946cbed3f7bccbd0"
+  },
+  {
+   "path": "careerhub/profile_form.py",
+   "sha256": "c296a03f5ab775cce8265f7f8fa8eb0f43cc7cbdf7a9997127ab8e8899f58d87"
+  },
+  {
+   "path": "careerhub/records.py",
+   "sha256": "2847c8488471e2e35cd7242880eed137d393ade4abeb59c448af6bd5798be73d"
+  },
+  {
+   "path": "careerhub/reports.py",
+   "sha256": "33aa79595a01da016bac519013ff95a7149764e29a6f729618e3b4b30b97c245"
+  },
+  {
+   "path": "careerhub/resume.py",
+   "sha256": "c3ead626177239e4996b1d9a29c96ea6433dabe991e8c245462557f62a6668d2"
+  },
+  {
+   "path": "careerhub/state.py",
+   "sha256": "5aeeb1d94e10cee0781594f49f1b6e8008ff21e3101dd2173ed8d3cd2dd4624c"
+  },
+  {
+   "path": "careerhub/store.py",
+   "sha256": "3eaf2dacab2857a41899afde9e0f2cb539e4257a96ddaac5d33f6ca11a5796bd"
+  },
+  {
+   "path": "careerhub/textutil.py",
+   "sha256": "921632f8867844efe86b178d57d3df12e93270a7251aea28c9d215eb71e697b7"
+  },
+  {
+   "path": "careerhub/updater.py",
+   "sha256": "8053eb534d285f9a1127c8aee142cab4950e2fc3c0c879294e783a3888857c0b"
+  },
+  {
+   "path": "ui/index.html",
+   "sha256": "a8d86d299e408ad6e594b84dc2aa3518ccd4a7614f4b45a965f68a8e6a5a8470"
+  },
+  {
+   "path": "ui/styles.css",
+   "sha256": "81a64d5f83f250400bc12237e1a013334a617897de476d3903507d6f98531e7f"
+  },
+  {
+   "path": "ui/js/apply.js",
+   "sha256": "cdc3e53e8d33a29d128df898ed20315019e7ebe0e29aa7c45a85610b00aba582"
+  },
+  {
+   "path": "ui/js/core.js",
+   "sha256": "6bbe7d856edc80aeb0ba3496311a96f9ee46508e747b7d2511316480a17b8a55"
+  },
+  {
+   "path": "ui/js/events.js",
+   "sha256": "f39e5c68689595f811ffa60bcd3d90b4e6e318062eae36cf3dd29d3c44aed251"
+  },
+  {
+   "path": "ui/js/find.js",
+   "sha256": "4b814f40160f7828eb6e5d0ab0ff4e36b372f3d60af2f16245991ccbe246f816"
+  },
+  {
+   "path": "ui/js/forms.js",
+   "sha256": "75cfdcda05f0c4cb99f40612e1d58569e36a9bd7f5808fb8c2af3551ae10abea"
+  },
+  {
+   "path": "ui/js/home.js",
+   "sha256": "c5a55e221a93b2bc19e41af60be05b863aeafd66f20713c3193a065403538fe3"
+  },
+  {
+   "path": "ui/js/jobs.js",
+   "sha256": "f790bd2144a7012404a8849cdeee8534345f0e298412ccb55189a09dc78407f2"
+  },
+  {
+   "path": "ui/js/palette.js",
+   "sha256": "dadef8dc06059b74332287620e26e9ce261b00cf515ad76e66cfc9dcc45c05d9"
+  },
+  {
+   "path": "ui/js/questions.js",
+   "sha256": "72e005a675f88326e03b68ee1090826ecd09da09c8e9e7089a1ec1da4e83671c"
+  },
+  {
+   "path": "ui/js/run.js",
+   "sha256": "dbeabddecbc7b5fc43b4a9bc20f1f0096f2dd20178e78e49e3739a7c1e287146"
+  },
+  {
+   "path": "tools/make_release.py",
+   "sha256": "ae626a43117aa3e9bbc5d837379810ec3bab2a05285745954427b58f49f2b95d"
+  },
+  {
+   "path": "tools/selftest.py",
+   "sha256": "b9b098efa14b75e3aeafc45d27e5f53654565fa1c27489d4057cf8d09f5de91f"
+  },
+  {
+   "path": "CLAUDE.md",
+   "sha256": "163a5c2f1437feda7b0e9e5add1a030a9cef4812e7ed87985506b26ab0e97a0c"
+  },
+  {
+   "path": "MAP.md",
+   "sha256": "51c66418093c3ca98c297879228909bcc05953bd8e7d9c5430ecfbabab09c4b0"
+  },
+  {
+   "path": "Setup (Mac).command",
+   "sha256": "54db4b61015172008382b452e347dab0e015c667f00e44aab9b5dd2d4d20c1ea"
+  },
+  {
+   "path": "Open Career Hub (Mac).command",
+   "sha256": "363e7f05c9c7ecc5606e1092da61f75a66488aef6cab461fa7c484e492efb8db"
+  },
+  {
+   "path": "Setup (Windows).bat",
+   "sha256": "5b626278525ab15aa5bff5048d74f61d0fb731ecb5a8f8a0a0a3a3909d56dcde"
+  },
+  {
+   "path": "Open Career Hub (Windows).bat",
+   "sha256": "c918e03e112e6d71b565d5e3fd3ad57878f0608a78c16628ff859a45f6e105b8"
+  }
+ ]
+}

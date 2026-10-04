@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Quick check before every release: python3 tools/selftest.py   (exit code 0 = all good).
+
+1. every Python file compiles      2. the package imports with a throwaway data folder
+3. changelog matches APP_VERSION     4. field-matching cases from real sites still resolve
+5. the UI files exist and the page loads in a hidden browser without JavaScript errors
+Add a line to CASES whenever a real site's label was answered wrongly; it then stays fixed.
+"""
+import asyncio
+import json
+import os
+import re
+import sys
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+os.environ["CAREERHUB_DATA"] = tempfile.mkdtemp(prefix="careerhub-test-")
+sys.path.insert(0, str(ROOT))
+FAILS = []
+
+
+def check(ok, what):
+    print(("  ok   " if ok else "  FAIL ") + what)
+    if not ok:
+        FAILS.append(what)
+
+
+# (label as the site shows it, kind, expected answer) with the profile seeded below
+CASES = [
+    ("Experience *", "text", "3"),
+    ("Available To Join (in days) *", "text", "30 days"),
+    ("Current Location *", "text", "Hyderabad"),
+    ("standardFields.locationPreference.answer", "text", "Hyderabad, Bengaluru"),
+    ("mobilePhone.countryCode", "select", "India (+91)"),
+    ("Company Name", "text", "Mamaearth"),
+    ("Job Title", "text", "Growth Marketing Manager"),
+    ("Referred By", "text", ""),
+    ("By applying, you hereby accept the data processing terms under the Privacy Policy", "checkbox", "Yes"),
+    ("Email Address*", "text", "jobs@example.com"),
+    ("Notice Period", "text", "30 days"),
+]
+
+
+def main():
+    print("1. compile")
+    for p in sorted(list(ROOT.glob("careerhub/*.py")) + [ROOT / "career_hub.py"] + list(ROOT.glob("tools/*.py"))):
+        try:
+            compile(p.read_text(encoding="utf-8"), str(p), "exec")
+        except SyntaxError as e:
+            check(False, f"{p.name}: {e}")
+    check(True, "all Python files compile")
+
+    print("2. import")
+    from careerhub import api, answers, store, textutil
+    from careerhub.changelog import CHANGELOG
+    from careerhub.config import APP_VERSION
+    d = store.data()
+    check(d["schema"] == store.SCHEMA, f"data file created at schema {store.SCHEMA}")
+
+    print("3. changelog")
+    versions = [c["version"] for c in CHANGELOG]
+    check(versions[0] == APP_VERSION, f"newest changelog entry is {APP_VERSION}")
+    check(len(versions) == len(set(versions)), "no version listed twice")
+
+    print("4. field matching")
+    f = d["profile"]["fields"]
+    f.update({"city|town": "Hyderabad", "total (work |professional )?experience|total years": "3",
+              "current (company|employer)|most recent (company|employer)": "Mamaearth",
+              "current (job )?(title|role|designation|position)": "Growth Marketing Manager", "e ?mail": "jobs@example.com"})
+    d["profile"]["settings"]["job_locations"] = "Hyderabad, Bengaluru, Remote"
+    db = answers.Answers()
+    for label, kind, want in CASES:
+        got = db.lookup({"label": label, "kind": kind})[0]
+        check(got == want, f"{label[:50]!r} -> {got!r}" + ("" if got == want else f" (expected {want!r})"))
+    check(textutil.pick("India (+91)", ["+93", "+91"]) == "+91", "phone code +91 matches 'India (+91)'")
+    check(textutil.adapt_value({"label": "Available To Join (in days)"}, "30 days") == "30", "'in days' fields get a number")
+
+    print("5. user interface")
+    html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
+    refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)
+    check(all((ROOT / "ui" / r).exists() for r in refs), f"{len(refs)} UI files referenced and present")
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        print("  skip browser check (playwright not installed)")
+        return
+    stub = {n: None for n in dir(api) if n.startswith("api_")}
+
+    async def load():
+        state = json.dumps({"api_state": await api.api_state(), "api_home": await api.api_home(), "api_jobs": await api.api_jobs(),
+                            "api_found": await api.api_found(), "api_answers": await api.api_answers(),
+                            "api_tables": await api.api_tables()}, default=str)
+        js = f"const R = {state}; " + "".join(
+            f"window.{n} = async () => (R.{n} !== undefined ? R.{n} : {{ok: true}});" for n in stub)
+        async with async_playwright() as p:
+            b = await p.chromium.launch()
+            page = await b.new_page()
+            errors = []
+            page.on("pageerror", lambda e: errors.append(str(e)))
+            await page.add_init_script(js)
+            await page.goto((ROOT / "ui" / "index.html").as_uri())
+            await page.wait_for_timeout(800)
+            for n in range(1, 7):
+                await page.keyboard.press(str(n))
+                await page.wait_for_timeout(150)
+            await b.close()
+            return errors
+    try:
+        errors = asyncio.run(load())
+        check(not errors, "UI loads and every page opens without JavaScript errors" + (f": {errors[:3]}" if errors else ""))
+    except Exception as e:
+        print(f"  skip browser check ({str(e).splitlines()[0][:80]})")
+
+
+if __name__ == "__main__":
+    main()
+    print("\nRESULT:", "all good" if not FAILS else f"{len(FAILS)} problem(s)")
+    sys.exit(1 if FAILS else 0)

@@ -1,0 +1,51 @@
+/* ===== home ===== */
+function greeting(){ const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; }
+async function loadHome(){
+  HOME = await api_home(); const s = HOME.stats, name = STATE.owner || "Harshitha";
+  $("#hello").textContent = `${greeting()}, ${name}`;
+  const heard = s.interviews + s.offers + s.rejected;
+  const lines = [];
+  const prep = HOME.attention.filter(u => u.type === "interview" || u.type === "assessment").length;
+  if (HOME.attention.some(u => u.type === "offer")) lines.push("You have an offer waiting. Congratulations!");
+  else if (prep) lines.push(`${prep} interview${prep > 1 ? "s" : ""} or test${prep > 1 ? "s" : ""} to get ready for.`);
+  else if (s.week) lines.push(`${s.week} application${s.week > 1 ? "s" : ""} sent this week. Nice momentum.`);
+  else lines.push(s.applied ? "A quiet week so far. Paste a link below to keep it moving." : "Let's send your first application today.");
+  $("#helloSub").textContent = lines.join(" ");
+  const max = Math.max(1, HOME.list_count, s.applied);
+  const stages = [
+    ["saved","Saved", HOME.list_count, "ready to apply", () => go("apply")],
+    ["applied","Applied", s.applied, s.week ? `${s.week} this week` : "", () => go("jobs", {filter:"all"})],
+    ["heard","Heard back", heard, s.applied ? `${s.reply_rate}% reply rate` : "", () => go("jobs", {filter:"replied"})],
+    ["int","Interviews", s.interviews, s.interviews ? "including tests" : "", () => go("jobs", {filter:"Interview"})],
+    ["offer","Offers", s.offers, s.offers ? "well done" : "", () => go("jobs", {filter:"Offer"})]];
+  $("#funnel").innerHTML = stages.map(([k,l,n,sub]) => `<button class="stagebox k-${k} ${k==="offer" && n ? "win" : ""}" data-k="${k}">
+     <div class="n" data-n="${n}">0</div><div class="l">${l}</div><div class="s">${esc(sub)}</div><div class="bar"><i></i></div></button>`).join("");
+  $$("#funnel .stagebox").forEach((b,i) => { b.onclick = stages[i][4]; countUp(b.querySelector(".n"), stages[i][2]);
+    requestAnimationFrame(() => b.querySelector(".bar i").style.width = (100 * stages[i][2] / max) + "%"); });
+  $("#weekline").innerHTML = [s.waiting ? `<span><b>${s.waiting}</b> waiting to hear back</span>` : "",
+    s.rejected ? `<span><b>${s.rejected}</b> not selected</span>` : "", s.drafts ? `<span><b>${s.drafts}</b> draft${s.drafts > 1 ? "s" : ""} to finish</span>` : ""].join("");
+  $("#attnCount").textContent = HOME.attention.length ? `${HOME.attention.length} open` : "";
+  $("#attention").innerHTML = HOME.attention.length ? HOME.attention.map(u => itemHTML(u, true)).join("")
+    : emptyHTML("check", "You're all caught up", "Interview invites, tests and offers from your inbox land here.");
+  $("#feed").innerHTML = HOME.feed.length ? HOME.feed.slice(0, 8).map(u => itemHTML(u, false)).join("")
+    : emptyHTML("inbox", HOME.mail_ready ? "No job emails yet" : "Connect your job Gmail", HOME.mail_ready ? "Replies from companies will show up here." : `Settings, then Job email. <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Open settings</a>`);
+  $("#mailInfo").textContent = HOME.mail_ready && HOME.last_mail_check ? "Checked " + when(HOME.last_mail_check).toLowerCase() + " at " + new Date(HOME.last_mail_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
+  if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
+  $$("#attention [data-done]").forEach(b => b.onclick = async () => { const it = b.closest(".item"); it.classList.add("done-anim");
+    await api_dismiss(b.dataset.done); setTimeout(loadHome, 330); });
+  setCount("#navAttn", HOME.attention.length); setCount("#navSaved", HOME.list_count);
+  return HOME;
+}
+const TYPE = {offer:["Offer","Offer"], rejection:["Not selected","Rejected"], interview:["Interview","Interview"], assessment:["Test","Assessment"], received:["Received","received"], other:["Update","other"]};
+function itemHTML(u, attn){
+  const [label, cls] = TYPE[u.type] || TYPE.other;
+  return `<div class="item ${attn ? "new" : ""}"><span class="stage s-${cls}">${label}</span>
+    <div class="body"><b>${esc(u.company || u.from)}${u.title ? `, ${esc(u.title)}` : ""}</b><span>${esc(u.subject)}</span><span>${when(u.date)}</span></div>
+    <div class="side-acts"><a class="btn sm ghost" href="${esc(u.gmail || "#")}" target="_blank" title="Open in Gmail">${icon("ext")}</a>
+    ${attn ? `<button class="btn sm" data-done="${esc(u.id)}">Done</button>` : ""}</div></div>`;
+}
+function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
+function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
+$("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking"; await api_check_mail(); };
+$("#quickGo").onclick = () => { const l = links($("#quickLink").value); if (!l.length) return toast("Paste a link that starts with http", true); startApply(l); $("#quickLink").value = ""; };
+$("#quickLink").onkeydown = e => { if (e.key === "Enter") $("#quickGo").click(); };

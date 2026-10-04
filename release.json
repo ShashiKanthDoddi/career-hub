@@ -1,8 +1,25 @@
 {
- "version": "2.3",
+ "version": "2.4",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.4",
+   "title": "Clearer look and better job search",
+   "new": [
+    "New default look: Clean white, with a charcoal side panel. Themes are now Clean white, Sand, Emerald, Slate and Mint",
+    "Sharper, larger text and easier-to-read grey text",
+    "Quick actions, Activity and Report a problem now sit under one More item in the sidebar",
+    "Sharper \"H\" icon",
+    "Find jobs: \"Where should I search?\" is explained in plain words, and searching the web now always checks a built-in list of companies that hire marketers",
+    "Find jobs works from the job titles you type when no resume is found"
+   ],
+   "fixed": [
+    "Find jobs gave no answer when the resume was missing: it now says what to do",
+    "Search the web found nothing because search engines blocked it",
+    "Removed the duplicate \"Paste a job link\" bar from Home (use Apply), and the confusing dot and \"1\" in the sidebar"
+   ]
+  },
   {
    "version": "2.3",
    "title": "Safer LinkedIn, Indeed and Naukri",
@@ -126,14 +143,6 @@
     "Tracker of applications, accounts and found jobs"
    ],
    "fixed": []
-  },
-  {
-   "version": "0.4",
-   "title": "Job finder",
-   "new": [
-    "Reads your resume and finds matching marketing jobs at companies you name or ones it discovers"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -155,7 +164,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "a6d957d80656db9141d571a3fb05921a0c80fa775d0de73fcc6a854f980c3d45"
+   "sha256": "676d18198a5fbb8d01e87760dfb2fccf6dc26d11adfbb2ee1b67809f8a138768"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -171,11 +180,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "4cf55ac114cf1b4f7fb3b1a415cffeec31faaefbf7fd937c786c6a61fba29f6b"
+   "sha256": "5cb524d9b55e089fb8aa0398cd19162ed6faf080a172222cb68e89d68a488ad9"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "12c0f44d817631bf956e662768892e191538a7f603932727f56033125336d966"
+   "sha256": "0df84e8677aff53fc0d6aefc464a60f82f513b179c761dc520ca47e5eeb6c019"
   },
   {
    "path": "careerhub/filler.py",
@@ -183,7 +192,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "a0f3dd32ff98918d7d7b576d2ffe8945a15144dc13f5727c076fdba25d855679"
+   "sha256": "12a12a205dbbe0eac6258bac4d55c7d932528ee3a2e01696fa8e91e573328e90"
   },
   {
    "path": "careerhub/gmail.py",
@@ -199,7 +208,7 @@
   },
   {
    "path": "careerhub/main.py",
-   "sha256": "ebc42c632c858da7fc95528962c571244d16c70fb8088af09845ffc2e0ba6a14"
+   "sha256": "7454375adda967d44b723c7e968209cf42e5fb5605b42e8d4f5d00c649c78774"
   },
   {
    "path": "careerhub/overview.py",
@@ -243,11 +252,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "8c971484d3a46f38337adbd10407db5346f278463805c192d516592871cf89d8"
+   "sha256": "b21f4749c757a21f074f4b2d427f1e9cdf6671061b04358fdddaaf4a7190cce5"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "2a98531e151c6e10c63d8f5ea3170bab91e977e98b5fbf7469a46aca5a71e7b3"
+   "sha256": "8d8e0b34c4c052c46a75518d673fbd9bbddb5a3ff30c24aac0045628b00bd0a5"
   },
   {
    "path": "ui/js/apply.js",
@@ -267,11 +276,11 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "dd5f2345c73b3486285770e513bc7d8e4fc085e3fe37acf8deba5550c1c13b6a"
+   "sha256": "60d94f58df1d301ba4ae071e8039c6aa4c97d9fe14406b236de2cbcf9b644c70"
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "c5a55e221a93b2bc19e41af60be05b863aeafd66f20713c3193a065403538fe3"
+   "sha256": "ea6c3ca18f4e836aa566a4b9cf3a2dbeedf21a2f635ac1a4ca9b5442e033a662"
   },
   {
    "path": "ui/js/jobs.js",
@@ -279,7 +288,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "dadef8dc06059b74332287620e26e9ce261b00cf515ad76e66cfc9dcc45c05d9"
+   "sha256": "96f7302e2f310875910bc8c2c3c220d9337664411708147d974ce18b20685ed3"
   },
   {
    "path": "ui/js/questions.js",
@@ -291,7 +300,7 @@
   },
   {
    "path": "tools/make_guide.py",
-   "sha256": "ed21bd93da306ca4ac7dbed0a274e9f486720638e83f3c58295ce17a7d120999"
+   "sha256": "df729ff72edee1732b5594c5fcd4018fae2bbb6d3dd998643281c67e0b96264f"
   },
   {
    "path": "tools/make_release.py",
@@ -303,11 +312,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "9bd1237dcadf31a1f6dd20bcc1b517f9f1d3801a2c7bddb222da9a0f78f28eb5"
+   "sha256": "09fe291c807b3c66c6b1ca728a6c7e9d72b35e2bbd21e96b013350f4d8c34a67"
   },
   {
    "path": "MAP.md",
-   "sha256": "f58f45cc69f4ed5ba37370d8e0643e123f4ac6042137f90070c0d3c7a54a30a0"
+   "sha256": "5c380c80970c92d91bbf982ef99d4eb2997063e6f8a2859e7b91018541ecce7a"
   },
   {
    "path": "Setup (Mac).command",

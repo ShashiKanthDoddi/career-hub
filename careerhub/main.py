@@ -16,7 +16,7 @@ UI_INDEX = BASE / "ui" / "index.html"
 
 async def open_app_window(p):
     return await launch_chrome(p, APP_WINDOW_DIR, args=[f"--app={UI_INDEX.as_uri()}", "--window-size=1320,880",
-                                                         "--allow-file-access-from-files"])
+                                                         "--allow-file-access-from-files", "--enable-lcd-text", "--high-dpi-support=1"])
 
 
 async def update_loop():

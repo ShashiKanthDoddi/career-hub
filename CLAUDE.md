@@ -58,4 +58,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Workday work-history and education sections are not filled from the resume.
 - Windows is untested on real hardware. LinkedIn/Indeed/Naukri: pasted links work with a daily limit (default 10 per site),
   pacing and rest-on-robot-check (`careerhub/jobsites.py`), alert-email links feed Find jobs; none of it is tested on a real login.
+- Web search for companies: DuckDuckGo and Bing block automatic requests, so `discover()` relies on `DEFAULT_BOARDS`
+  (`careerhub/finder.py`, live-checked in 2.4; re-check now and then, boards come and go). Companies on their own hiring system
+  (Nykaa, Swiggy, Zomato, Freshworks) can't be read: she can only add companies on the five supported systems.
+- Themes: Clean white (default), Sand, Emerald, Slate, Mint. A saved theme that no longer exists falls back to Clean white.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

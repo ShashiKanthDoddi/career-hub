@@ -46,6 +46,15 @@ ATS_PATTERNS = [
 BAD_SLUGS = {"embed", "v1", "jobs", "js", "api", "static", "assets", "wday", "cxs", "en-us", "search", "careers"}
 
 
+# Boards checked live (all answer their public job API) that hire marketers in India or remote.
+# Used by "search the web" so it still finds something when the search engines refuse us.
+DEFAULT_BOARDS = [("greenhouse", x) for x in (
+    "razorpaysoftwareprivatelimited stripe dropbox twilio datadog coinbase pinterest samsara reddit gitlab mongodb "
+    "elastic webflow lattice monzo airbnb").split()] + [
+    ("lever", x) for x in "paytm mindtickle meesho".split()] + [
+    ("ashby", x) for x in "notion ramp linear openai vanta clickup zapier supabase sentry".split()]
+
+
 def boards_in(text):
     """Finds hiring-system job boards mentioned in a URL or a web page."""
     text = unquote(html.unescape(text or ""))
@@ -258,13 +267,22 @@ async def discover(req, prof, locations):
         for b in boards_in(await web_search(req, q)):
             found[b] = True
     log(" " * 50, end="\r")
-    return list(found)[:30]
+    if not found:
+        log("   The search engines gave no answer, so I'll use my built-in list of companies that hire marketers.")
+    for b in DEFAULT_BOARDS:
+        found.setdefault(b, True)
+    return list(found)[:60]
 
 
 async def search_jobs(p, db, roles, tokens):
     prof = resume_info(db)
     if prof is None:
-        return []
+        if not roles:
+            log("⚠  I can't read your resume and no job title was given. Add a job title above, or put your resume in Profile → Files.")
+            return []
+        log("ℹ  No resume found, so I'm matching on the job titles you typed only.")
+        exp = re.search(r"\d+", str(db.fields.get("total (work |professional )?experience|total years") or ""))
+        prof = {"skills": [], "roles": roles, "years": int(exp.group(0)) if exp else None}
     if roles:
         prof["roles"] = roles
     st = db.settings

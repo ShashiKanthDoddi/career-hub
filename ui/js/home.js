@@ -47,5 +47,3 @@ function itemHTML(u, attn){
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
 $("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking"; await api_check_mail(); };
-$("#quickGo").onclick = () => { const l = links($("#quickLink").value); if (!l.length) return toast("Paste a link that starts with http", true); startApply(l); $("#quickLink").value = ""; };
-$("#quickLink").onkeydown = e => { if (e.key === "Enter") $("#quickGo").click(); };

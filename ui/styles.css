@@ -185,11 +185,11 @@ tbody tr:hover td{background:var(--surface-2)}
 input[type=checkbox]{width:17px;height:17px;accent-color:var(--violet);cursor:pointer}
 
 /* ===== board ===== */
-.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(155px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
 .col{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-l);padding:12px;min-height:280px;transition:background .15s,border-color .15s}
 .col.over{background:var(--hi-soft);border-color:var(--hi)}
-.col-head{display:flex;align-items:center;gap:8px;padding:2px 4px 10px;font-weight:700;font-size:14px}
-.col-head .c{margin-left:auto;color:var(--muted);font-weight:650;font-size:13px}
+.col-head{display:flex;align-items:center;gap:8px;min-width:0;padding:2px 4px 10px;font-weight:700;font-size:14px}
+.col-head .c{flex:none;margin-left:auto;color:var(--muted);font-weight:650;font-size:13px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:grab;box-shadow:var(--shadow-1);transition:transform .12s,box-shadow .12s}
 .card:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
 .card.drag{opacity:.4}

@@ -23,7 +23,7 @@ async function loadResume(){
 }
 $("#findBtn").onclick = async () => {
   if ($("#compInput").value.trim()){ addTag("comp", $("#compInput").value); $("#compInput").value = ""; }
-  const r = await api_start_find(ROLES.join(", "), COMPS.join(", "), $("#autoSearch").checked);
+  const r = await api_start_find(ROLES.join(", "), COMPS.join(", "), $("#autoSearch").checked, $("#allOpenings").checked);
   if (!r.ok) toast(r.error, true); else { $("#foundPanel").hidden = true; toast("Searching"); }
 };
 $("#dailyFind").onchange = e => { api_set_daily(e.target.checked); toast(e.target.checked ? "This search will repeat daily" : "Daily search off"); };

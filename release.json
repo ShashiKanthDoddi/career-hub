@@ -1,8 +1,24 @@
 {
- "version": "2.6.19",
+ "version": "2.6.21",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.21",
+   "title": "Sign-in fix",
+   "new": [],
+   "fixed": [
+    "Google no longer says \"This browser or app may not be secure\" when you sign in to LinkedIn in the job window"
+   ]
+  },
+  {
+   "version": "2.6.20",
+   "title": "Clearer report messages",
+   "new": [],
+   "fixed": [
+    "When a report or idea cannot be sent to GitHub, the message now says why (for example no token, or the token is missing a permission)"
+   ]
+  },
   {
    "version": "2.6.19",
    "title": "Pictures in reports and ideas",
@@ -57,25 +73,6 @@
    "fixed": [
     "Find jobs no longer shows \"remote\" jobs tied to other countries, such as Germany remote or Remote in the US. Remote jobs open to India or anywhere still show"
    ]
-  },
-  {
-   "version": "2.6.13",
-   "title": "Labelled and rejected mail read properly",
-   "new": [],
-   "fixed": [
-    "Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once",
-    "An interview card shows the company (for example Accenture) instead of the name of the recruiter"
-   ]
-  },
-  {
-   "version": "2.6.12",
-   "title": "Select all and Unselect all",
-   "new": [
-    "Find jobs has Select all and Unselect all buttons. They work on the jobs you can see after filtering"
-   ],
-   "fixed": [
-    "Changing a filter no longer ticks every job again; the ones you unticked stay unticked"
-   ]
   }
  ],
  "files": [
@@ -113,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "42a35fa42bfa11206ece211aaba2e745fd7acfd4ab77300ed4cff5145e4ccadb"
+   "sha256": "76f010515f2059e98b98763a09eb1809cb3ceebaad14d2f79b4883472b52e61f"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "5f6808ba7c0f30483ebe5b5c0857c4f41b7e5cec5374273f5eb71dde7e10b205"
+   "sha256": "b3cba1b8ffa4a99f03118a82c3d1fd223e6fcf292b395f95a564f3d893fbfc57"
   },
   {
    "path": "careerhub/filler.py",
@@ -141,7 +138,7 @@
   },
   {
    "path": "careerhub/launch.py",
-   "sha256": "1580f745c2d019f80f1c16cadbf86c2e7a2dd50fe40e449f22f79909fec01751"
+   "sha256": "87174cc23f7ba622bf1be904d490871b88184e8b1883dbbcaf2f1fbf028e9d2d"
   },
   {
    "path": "careerhub/main.py",
@@ -173,7 +170,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "8d335ba6fa59dad07209523f72e077e4a3dc917431bc246ddc95c8f26ce8ef8a"
+   "sha256": "f9e1627a2b4db823a09aca9e4507c93dc8ff6a84421a3a7a0db15a308298a397"
   },
   {
    "path": "careerhub/resume.py",
@@ -241,7 +238,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "6e92abb6070251f7b5ef2d1000c47d979ded04e43957e0a6fb8a1e1a1dd812f5"
+   "sha256": "f1c4e84dabd2b367f470b615ab0e912d306ba78a2bfee09bc43ce203fce0ef6b"
   },
   {
    "path": "ui/js/planner.js",
@@ -273,11 +270,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "9e00bfb32d0e2fe24a5af65b1f9785361cc601ccb66e0640ad9bfe65b91a3bbf"
+   "sha256": "e7cbff7fd287fbb44ca6a8be2272199daedbc359cea42a2586287a3403f51c4d"
   },
   {
    "path": "MAP.md",
-   "sha256": "93a75fc57a6f42a77120e2762d0ecb4efda44650a1b10cd133c43922a3c84c87"
+   "sha256": "2cb7f017c6c3af975720cd72da2b4d23481e1a764affa3337f7ca52d2f0321ad"
   },
   {
    "path": "Setup (Mac).command",

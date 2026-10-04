@@ -39,8 +39,9 @@ function openReport(){
 function reportResult(r){
   if (!r.ok) return toast("Couldn't make the report: " + r.error, true);
   if (r.created) return toast("Thanks, your report was sent to GitHub");
-  if (r.sent) return toast("Report sent to " + r.to);
-  toast(r.helper ? "Report saved. Attach the highlighted zip to the Gmail draft that opened." : "Report saved in the Reports folder. Send that zip to your helper.");
+  const why = r.why ? ` Not sent to GitHub: ${r.why}.` : "";
+  if (r.sent) return toast("Report sent to " + r.to + "." + why);
+  toast((r.helper ? "Report saved. Attach the highlighted zip to the Gmail draft that opened." : "Report saved in the Reports folder. Send that zip to your helper.") + why);
 }
 $("#reportBtn").onclick = openReport; $("#reportBtn2").onclick = openReport;
 function openSuggest(){

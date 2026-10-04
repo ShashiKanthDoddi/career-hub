@@ -12,6 +12,9 @@ async def launch_chrome(p, user_dir, **opts):
     opts.setdefault("headless", False)
     opts.setdefault("no_viewport", True)
     opts["chromium_sandbox"] = SANDBOX
+    # Google refuses sign-in ("This browser or app may not be secure") in a browser flagged as automated.
+    opts["ignore_default_args"] = list(opts.get("ignore_default_args", [])) + ["--enable-automation"]
+    opts["args"] = list(opts.get("args", [])) + ["--disable-blink-features=AutomationControlled"]
     try:
         return await p.chromium.launch_persistent_context(str(user_dir), channel="chrome", **opts)
     except Exception:

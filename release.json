@@ -1,8 +1,32 @@
 {
- "version": "2.8.5",
+ "version": "3.0",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.0",
+   "title": "A friendlier look",
+   "new": [
+    "Choose the letters you like in Settings, Appearance: Classic, Friendly, Elegant, Bold or Handwritten",
+    "Calm mode in Settings, Appearance turns off the small animations",
+    "Each page has its own icon, Home has emoji on its tiles, and pages and buttons move a little when you use them",
+    "When the app needs you in Chrome (a robot check, signing in, a captcha, or before Submit), the Chrome window comes to the front with a sound, and it reminds you again if you are away",
+    "A \"Today\" line on Home: interviews today or tomorrow, drafts waiting for Submit, and jobs to follow up",
+    "The Apply page shows how many LinkedIn, Indeed or Naukri applications are left today",
+    "Find jobs is simpler: choose \"Find jobs for me\" or \"Only companies I choose\"",
+    "\"Next up\" on Home shows your next interview, how long to go, a Join call button, and a short brief about the company",
+    "A reminder pops up an hour before an interview (or at 8 in the morning if it has no time)",
+    "Interview emails now also give the call link, who you will meet and which round it is"
+   ],
+   "fixed": [
+    "My jobs no longer looks empty after you click a Home tile with 0 in it",
+    "The Home numbers now agree with each other (offers, interviews, last 7 days)",
+    "Clear on the Apply page works again (the \"are you sure\" box closed by itself)",
+    "After a search, Find jobs shows only what that search found, and names companies it could not read",
+    "\"Your last 7 days\" now says how many you sent the week before, instead of \"up 9\"",
+    "The black window now closes by itself when you close the app"
+   ]
+  },
   {
    "version": "2.8.5",
    "title": "See the email check as it runs",
@@ -75,18 +99,6 @@
    "fixed": [
     "Rejection emails worded without \"unfortunately\" (for example \"decided not to\", \"not shortlisted\", \"moving ahead with other candidates\") are now recognised, and older \"received\" cards are re-read once"
    ]
-  },
-  {
-   "version": "2.7.6",
-   "title": "Company search and tidier boards",
-   "new": [
-    "Find jobs has a new tick box, \"Show every opening at these companies\": type a company and see all its current jobs",
-    "The browser keeps your logins more reliably, and says so in the log if it cannot save them"
-   ],
-   "fixed": [
-    "In My jobs, the number at the top of the \"Waiting for reply\" column no longer spills outside its box",
-    "If one saved login cookie is rejected, the rest are still restored"
-   ]
   }
  ],
  "files": [
@@ -100,7 +112,7 @@
   },
   {
    "path": "careerhub/ai.py",
-   "sha256": "2702e5504a2da0190ac278e608382a785f7e402ebb3b0cb29c05f88c9a2081f5"
+   "sha256": "254fcd986db06f0920979d59494b3ee548a183f75c6f91783379da0ea2869a75"
   },
   {
    "path": "careerhub/answers.py",
@@ -108,11 +120,11 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "0a930ab56dc2178c99cd0bb5efc87b3e9f6ca57f97041418aead566cae24027d"
+   "sha256": "befd365bd7484440e18817956d237b3c2cfcb0bf63c5ad852fad30fd49628a73"
   },
   {
    "path": "careerhub/apply_run.py",
-   "sha256": "801d9b91a39d5e757646d2ff42cfd5efaaba743dcf39822e38fd0a2c25e35684"
+   "sha256": "80d1a153940486900fbec82197795e1e6015052492b3b48e0d12bbf59e4dcc8f"
   },
   {
    "path": "careerhub/auth.py",
@@ -120,15 +132,15 @@
   },
   {
    "path": "careerhub/bridge.py",
-   "sha256": "8ba19eb00c27abc04f3723ab8949972c453bf6af80dee391df995af5c54b2a73"
+   "sha256": "8e949c441bcb3caf63c7a2b0fd338f59f65121c8e99492cc1a8775f8c0f5e116"
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "03744810957c38c094408bdaead50892e4b689d2aabfe252f126179931aeff12"
+   "sha256": "246b4381e234b0e0be43f0e3dcb086bd6dc2a5e6d26cb14ef58b7868d8404004"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "45d6dfcd9d2bbdd74087f1f14491c8e2acb66377ce0cef63f65a69487e935a60"
+   "sha256": "a9c5ee729d884e4cb37b39e421b9c563f456fdb00793fe2a52cb9e3ed88ac53d"
   },
   {
    "path": "careerhub/filler.py",
@@ -136,7 +148,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "125a2efda586be5d70ca4385b4388dffcbaad4e096b1d3bc6fc203d0d763eb87"
+   "sha256": "2904e0759d336d28c43ce015e0bb5f166389327ea2c805c00ae1762750853c14"
   },
   {
    "path": "careerhub/gmail.py",
@@ -156,11 +168,11 @@
   },
   {
    "path": "careerhub/main.py",
-   "sha256": "789bce6fbc7127dda0aa2376c862748955eb3e905972e832129e85eca11efe15"
+   "sha256": "639913dede094576d9b9a47f0c69e4a9610da9ce73eb06892027c777bfbcc9d4"
   },
   {
    "path": "careerhub/meetings.py",
-   "sha256": "c45d5096d973444825467a6639ead2392c4df8425e14c99e84af9ebe26687885"
+   "sha256": "e30d01fe6a2c587bef9864e6689f7d767711a80196b6bcd97083daf4e4522c60"
   },
   {
    "path": "careerhub/overview.py",
@@ -172,7 +184,7 @@
   },
   {
    "path": "careerhub/planner.py",
-   "sha256": "5b6a29f6c82c8619cd44117f0ec12b82fd1eb02f0b9578cd6699b620b664f53d"
+   "sha256": "593c9095d7cfd57d9edfcf13d519910c6265768038874c16246836aa3757b7c0"
   },
   {
    "path": "careerhub/profile_form.py",
@@ -185,6 +197,10 @@
   {
    "path": "careerhub/reports.py",
    "sha256": "fd73b30492c048713e0bc5c30e94772b813d00ba7aab7cbefdc1a6660d7d5a70"
+  },
+  {
+   "path": "careerhub/research.py",
+   "sha256": "e7f83592d5832050af6900af9a3b03d8864609f362a9de3ce0264fc45e472272"
   },
   {
    "path": "careerhub/resume.py",
@@ -216,19 +232,19 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "bf6a11802aee5a35dd9e50df03d17b136accb5f741559f93627910dd4ad55c6b"
+   "sha256": "4727351856d000a6f287bcfa3786ba210c35db398e0b9922883614d5488fc3ce"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "6f54ba03d992cfb41af92de2750ed28a86e71897d0c090d094514471fb90e750"
+   "sha256": "191072085f7753e0e507bc986e2a3f25a9585d362ed1c499dae1d31f07b27fbe"
   },
   {
    "path": "ui/js/apply.js",
-   "sha256": "03e642d8fa191f30bc62d56a767e03e78a2c6b65d325a6da8c01cf3b72fae576"
+   "sha256": "61dd9bfdbe845fd00335ca44219510be0a3a28e9f0531f9cd508591ed577a81a"
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "f3606b5b8adc22eb89d95f83bbfb5adcd0c58a2eac01cde7cc580044e4f6a5aa"
+   "sha256": "daa94c1dc4da237ad4d004544580c4203e41ab750a7851783b52a0e3d12b1567"
   },
   {
    "path": "ui/js/events.js",
@@ -236,23 +252,23 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "cae683ab265fb881aa12dba72241e10799c0fa8d148bf1e3d469627bd22e5fa6"
+   "sha256": "a3acd22209748fa6b886b4f951c59f2bcff1c7d5a0838468e42f17c73ca351c1"
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "a5cf2e00f2f75850d3d77f277d916cde1324cf4575c21566dd36e4037a7adfda"
+   "sha256": "a651f335896e75247c46d480986eef6ee14625196ff916813ef0360acb3200fc"
   },
   {
    "path": "ui/js/history.js",
-   "sha256": "f124a37f4df1ee251c48b7c5b4e63e0b10b03fbe53782c60578e642c26916e0f"
+   "sha256": "f029930289a28e684eaf38e2e8f27a4ecd37113cc2e9ed783188d760515ea455"
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "c5e7422f19d4a5d720f8a4e86adf22bbbd9da2391f2668971216ec2c5d137c4a"
+   "sha256": "5e40227d08f1db92135dad999246c88c91e215db8bc9c37b7b5d8f1d82d0b54b"
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "54024cf41a43e42e6d866598b465492a26fe8065ee4c62fad9e52cc5ac5a25db"
+   "sha256": "3a0f90eecb5449ed5f093b2a60ea937c74941296671f19eef35fcb00799b8e96"
   },
   {
    "path": "ui/js/palette.js",
@@ -260,11 +276,11 @@
   },
   {
    "path": "ui/js/planner.js",
-   "sha256": "c1079a3c55b1af55e5dced65367ce2e5cf95ad8661f4af4df57312b5ac630b11"
+   "sha256": "8ea721f662f49f4f34c652216decc01113edd7f0b1355261b62685f84f8cf775"
   },
   {
    "path": "ui/js/questions.js",
-   "sha256": "72e005a675f88326e03b68ee1090826ecd09da09c8e9e7089a1ec1da4e83671c"
+   "sha256": "271e73900bf96e3d114060fdca9514fe2f2c0025239b35ba1261f1217e33e828"
   },
   {
    "path": "ui/js/run.js",
@@ -288,15 +304,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "cd63b12633864821b086fede19daf8227c73040d96de03288f135336118ce1bb"
+   "sha256": "bf195d6ffaf090c482e31eab10c6dbf2792818111937468e28097ff9b1e3c800"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "db11a8c5ffa7a21ae9e561fad40e719e50fa40839869bc3ba4d65de5a22f9b27"
+   "sha256": "fea0e52bcf4560515c8b77fd7dcf6d76aaaabc9a9e21da8f98c2d76285cae06d"
   },
   {
    "path": "MAP.md",
-   "sha256": "17f288be419e6c030a3adfbbe747eeafb4050bb1c18fc0be59c628c4884e044a"
+   "sha256": "5410e03e1f52a2beb992b5523362b6c336e3e79c2a40332f85e94cc0e251b35e"
   },
   {
    "path": "Setup (Mac).command",
@@ -315,5 +331,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "QhnevAJE5aNngur8iQ8LeT/+JUD1/LsHWf1vZfw/H6ZrTzXEVlgg/PKGs9LvJ2GwCIxXR1X0QO00rJvmvkqAAQ=="
+ "signature": "i1EP75lbgvTgh9ckH1P2g1RAaD8GVb/pnbPbp+cSYX5mf95GHkyYwP63kAZb0pBWNlPWT9egqEXdQRH1x8rfCA=="
 }

@@ -11,8 +11,8 @@
     "The app waits a little between jobs on these sites, like a person would",
     "If a site asks you to prove you are human, the app waits for you and rests from that site if it keeps happening",
     "Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs",
-    "New warm default look (Peach) and a new Mint theme; the other themes are still in Settings, Appearance",
-    "A peach \"H\" icon for the app window in the taskbar"
+    "New default look (Emerald: deep green with gold) plus new Peach and Mint themes; the other themes are still in Settings, Appearance",
+    "A gold \"H\" icon for the app window in the taskbar"
    ],
    "fixed": []
   },
@@ -155,7 +155,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "f24ac84ddd9afa23542698304378fb29dda66de625b281b50b76a020dfb3e21f"
+   "sha256": "a6d957d80656db9141d571a3fb05921a0c80fa775d0de73fcc6a854f980c3d45"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -171,7 +171,7 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "c11af248275133f993b4f74b6e1f26a68616e906404791bb79eeb27e8a0639ff"
+   "sha256": "4cf55ac114cf1b4f7fb3b1a415cffeec31faaefbf7fd937c786c6a61fba29f6b"
   },
   {
    "path": "careerhub/config.py",
@@ -243,11 +243,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "13268bb3eda800332be5ca208867f70aa1744492f0768fb4db7e207674f31494"
+   "sha256": "8c971484d3a46f38337adbd10407db5346f278463805c192d516592871cf89d8"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "26ed94ed5711a82e58e80aa72c005e9d9eb56955beb3e62ae949103bc22fd620"
+   "sha256": "2a98531e151c6e10c63d8f5ea3170bab91e977e98b5fbf7469a46aca5a71e7b3"
   },
   {
    "path": "ui/js/apply.js",
@@ -267,7 +267,7 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "0dd94fb314112b04c1db44c14d80d0a78f6a8e77f99d8cc6aa24e7895c664595"
+   "sha256": "dd5f2345c73b3486285770e513bc7d8e4fc085e3fe37acf8deba5550c1c13b6a"
   },
   {
    "path": "ui/js/home.js",

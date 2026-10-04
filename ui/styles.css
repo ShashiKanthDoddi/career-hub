@@ -20,6 +20,8 @@
   --hi-soft:#3A3115; --hi-ink:#FFE38A; --teal-soft:#143331; --green-soft:#16301F; --rose-soft:#3A1A22;
   --amber-soft:#36270F; --violet-soft:#2A2350; --shadow-1:none; --shadow-2:0 14px 40px rgba(0,0,0,.5);
 }
+:root[data-theme=emerald]{ --paper:#0E1915; --surface:#15251F; --surface-2:#1A2E27; --ink:#E8F3EE; --ink-2:#B7CFC5; --muted:#7FA093;
+  --line:#243B33; --line-2:#2F4B41; --plum:#0A120F; --plum-2:#173028; --violet:#3DD9A0; --violet-soft:#12392D; --hi:#F2C14E; }
 :root[data-theme=peach]{ --paper:#F3E6DA; --surface:#FFF7F0; --surface-2:#FAEDE2; --ink:#2B1B14; --ink-2:#5E4437; --muted:#8C7061;
   --line:#E7D2C3; --line-2:#DAC0AD; --plum:#3A2822; --plum-2:#503730; --violet:#C0532B; --violet-soft:#F8DDD0; --hi:#FFC857; }
 :root[data-theme=mint]{ --paper:#DDEBE6; --surface:#F2FAF7; --surface-2:#E8F4EF; --ink:#12302B; --ink-2:#3A5A53; --muted:#6A8982;
@@ -49,7 +51,7 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 /* ===== sidebar ===== */
 aside.side{background:var(--plum);color:var(--plum-ink);display:flex;flex-direction:column;padding:18px 12px;gap:4px;min-height:0}
 .brand{display:flex;gap:10px;align-items:center;padding:4px 10px 18px}
-.brand .mark{width:34px;height:34px;border-radius:10px;background:#FFB68A;color:var(--plum);display:grid;place-items:center;font-weight:800;font-size:17px}
+.brand .mark{width:34px;height:34px;border-radius:10px;background:var(--hi);color:var(--plum);display:grid;place-items:center;font-weight:800;font-size:17px}
 .brand b{display:block;font-size:14.5px;line-height:1.15;font-weight:700}
 .brand small{color:rgba(255,255,255,.62);font-size:12px}
 .nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:0;background:none;color:rgba(255,255,255,.8);cursor:pointer;text-align:left;width:100%;font-weight:600;font-size:14.5px;position:relative}

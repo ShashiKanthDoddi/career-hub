@@ -67,7 +67,7 @@ const ACTIONS = [
   ["Find new jobs", () => go("find"), "3"], ["Open My jobs", () => go("jobs"), "4"], ["Edit Profile", () => go("profile"), "5"], ["Open Settings", () => go("settings"), "6"],
   ["Check email now", () => { go("home"); $("#checkMailBtn").click(); }], ["Apply to all saved jobs", () => startApply(SAVED)],
   ["Theme: Sand", () => setTheme("sand")], ["Theme: Emerald", () => setTheme("emerald")], ["Theme: Slate", () => setTheme("slate")], ["Theme: Clean white", () => setTheme("clean")], ["Theme: Mint", () => setTheme("mint")], ["Check for updates", () => checkUpdates(true)],
-  ["Show activity", openActivity], ["Report a problem", openReport], ["Suggest a feature", openSuggest],["What's new", showNews], ["Add a resume or file", () => { go("profile"); setTimeout(() => $("#addFile").click(), 80); }]];
+  ["Show activity", openActivity], ["Report a problem", openReport], ["Suggest a feature", openSuggest],["What's new", showNews], ["Add a resume or file", () => { go("resume"); setTimeout(() => $("#addFile").click(), 80); }]];
 function openPalette(){
   $("#layer").innerHTML = `<div class="palette" id="pal"><div class="box"><input type="text" id="palIn" placeholder="Type a command, e.g. dark, email, apply"><div class="list" id="palList"></div></div></div>`;
   let sel = 0; const list = () => ACTIONS.filter(a => a[0].toLowerCase().includes($("#palIn").value.toLowerCase()));
@@ -87,7 +87,7 @@ document.addEventListener("keydown", e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k"){ e.preventDefault(); openPalette(); return; }
   if (e.key === "Escape"){ if (ASK) return; $("#layer").innerHTML = ""; return; }
   if (ASK && !typing && /^[1-9]$/.test(e.key)){ const o = ASK.options[+e.key - 1]; if (o !== undefined) reply(o); return; }
-  if (!typing && !ASK && !$("#layer").innerHTML && /^[1-6]$/.test(e.key)) go(PAGES[+e.key - 1]);
+  if (!typing && !ASK && !$("#layer").innerHTML && /^[1-7]$/.test(e.key)) go(PAGES[+e.key - 1]);
 });
 
 $("#moreBtn").onclick = () => { const box = $("#moreBox"); box.hidden = !box.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!box.hidden)); };

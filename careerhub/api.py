@@ -80,6 +80,8 @@ async def api_save_profile(items):
             else:
                 prof[where].pop(key, None)          # empty box = "ask me when a site needs it"
         save_data()
+        from .state import RESUME_CACHE
+        RESUME_CACHE["text"] = None                     # a different resume may have been picked
         return {"ok": True}
     except Exception as e:
         return {"ok": False, "error": str(e)[:300]}
@@ -116,7 +118,7 @@ async def api_resume():
         return {"ok": False, "error": str(e)}
     prof = resume_info(db)
     if prof is None:
-        return {"ok": False, "error": "Couldn't read your resume. Drop it into Profile → Files, "
+        return {"ok": False, "error": "Couldn't read your resume. Drop it into Resume → Your files, "
                                       "pick it as Resume, and Save profile."}
     return {"ok": True, **prof}
 
@@ -136,7 +138,7 @@ async def api_start_find(roles_text, companies_text, auto, all_openings=False):
         except ProfileError:
             has_resume = False
         if not has_resume:
-            return {"ok": False, "error": "I need a job title to look for. Add one above, or add your resume in Profile → Files."}
+            return {"ok": False, "error": "I need a job title to look for. Add one above, or add your resume in Resume → Your files."}
     start_task(run_find(roles, tokens, bool(all_openings)))
     return {"ok": True}
 
@@ -408,6 +410,123 @@ async def api_restart():
     except Exception:
         pass
     return True
+
+
+# ---- Resume page ----
+
+def _resume_versions(db):
+    """[(info for the page, path)] for the main resume and the 2nd / 3rd ones from Settings."""
+    from .store import resolve_path
+    main = next((v for k, v in db.files.items() if "resume" in k and v), "")
+    out, seen = [], set()
+    for label, f, kw in [("Main resume", main, "")] + [(f"Resume {i}", db.settings.get(f"resume_{i}_file") or "",
+                                                         db.settings.get(f"resume_{i}_keywords") or "") for i in (2, 3)]:
+        f = str(f).strip()
+        if f and Path(f).name not in seen:
+            seen.add(Path(f).name)
+            p = resolve_path(f)
+            out.append(({"label": label, "file": Path(f).name, "keywords": str(kw), "exists": p.is_file(),
+                         "pdf": p.suffix.lower() == ".pdf"}, p))
+    return out
+
+
+async def _resume_pick(name):
+    """(versions, chosen info, its text) for the Resume page."""
+    from .resume import pdf_text
+    vs = _resume_versions(Answers())
+    info, path = next(((i, p) for i, p in vs if i["file"] == name), vs[0] if vs else (None, None))
+    text = await asyncio.to_thread(pdf_text, path) if info and info["exists"] and info["pdf"] else ""
+    return [i for i, _ in vs], info, text
+
+
+async def api_resume_page(name=""):
+    """Everything the Resume page shows for one version: its text, the ATS check and skills to build."""
+    from .resume import resume_profile
+    from .resume_tools import ats_check, skill_gaps, target_roles
+    try:
+        versions, info, text = await _resume_pick(name)
+        db = Answers()
+    except ProfileError as e:
+        return {"ok": False, "error": str(e), "versions": []}
+    if not info:
+        return {"ok": False, "versions": [], "error": "Add your resume first: drop it into Your files on this page."}
+    roles = target_roles(app_state().get("find_roles", ""), resume_profile(text)["roles"] if text else [])
+    return {"ok": True, "versions": versions, "file": info["file"], "text": text[:20000],
+            "ats": ats_check(text) if info["exists"] and info["pdf"] else None,
+            "gaps": skill_gaps(text, roles), "ai": bool(db.ai_key)}
+
+
+async def api_resume_pdf(name=""):
+    """The resume PDF itself (base64) for the preview. Only her resume versions, never any other file."""
+    import base64
+    try:
+        vs = _resume_versions(Answers())
+    except ProfileError:
+        return {"ok": False}
+    p = next((p for i, p in vs if i["file"] == name and i["exists"] and i["pdf"]), None)
+    if p is None or p.stat().st_size > 15_000_000:
+        return {"ok": False}
+    return {"ok": True, "b64": base64.b64encode(p.read_bytes()).decode()}
+
+
+async def api_resume_open(name=""):
+    try:
+        p = next((p for i, p in _resume_versions(Answers()) if i["file"] == name and i["exists"]), None)
+    except ProfileError:
+        p = None
+    if p is None:
+        return False
+    os_open(p)
+    return True
+
+
+async def _job_text(job):
+    """Job text she pasted, or the text of the job page when she pasted a link."""
+    from .resume_tools import html_to_text
+    from .state import PW
+    job = str(job or "").strip()
+    if not re.match(r"https?://\S+$", job):
+        return job
+    req = await PW["p"].request.new_context()
+    try:
+        r = await req.get(job, timeout=20000)
+        text = html_to_text(await r.text()) if r.ok else ""
+    except Exception:
+        text = ""
+    finally:
+        await req.dispose()
+    return text if len(text) > 300 else ""
+
+
+async def api_resume_match(job, name=""):
+    """How well one resume fits one job: keywords the job asks for that are in / missing from the resume."""
+    from .resume_tools import keyword_match
+    text = await _job_text(job)
+    if not text:
+        return {"ok": False, "error": "I couldn't read that job page (it may need a login). Copy the job text and paste it here instead."}
+    try:
+        _, info, resume = await _resume_pick(name)
+    except ProfileError as e:
+        return {"ok": False, "error": str(e)}
+    if not resume:
+        return {"ok": False, "error": "I can't read this resume. Use a PDF saved from Word or Google Docs."}
+    return {"ok": True, **keyword_match(resume, text), "job": text[:6000]}
+
+
+async def api_resume_tailor(job, name=""):
+    """Rewrite suggestions from Claude for one job (needs the Claude key in Settings)."""
+    from .ai import ai_tailor
+    db = Answers()
+    if not db.ai_key:
+        return {"ok": False, "error": "Add your Claude key in Settings, AI helper, to get rewrite suggestions."}
+    text = await _job_text(job)
+    if not text:
+        return {"ok": False, "error": "I couldn't read that job page. Copy the job text and paste it here instead."}
+    _, info, resume = await _resume_pick(name)
+    try:
+        return {"ok": True, "text": await ai_tailor(db, resume, text)}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:200]}
 
 
 async def api_prep(company, title, kind):

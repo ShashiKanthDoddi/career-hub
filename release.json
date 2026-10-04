@@ -1,8 +1,23 @@
 {
- "version": "3.0",
+ "version": "3.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.1",
+   "title": "A Resume page",
+   "new": [
+    "A new Resume page: your resume on the left, the way it looks or the way job sites read it (with marketing keywords highlighted)",
+    "Resume health: a score out of 100 and a short list of what to fix so job sites read it well",
+    "Fit to a job: paste a job link or text and see which of its words your resume is missing; with a Claude key, get rewrite suggestions",
+    "Skills to build for the roles you look for, each with a free course",
+    "Your files (resumes and cover letter) moved from Profile to the Resume page, and they save by themselves"
+   ],
+   "fixed": [
+    "The app no longer clicks a job site's search filter thinking it is the Next button",
+    "After you pick a different resume, the app uses it straight away"
+   ]
+  },
   {
    "version": "3.0",
    "title": "A friendlier look",
@@ -91,14 +106,6 @@
    "fixed": [
     "The app opens pages faster: big forms and tables are only loaded when you open them, long job lists show 60 at a time, and saving is quicker"
    ]
-  },
-  {
-   "version": "2.7.7",
-   "title": "More rejection emails found",
-   "new": [],
-   "fixed": [
-    "Rejection emails worded without \"unfortunately\" (for example \"decided not to\", \"not shortlisted\", \"moving ahead with other candidates\") are now recognised, and older \"received\" cards are re-read once"
-   ]
   }
  ],
  "files": [
@@ -112,7 +119,7 @@
   },
   {
    "path": "careerhub/ai.py",
-   "sha256": "254fcd986db06f0920979d59494b3ee548a183f75c6f91783379da0ea2869a75"
+   "sha256": "ba0cc928f7e4d5ca94c36c768a94b2084b9b2b61187cff659ed6d3cc665c75c1"
   },
   {
    "path": "careerhub/answers.py",
@@ -120,7 +127,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "befd365bd7484440e18817956d237b3c2cfcb0bf63c5ad852fad30fd49628a73"
+   "sha256": "22254a64873f8cbde149723204fc6177d53572c7757b6e32e9aff5ce772311a9"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -136,19 +143,19 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "246b4381e234b0e0be43f0e3dcb086bd6dc2a5e6d26cb14ef58b7868d8404004"
+   "sha256": "089bab8019576144409bb1fdcd64bf4682e9a15618b23b46aedb817412f89b7a"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "a9c5ee729d884e4cb37b39e421b9c563f456fdb00793fe2a52cb9e3ed88ac53d"
+   "sha256": "2cb9d21857e0acf5bd1088037db0bb414fe3818c60c05bca3a981d49b2a9982a"
   },
   {
    "path": "careerhub/filler.py",
-   "sha256": "7ed5379fc27c27587542ce2d7df09d9e9fc27b0f97068eb04769ffe4ff2bc7ba"
+   "sha256": "7d1e9252f7a89ce517428e01ba1dcdb864cb09d7382bbdb2d2914fa867e98f18"
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "2904e0759d336d28c43ce015e0bb5f166389327ea2c805c00ae1762750853c14"
+   "sha256": "46c7b3d61d1b068e13d8cd0fb5966819cec65dd18dddc0ff1ea65c112fcd8983"
   },
   {
    "path": "careerhub/gmail.py",
@@ -180,7 +187,7 @@
   },
   {
    "path": "careerhub/page_js.py",
-   "sha256": "1d4fe68a3511b1dc00b892ffd6e059709e2193c22f934878d42f8cdd637131e2"
+   "sha256": "9ffdbe50ecb4ea6072963f0f3fe1fe7141e76d9a1b14ddb567c3cc4b0791f8a8"
   },
   {
    "path": "careerhub/planner.py",
@@ -204,7 +211,11 @@
   },
   {
    "path": "careerhub/resume.py",
-   "sha256": "c3ead626177239e4996b1d9a29c96ea6433dabe991e8c245462557f62a6668d2"
+   "sha256": "36b023f4a8780db99e6b3ff321fd922b2bec36d54f190bb75cbd5be0a3e1b549"
+  },
+  {
+   "path": "careerhub/resume_tools.py",
+   "sha256": "7bd06fd980993d46103a85edb49904908b7dbd6b808b62d4c462283ce5d35277"
   },
   {
    "path": "careerhub/sigcheck.py",
@@ -232,11 +243,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "4727351856d000a6f287bcfa3786ba210c35db398e0b9922883614d5488fc3ce"
+   "sha256": "c9f589e4bb304c3cc640e7abac2c5c21070e6cc4d98cd4d7b5333a1a6f3de46c"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "191072085f7753e0e507bc986e2a3f25a9585d362ed1c499dae1d31f07b27fbe"
+   "sha256": "c84e0404cfe14fa3e6f006d21142fa68bf874ac0bdf3cac465e40f85b332abdb"
   },
   {
    "path": "ui/js/apply.js",
@@ -244,7 +255,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "daa94c1dc4da237ad4d004544580c4203e41ab750a7851783b52a0e3d12b1567"
+   "sha256": "2d80c90d13e7d21a5068bd27693ff1056fc0d27da77bde698491d33ef544fca2"
   },
   {
    "path": "ui/js/events.js",
@@ -252,11 +263,11 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "a3acd22209748fa6b886b4f951c59f2bcff1c7d5a0838468e42f17c73ca351c1"
+   "sha256": "7396d7dc19c108a30ffef7ec30d88fda196d885375f7a9d59efe245bba516a06"
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "a651f335896e75247c46d480986eef6ee14625196ff916813ef0360acb3200fc"
+   "sha256": "3b1f67de847355cf060f3668349de092da07298112e5b223b31142ca884db91f"
   },
   {
    "path": "ui/js/history.js",
@@ -272,7 +283,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "df263748ef6c765b95f4cfedcf6d3154f2b284b746edbdbf84f406c05fd0dd77"
+   "sha256": "541a3ef31bae302af6c5f0c2c4dc39cdf4d05613845806de94ca3adcab1f836b"
   },
   {
    "path": "ui/js/planner.js",
@@ -280,7 +291,11 @@
   },
   {
    "path": "ui/js/questions.js",
-   "sha256": "271e73900bf96e3d114060fdca9514fe2f2c0025239b35ba1261f1217e33e828"
+   "sha256": "d56fa2f3961da2adf9c976bfa1c279acf314e2bd0ea51722cd750bceacf9267f"
+  },
+  {
+   "path": "ui/js/resume.js",
+   "sha256": "2c29a64be09e6c441b61c8fdfac85d3b4a8475b92e8388d9f096c593188995ee"
   },
   {
    "path": "ui/js/run.js",
@@ -304,15 +319,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "bf195d6ffaf090c482e31eab10c6dbf2792818111937468e28097ff9b1e3c800"
+   "sha256": "18d051b644a2530f575d825a7247153789e4f57c1b6c34021d788e9890276cab"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "fea0e52bcf4560515c8b77fd7dcf6d76aaaabc9a9e21da8f98c2d76285cae06d"
+   "sha256": "3ab7b9c61279da252d3ca1d4576f53e65285345c3e3186c9ad6506abb7bc435f"
   },
   {
    "path": "MAP.md",
-   "sha256": "5410e03e1f52a2beb992b5523362b6c336e3e79c2a40332f85e94cc0e251b35e"
+   "sha256": "dc31ebd85c3d8e1675d9c01d37954ffc459421b49e695bd01d7dbb1a3f9d1014"
   },
   {
    "path": "Setup (Mac).command",
@@ -331,5 +346,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "i1EP75lbgvTgh9ckH1P2g1RAaD8GVb/pnbPbp+cSYX5mf95GHkyYwP63kAZb0pBWNlPWT9egqEXdQRH1x8rfCA=="
+ "signature": "fL34bwbLSGvAzmbh6vlNzyD+tfmAvlMOwuiHD/uAx7s6scTd53Gai/B8XWZXzW8mFphGb55mOa4J4G+rDNyKDQ=="
 }

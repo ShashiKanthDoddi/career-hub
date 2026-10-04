@@ -292,7 +292,7 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
         prof = {"skills": [], "roles": roles, "years": None}
     elif prof is None:
         if not roles:
-            log("⚠  I can't read your resume and no job title was given. Add a job title above, or put your resume in Profile → Files.")
+            log("⚠  I can't read your resume and no job title was given. Add a job title above, or put your resume in Resume → Your files.")
             return []
         log("ℹ  No resume found, so I'm matching on the job titles you typed only.")
         exp = re.search(r"\d+", str(db.fields.get("total (work |professional )?experience|total years") or ""))

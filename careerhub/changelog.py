@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.4',
+CHANGELOG = [{'version': '2.7.5',
+  'title': 'Safer updates',
+  'new': ['Updates are now checked against a signature from your helper before they install, so only genuine updates are accepted'],
+  'fixed': ['The app window now only accepts commands from the app itself']},
+ {'version': '2.7.4',
   'title': 'See what happened to your reports',
   'new': ['Settings has a new section, Your reports and ideas: everything you sent, with Open, Done or Not planned, and a link to read it'],
   'fixed': []},

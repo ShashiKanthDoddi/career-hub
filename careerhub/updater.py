@@ -15,6 +15,7 @@ import time
 import zipfile
 from pathlib import Path, PurePosixPath
 from .bridge import log
+from .sigcheck import manifest_ok
 from .config import APP_VERSION, BASE, DATA, UPDATE_SOURCE
 from .state import PW, UPDATE
 from .store import backup_data, data, save_app_state
@@ -41,7 +42,9 @@ def source_base():
     m = re.match(r"https://github\.com/([\w.-]+/[\w.-]+?)(?:\.git)?(?:/tree/([\w./-]+))?/?$", s)
     if m:
         return f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2) or 'main'}/"
-    return s if s.endswith("/") else s + "/"
+    if re.match(r"https://raw\.githubusercontent\.com/[\w.-]+/[\w.-]+/[\w./-]+$", s):
+        return s if s.endswith("/") else s + "/"
+    return ""                                          # any other address (plain http, other hosts) is refused
 
 
 def safe_path(rel):
@@ -66,11 +69,14 @@ async def check_for_update():
     base = source_base()
     save_app_state(last_update_check=datetime.datetime.now().isoformat(timespec="seconds"))
     if not base:
-        return {"ok": False, "error": "No update source set yet. Your helper adds it in Settings, Updates."}
+        return {"ok": False, "error": "No valid update source set. Your helper sets it in Settings, Updates (a GitHub repository)."}
     try:
         manifest = json.loads(await _get(base + "release.json"))
     except Exception as e:
         return {"ok": False, "error": f"Couldn't reach the update source ({str(e)[:120]})."}
+    if not manifest_ok(manifest):
+        log("⚠  The update was refused: it isn't signed by your helper.")
+        return {"ok": False, "error": "The update was refused because it isn't signed by your helper."}
     newv = str(manifest.get("version", ""))
     if vt(newv) <= vt(APP_VERSION):
         return {"ok": True, "available": False, "version": APP_VERSION}
@@ -158,26 +164,37 @@ async def install_latest():
     return {"ok": True, "version": m["version"]}
 
 
+def _sha(rel, blob):
+    if PurePosixPath(rel).suffix.lower() in (".py", ".js", ".html", ".css", ".md", ".bat", ".command", ".json", ".txt"):
+        blob = blob.replace(b"\r\n", b"\n")                   # same rule as tools/make_release.py
+    return hashlib.sha256(blob).hexdigest()
+
+
 def install_zip(blob):
-    """Manual fallback: a zip of the Career Hub folder (or its contents)."""
+    """Manual fallback: a zip of the Career Hub folder from GitHub. It must contain a release.json signed by the
+    helper, and every file must match its fingerprint there."""
     z = zipfile.ZipFile(io.BytesIO(blob))
     names = [n for n in z.namelist() if not n.endswith("/")]
     prefix = ""
-    if not any(n.startswith("careerhub/") for n in names):
-        tops = {n.split("/")[0] for n in names}
-        prefix = next((t + "/" for t in tops if any(n.startswith(t + "/careerhub/") for n in names)), "")
-    files = {}
-    for n in names:
-        if n.startswith(prefix):
-            rel = n[len(prefix):]
-            if any(rel == a or rel.startswith(a) for a in ALLOWED) and "__pycache__" not in rel:
-                files[rel] = z.read(n)
-    cfg = files.get("careerhub/config.py", b"").decode("utf-8", "ignore")
-    m = re.search(r'APP_VERSION = "([^"]+)"', cfg)
-    if not m:
+    if "release.json" not in names:
+        prefix = next((n[:-len("release.json")] for n in names if n.endswith("/release.json") and n.count("/") == 1), "")
+    if prefix + "release.json" not in names:
         raise ValueError("this zip isn't a Career Hub release")
-    install_files(files, m.group(1))
-    return m.group(1)
+    m = json.loads(z.read(prefix + "release.json"))
+    if not manifest_ok(m):
+        raise ValueError("this zip isn't signed by your helper")
+    hashes = {f["path"]: f["sha256"] for f in m.get("files", [])}
+    files = {}
+    for rel, want in hashes.items():
+        safe_path(rel)
+        if prefix + rel not in names:
+            raise ValueError(f"{rel} is missing from the zip")
+        data_ = z.read(prefix + rel)
+        if _sha(rel, data_) != want:
+            raise ValueError(f"{rel} doesn't match the signed release")
+        files[rel] = data_
+    install_files(files, str(m["version"]))
+    return str(m["version"])
 
 
 def confirm_started():

@@ -33,6 +33,13 @@ maintains it and ships fixes through automatic updates from GitHub.
 - **Windows launcher:** no brackets inside `IF ( … )` blocks (the file name contains brackets). Use `goto` labels.
 - **UI text:** sentence case, plain words, no jargon. She is not technical.
 
+## Security rules
+
+- **Releases are signed.** `make_release.py` signs `release.json` with the private key in `~/.careerhub_release_key` (only on the helper's computer, never in the repo; back it up: if it is lost, her app refuses all updates until a release signed by the old key ships a new `PUBLIC_KEY`). The app checks the signature against `PUBLIC_KEY` in `careerhub/sigcheck.py`; the zip fallback needs the signed `release.json` too.
+- `tools/make_key.py` makes a signing key (and a new one when rotating; see its header).
+- **Update source must be GitHub over https** (`updater.source_base`). Other addresses are refused.
+- **`api_*` functions only answer the app's own window** (`main.guarded`: page and frame must be under `ui/`). Don't add `--allow-file-access-from-files` or load web pages in the app window.
+
 ## Release (automatic update to her laptop)
 
 0. **Update the documentation first**: `MAP.md` (new/changed modules), `CLAUDE.md` (rules, known limits), and the

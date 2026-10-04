@@ -1,10 +1,12 @@
 """overview module of Career Hub. See MAP.md for what lives where."""
+import datetime
+
 from .gmail import TYPE_LABELS, job_from_subject
 from .records import tracker_rows
 from .store import data
 
 
-STAGE_ORDER = ["Offer", "Interview", "Assessment", "Rejected", "Applied", "Draft", "Skipped", "Error"]
+STAGE_ORDER = ["Offer", "Interview", "Assessment", "Waiting", "Rejected", "Applied", "NoResponse", "Draft", "Skipped", "Error"]
 
 
 def jobs_overview():
@@ -53,8 +55,44 @@ def jobs_overview():
 MAIL_STAGE = ("received", "interview", "assessment", "offer", "rejection")
 
 
+NO_REPLY_DAYS = 30
+
+
+def _passed(date, time=""):
+    """True when a 'YYYY-MM-DD' (and optional 'HH:MM') is in the past."""
+    try:
+        d = datetime.date.fromisoformat((date or "")[:10])
+    except ValueError:
+        return False
+    if d != datetime.date.today():
+        return d < datetime.date.today()
+    try:
+        return datetime.datetime.strptime(time, "%H:%M").time() < datetime.datetime.now().time()
+    except ValueError:
+        return False                                      # today, no time known: still counts as happening
+
+
+def _timed_stage(key, date, stage, ups):
+    """Interview whose date has passed -> Waiting. Applied for 30+ days with no reply -> No response."""
+    if stage == "Interview":
+        when = [(e["date"], e.get("time", "")) for e in data()["events"] if e.get("ref") == key and e.get("date")]
+        when += [((u.get("meeting") or {}).get("date"), (u.get("meeting") or {}).get("time", ""))
+                 for u in ups if u["type"] == "interview" and (u.get("meeting") or {}).get("date")]
+        if when and _passed(*max(when)):
+            return "Waiting"
+    elif stage == "Applied" and date:
+        try:
+            age = (datetime.date.today() - datetime.date.fromisoformat(date[:10])).days
+        except ValueError:
+            return stage
+        if age >= NO_REPLY_DAYS:
+            return "NoResponse"
+    return stage
+
+
 def _job(key, date, company, title, status, link, stage, ups, notes):
     """One card. A stage she set by hand wins only until the emails say something new."""
+    stage = _timed_stage(key, date, stage, ups)
     n = notes.get(key, {})
     chosen = n.get("stage") if n.get("stage") and n.get("auto", stage) == stage else ""
     return {"key": key, "date": date, "company": company, "title": title, "status": status, "link": link,

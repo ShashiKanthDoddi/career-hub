@@ -125,6 +125,16 @@ def main():
           and find_change("Interview invitation") == "", "interview email: reschedule / cancel wording")
     check(find_meeting("Please share your availability. You applied on 1 Oct 2026", sent) is None, "interview email without a date: nothing added")
 
+    from careerhub.overview import _timed_stage
+    day = lambda n: (datetime.date.today() - datetime.timedelta(days=n)).isoformat()
+    past_mtg = [{"type": "interview", "meeting": {"date": day(2), "time": "10:00"}}]
+    next_mtg = [{"type": "interview", "meeting": {"date": day(-2), "time": "10:00"}}]
+    check(_timed_stage("k", day(10), "Interview", past_mtg) == "Waiting" and _timed_stage("k", day(10), "Interview", next_mtg) == "Interview"
+          and _timed_stage("k", day(10), "Interview", [{"type": "interview"}]) == "Interview",
+          "My jobs: interview moves to Waiting for reply once its date has passed")
+    check(_timed_stage("k", day(30), "Applied", []) == "NoResponse" and _timed_stage("k", day(29), "Applied", []) == "Applied"
+          and _timed_stage("k", day(60), "Rejected", []) == "Rejected", "My jobs: applied 30+ days with no reply goes to No response")
+
     from careerhub.history import parse_history
     hh = parse_history("WORK EXPERIENCE\nSenior Manager\nAcme Corp, Bengaluru   Jan 2021 - Present\n- Led campaigns\n"
                        "Executive | Beta Ltd, Mumbai  06/2018 - 12/2020\n- Ran SEO\nEDUCATION\nMBA in Marketing\nXYZ University, Pune\n2016 - 2018\nPercentage: 78%")

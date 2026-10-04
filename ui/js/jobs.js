@@ -1,7 +1,7 @@
 /* ===== my jobs ===== */
 let JVIEW = "board", JFILTER = "all", UPD_SHOWN = 25;
-const COLS = ["Applied","Interview","Assessment","Offer","Rejected","Draft"];
-const COLNAME = {Applied:"Applied", Interview:"Interview", Assessment:"Test", Offer:"Offer", Rejected:"Not selected", Draft:"Draft"};
+const COLS = ["Applied","Interview","Waiting","Assessment","Offer","Rejected","NoResponse","Draft"];
+const COLNAME = {Applied:"Applied", Interview:"Interview", Waiting:"Waiting for reply", Assessment:"Test", Offer:"Offer", Rejected:"Not selected", NoResponse:"No response", Draft:"Draft"};
 async function loadJobs(filter){
   if (filter){ JFILTER = filter; if (filter !== "all" && filter !== "replied") JVIEW = "board"; }
   JOBS = await api_jobs(); TABLES = await api_tables(); renderJobs();
@@ -14,7 +14,7 @@ $("#exportBtn").onclick = async () => { const m = {board:"applications", list:"a
   if (!await api_open(m[JVIEW])) toast("Nothing to export yet", true); };
 function filtered(){ const q = $("#jobSearch").value.toLowerCase();
   return JOBS.jobs.filter(j => (!q || (j.company + " " + j.title).toLowerCase().includes(q)) &&
-    (JFILTER === "all" || (JFILTER === "replied" ? ["Interview","Assessment","Offer","Rejected"].includes(j.stage) : j.stage === JFILTER || (JFILTER === "Interview" && j.stage === "Assessment")))); }
+    (JFILTER === "all" || (JFILTER === "replied" ? ["Interview","Waiting","Assessment","Offer","Rejected"].includes(j.stage) : j.stage === JFILTER || (JFILTER === "Interview" && (j.stage === "Assessment" || j.stage === "Waiting"))))); }
 function renderJobs(){
   $$("#jobsTabs button").forEach(b => b.classList.toggle("on", b.dataset.t === JVIEW));
   const v = $("#jobsView"); $("#jobStage").value = JFILTER; $("#jobStage").hidden = JVIEW !== "board" && JVIEW !== "list";

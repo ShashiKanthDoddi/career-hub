@@ -172,7 +172,7 @@ async def api_home():
     stages = {}
     for j in applied:
         stages[j["stage"]] = stages.get(j["stage"], 0) + 1
-    replied = sum(1 for j in applied if j["stage"] in ("Interview", "Assessment", "Offer", "Rejected"))
+    replied = sum(1 for j in applied if j["stage"] in ("Interview", "Waiting", "Assessment", "Offer", "Rejected"))
     st = app_state()
     ms = mail_settings()
     due = False
@@ -191,9 +191,9 @@ async def api_home():
         n = sum(1 for j in applied if ws.isoformat() <= j["date"][:10] < we.isoformat())
         weekly.append({"label": ws.strftime("%d %b"), "count": n})
     return {"weekly": weekly, "stages": stages, "stats": {"applied": len(applied), "week": sum(1 for j in applied if j["date"][:10] >= week_ago),
-                      "interviews": stages.get("Interview", 0) + stages.get("Assessment", 0),
+                      "interviews": stages.get("Interview", 0) + stages.get("Waiting", 0) + stages.get("Assessment", 0),
                       "offers": stages.get("Offer", 0), "rejected": stages.get("Rejected", 0),
-                      "waiting": stages.get("Applied", 0),
+                      "waiting": stages.get("Applied", 0) + stages.get("Waiting", 0),
                       "reply_rate": round(100 * replied / len(applied)) if applied else 0,
                       "drafts": sum(1 for j in jobs if j["stage"] == "Draft")},
             "attention": [u for u in updates if not u.get("done")][:10],
@@ -278,7 +278,7 @@ async def api_jobs():
 async def api_set_note(key, stage, notes):
     auto = next((j["auto_stage"] for j in jobs_overview()[0] if j["key"] == key), "")
     data()["notes"][key] = {"stage": stage or "", "notes": notes or "", "auto": auto}   # her choice holds until a newer email changes the auto stage
-    if stage in ("Applied", "Draft"):                  # moved back before any interview: its calendar entry goes too
+    if stage in ("Applied", "Draft", "NoResponse"):                  # moved back before any interview: its calendar entry goes too
         planner.drop_job_event(key)
     save_data()
     return True

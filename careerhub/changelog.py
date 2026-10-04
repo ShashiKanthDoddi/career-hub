@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.8',
+CHANGELOG = [{'version': '2.6.9',
+  'title': 'Updates keep working',
+  'new': [],
+  'fixed': ["After one update, the next update could fail to restart the app. The start file is now kept in the right format"]},
+ {'version': '2.6.8',
   'title': 'Filters on your job lists',
   'new': ['Find jobs results can be filtered by job, company or city, how recently posted, and minimum match, and sorted by best match, newest or company',
           'The Apply list has a filter box',

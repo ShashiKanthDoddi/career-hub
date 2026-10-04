@@ -1,8 +1,16 @@
 {
- "version": "2.6.8",
+ "version": "2.6.9",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.9",
+   "title": "Updates keep working",
+   "new": [],
+   "fixed": [
+    "After one update, the next update could fail to restart the app. The start file is now kept in the right format"
+   ]
+  },
   {
    "version": "2.6.8",
    "title": "Filters on your job lists",
@@ -63,16 +71,6 @@
    "fixed": [
     "Work and education: \"Read from my resume\" now finds sections written in normal capitals (like Professional Experience) and jobs without a heading"
    ]
-  },
-  {
-   "version": "2.6.1",
-   "title": "Updates in the side menu",
-   "new": [
-    "An Updates button at the bottom of the left menu checks for a new version, and shows a \"new\" tag when one is waiting"
-   ],
-   "fixed": [
-    "The update source is set automatically, so the empty box is gone from Settings"
-   ]
   }
  ],
  "files": [
@@ -110,11 +108,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "05f0750e0fdc626e048578b7ed1746252baa16f34ed7e91ba8e357a6dc08fcbd"
+   "sha256": "f0cccb4dcf7f736d4cf2bebf23185ab3612ae583a01df1e2c460845c9b56fb58"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "7d71d87a8343c3334168404b004e4cb7352c51e9eeb2c7ba15d1d599130b34a6"
+   "sha256": "38514d84788544c6f083299c5acaac3076f75875a239eead5268b1ab032c3b15"
   },
   {
    "path": "careerhub/filler.py",
@@ -190,7 +188,7 @@
   },
   {
    "path": "careerhub/updater.py",
-   "sha256": "11b3e3988ff3c58e9a1719606d51c5e2a8e76143e470cd6d76918016df823121"
+   "sha256": "1aa2e9982cbbc41d2112c6d48aa087b59c9e3d21a5f69848b86dd606e6e7450f"
   },
   {
    "path": "careerhub/workday.py",

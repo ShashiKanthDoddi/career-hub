@@ -1,8 +1,18 @@
 {
- "version": "2.7.0",
+ "version": "2.7.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.1",
+   "title": "Stay signed in",
+   "new": [
+    "LinkedIn and other sites you sign in to in the job window stay signed in after you close and reopen the app"
+   ],
+   "fixed": [
+    "The Chrome bar about an \"unsupported command-line flag\" no longer shows"
+   ]
+  },
   {
    "version": "2.7.0",
    "title": "A fresher look",
@@ -64,17 +74,6 @@
     "My jobs has a \"No response\" column: jobs you applied to 30 or more days ago with no reply move there by itself"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.6.15",
-   "title": "Each rejection gets its own card",
-   "new": [
-    "You can add a second and third job Gmail in Settings, and the app reads all of them",
-    "Home shows a \"See all emails\" link, and the emails list shows 25 at a time with Show more"
-   ],
-   "fixed": [
-    "LinkedIn \"Not selected\" emails now show as separate cards in My jobs, with the right company and job title, instead of one \"LinkedIn\" card"
-   ]
   }
  ],
  "files": [
@@ -112,11 +111,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "e5b09ea632b02a1d0f62568b121ded24a20622964338f78bce4c50abca8ec259"
+   "sha256": "a2086ebd44986de12b752b5352e6da308c1d623956a8ea769fef1d407995a02b"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b2c8bc47982d8e228a52a1dd6a63224c4a5773ca6c0673d9197cf1cae5ef7cd6"
+   "sha256": "52474906c73cb8f6d0340b7e37a7f07ac1a37f91a702106060ff9d65598d6ddf"
   },
   {
    "path": "careerhub/filler.py",
@@ -140,7 +139,7 @@
   },
   {
    "path": "careerhub/launch.py",
-   "sha256": "87174cc23f7ba622bf1be904d490871b88184e8b1883dbbcaf2f1fbf028e9d2d"
+   "sha256": "a041a96282326cf42503da95c64a2dfa725abc76037407ad1b3c1b0ed4895012"
   },
   {
    "path": "careerhub/main.py",
@@ -272,11 +271,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "e857583b03b53918d25a5fc49154a9fb99f1a1c5d250cb5b16f5a6239b8e5c77"
+   "sha256": "038b083f8fdd8062ff3aeb3ab03141e0d6e070a960dd315f497205a60ce02f47"
   },
   {
    "path": "MAP.md",
-   "sha256": "91a521c0c30c216eece2b8af05c32ce9ed76b7c3145048356efd8158c9694411"
+   "sha256": "bac82cb84edcbac1dc17def2e67fabc316a85207461f4a25cb70bc2844ebec17"
   },
   {
    "path": "Setup (Mac).command",

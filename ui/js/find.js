@@ -36,12 +36,13 @@ function diagText(d){
 }
 async function loadFound(diag){ showFound(await api_found(), diag); }
 function showFound(jobs, diag){
-  FOUND = jobs; $("#foundPanel").hidden = false;
+  FOUND = jobs; OFF.clear(); $("#foundPanel").hidden = false;
   $("#foundTitle").textContent = jobs.length ? `${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you` : "No matching jobs yet";
   $("#findDiag").textContent = diagText(diag || STATE.find_diag);
   $("#foundFilters").hidden = !jobs.length; drawFound();
   if (PAGE !== "find" && diag && jobs.length){ setCount("#navFound", jobs.length); toast(`${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you`); }
 }
+const OFF = new Set();                          // jobs she unticked: kept when the filters change
 function foundView(){
   const q = $("#fQ").value.trim().toLowerCase(), age = +$("#fAge").value, min = +$("#fMin").value, sort = $("#fSort").value;
   const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!q || `${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
@@ -52,7 +53,7 @@ function foundView(){
 }
 function drawFound(){
   const jobs = FOUND, rows = foundView();
-  $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}" checked>
+  $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
       <div class="ring" style="--p:${j.score}">${j.score}</div>
       <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span></div>
       <span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
@@ -60,14 +61,15 @@ function drawFound(){
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
     : emptyHTML("search", "Nothing here yet", "Add companies or careers-page links, keep web search on, and press Find jobs. A lower minimum match in Settings shows more.");
   $("#bulk").hidden = !jobs.length; updateBulk();
-  $$(".fj").forEach(c => c.onchange = updateBulk);
+  $$(".fj").forEach(c => c.onchange = () => { c.checked ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); updateBulk(); });
   $$("#foundList [data-dis]").forEach(b => b.onclick = async e => { e.preventDefault(); e.stopPropagation();
     await api_dismiss_found(FOUND[+b.dataset.dis].link); loadFound(); });
 }
 $("#fQ").oninput = $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = drawFound;
 function picked(){ return $$(".fj:checked").map(c => FOUND[+c.dataset.i].link); }
-function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; $("#allFound").checked = n > 0 && n === $$(".fj").length; }
-$("#allFound").onchange = e => { $$(".fj").forEach(c => c.checked = e.target.checked); updateBulk(); };
+function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; }
+function selectShown(on){ $$(".fj").forEach(c => { c.checked = on; on ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); }); updateBulk(); }
+$("#selAll").onclick = () => selectShown(true); $("#selNone").onclick = () => selectShown(false);
 $("#applyFoundBtn").onclick = () => { const l = picked(); if (!l.length) return toast("Select at least one job", true); startApply(l); };
 $("#saveFoundBtn").onclick = async () => { const l = picked(); if (!l.length) return toast("Select at least one job", true);
   const r = await api_add_to_list(l); toast(`${r.added} saved for later`); loadState(); };

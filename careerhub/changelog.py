@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.11',
+CHANGELOG = [{'version': '2.6.12',
+  'title': 'Select all and Unselect all',
+  'new': ['Find jobs has Select all and Unselect all buttons. They work on the jobs you can see after filtering'],
+  'fixed': ['Changing a filter no longer ticks every job again; the ones you unticked stay unticked']},
+ {'version': '2.6.11',
   'title': 'Tidier job filters',
   'new': [],
   'fixed': ['The filters above the Find jobs results now sit in one neat row instead of four long boxes']},

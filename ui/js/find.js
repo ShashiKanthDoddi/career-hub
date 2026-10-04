@@ -23,29 +23,42 @@ async function loadResume(){
 }
 $("#findBtn").onclick = async () => {
   if ($("#compInput").value.trim()){ addTag("comp", $("#compInput").value); $("#compInput").value = ""; }
-  const r = await api_start_find(ROLES.join(", "), COMPS.join(", "), $("#autoSearch").checked, $("#allOpenings").checked);
+  const auto = $("#autoSearch").checked;
+  const r = await api_start_find(ROLES.join(", "), auto ? "" : COMPS.join(", "), auto, !auto && $("#allOpenings").checked);
   if (!r.ok) toast(r.error, true); else { $("#foundPanel").hidden = true; toast("Searching"); }
 };
-$("#dailyFind").onchange = e => { api_set_daily(e.target.checked); toast(e.target.checked ? "This search will repeat daily" : "Daily search off"); };
+/* One choice instead of three switches: search widely for her, or only the companies she lists */
+function setFindMode(m){
+  $("#autoSearch").checked = m === "auto"; $("#compField").hidden = m === "auto";
+  $$("#findMode button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
+  $("#findModeHint").textContent = m === "auto" ? "I look through the job pages of many companies for roles that fit your resume and cities."
+    : "I look only at the companies you add below.";
+}
+$$("#findMode button").forEach(b => b.onclick = () => setFindMode(b.dataset.m));
+setFindMode("auto");
+$("#dailyFind").onchange =e => { api_set_daily(e.target.checked); toast(e.target.checked ? "This search will repeat daily" : "Daily search off"); };
 function diagText(d){
   if (!d || d.fetched === undefined) return "";
   const parts = [["seen","already seen or applied"],["title","not your kind of role"],["city","in other cities"],["old","too old"],["match","below your minimum match"]]
     .filter(([k]) => d[k]).map(([k, t]) => `${d[k]} ${t}`);
-  return `Last search: checked ${d.sites} career site${d.sites === 1 ? "" : "s"} and ${d.fetched} job${d.fetched === 1 ? "" : "s"}` +
-    (parts.length ? `. Skipped ${parts.join(", ")}.` : ".") + (d.sites === 0 ? " Add company names or careers-page links above to find more." : "");
+  const miss = (d.missing || []).length ? ` I couldn't read the job lists of ${d.missing.join(", ")}: they use their own hiring website. Paste their careers-page link instead, or choose "Find jobs for me".` : "";
+  return `Last search: looked at ${d.sites} company job page${d.sites === 1 ? "" : "s"} with ${d.fetched} opening${d.fetched === 1 ? "" : "s"}` +
+    (parts.length ? `. Left out ${parts.join(", ")}.` : ".") + miss + (d.sites === 0 && !miss ? " Choose \"Find jobs for me\" above to search more widely." : "");
 }
+let ONLY_LAST = false;                           // right after a search: show only what that search found
 async function loadFound(diag){ showFound(await api_found(), diag); }
 function showFound(jobs, diag){
   FOUND = jobs; OFF.clear(); jobs.forEach((j, i) => { if (j.dup) OFF.add(i); }); $("#foundPanel").hidden = false;   // jobs she already applied to start unticked
-  $("#foundTitle").textContent = jobs.length ? `${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you` : "No matching jobs yet";
+  if (diag !== undefined) ONLY_LAST = !!(diag && diag.fetched !== undefined);       // a dismiss reloads without diag: keep the view
   $("#findDiag").textContent = diagText(diag || STATE.find_diag);
   $("#foundFilters").hidden = !jobs.length; drawFound();
-  if (PAGE !== "find" && diag && jobs.length){ setCount("#navFound", jobs.length); toast(`${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you`); }
+  const fresh = jobs.filter(j => j.last).length;
+  if (PAGE !== "find" && diag && fresh){ setCount("#navFound", fresh); toast(`${fresh} new job${fresh > 1 ? "s" : ""} that fit you`); }
 }
 const OFF = new Set();                          // jobs she unticked: kept when the filters change
 function foundView(){
   const q = $("#fQ").value.trim().toLowerCase(), age = +$("#fAge").value, min = +$("#fMin").value, sort = $("#fSort").value;
-  const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!q || `${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
+  const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!ONLY_LAST || j.last) && (!q ||`${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
     (!age || j.age == null || +j.age < age + (age === 1 ? 1 : 0)) && (!min || j.score >= min));
   if (sort === "new") rows.sort((a, b) => (a[0].age ?? 999) - (b[0].age ?? 999));
   else if (sort === "co") rows.sort((a, b) => a[0].company.localeCompare(b[0].company));
@@ -55,14 +68,21 @@ let FOUND_SHOWN = 60;                            // long lists are drawn 60 at a
 function drawFound(more){
   if (more !== true) FOUND_SHOWN = 60;
   const jobs = FOUND, all = foundView(), rows = all.slice(0, FOUND_SHOWN);
+  const lastN = FOUND.filter(j => j.last).length, earlier = FOUND.length - lastN, s = n => n > 1 ? "s" : "";
+  $("#foundTitle").textContent = ONLY_LAST ? (lastN ? `${lastN} new job${s(lastN)} from this search` : "No new jobs from this search")
+    : FOUND.length ? `${FOUND.length} job${s(FOUND.length)} that fit you` : "No matching jobs yet";
+  $("#foundScope")?.remove();
+  if (ONLY_LAST ? earlier : lastN && earlier) $("#findDiag").insertAdjacentHTML("beforeend", ` <a href="#" id="foundScope">${ONLY_LAST ? `Show ${earlier} job${s(earlier)} found before` : "Show only the last search"}</a>`);
+  $("#foundScope") && ($("#foundScope").onclick = e => { e.preventDefault(); ONLY_LAST = !ONLY_LAST; drawFound(); });
   $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
       <div class="ring" style="--p:${j.score}">${j.score}</div>
       <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>
       <span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
       <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></label>`).join("") +
       (all.length > rows.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${all.length - rows.length} left)</button>` : "")
+    : ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
-    : emptyHTML("search", "Nothing here yet", "Add companies or careers-page links, keep web search on, and press Find jobs. A lower minimum match in Settings shows more.");
+    : emptyHTML("search", "Nothing here yet", "Choose where to search above and press Find jobs. A lower minimum match in Settings shows more.");
   $("#bulk").hidden = !jobs.length; updateBulk();
   $("#foundMore") && ($("#foundMore").onclick = () => { FOUND_SHOWN += 60; drawFound(true); });
   $$(".fj").forEach(c => c.onchange = () => { c.checked ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); updateBulk(); });

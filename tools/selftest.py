@@ -124,6 +124,21 @@ def main():
     check(not gmail.process_mail(_mail("CodeChef <contests@codechef.com>", "Interview invitation", "x"), [], set()),
           "a sender marked 'Not a job email' is ignored")
     gmail.BLOCKED.clear()
+    _first = lambda items: (gmail.process_mail(items, [], set()) or [{}])[0]
+    li = _first(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Harshitha, your application was sent to Acme Foods", "Marketing Executive, Acme Foods. Applied on 1 Oct"))
+    li2 = _first(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Your application to Marketing Manager at Acme", "Your application was sent to Acme."))
+    check(li.get("type") == "received" and li.get("company") == "Acme Foods" and li2.get("type") == "received" and li2.get("company") == "Acme"
+          and _first(_bulk("Acme Careers <careers@acme.com>", "Thank you for applying to Acme", "We have received your application.")).get("type") == "received"
+          and _first(_mail("Priya (Acme HR) <priya@acmefoods.in>", "Shortlisted for Marketing Executive", "You have been shortlisted. Please share your availability.")).get("type") == "interview"
+          and not gmail.process_mail(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Shashi, view your application updates from this week", "Your application was viewed"), [], set())
+          and not gmail.process_mail(_mail("Reddit <noreply@redditmail.com>", "Is this actually normal in an interview for a developer", "interview offer"), [], set()),
+          "jobs applied outside the app are found from their emails (LinkedIn, company mailers, recruiters); digests are not")
+    _learned = [{"Company": "Swiggy", "Job title": "", "Link": "", "learned": True}]
+    check(not gmail.process_mail(_mail("HDFC Bank <alerts@hdfcbank.net>", "Your credit card application", "Thank you for applying for the HDFC credit card. We have received your application."), [], set())
+          and not gmail.process_mail(_mail("Swiggy <noreply@swiggy.in>", "Your order is on the way", "Your Swiggy order will arrive soon"), _learned, set())
+          and not gmail.process_mail(_mail("Swiggy <noreply@swiggy.in>", "Order cancelled", "Unfortunately your Swiggy order was cancelled"), _learned, set())
+          and (gmail.process_mail(_mail("Swiggy Talent <talent@swiggy.in>", "Next steps", "Unfortunately we will not move forward with your candidature for the role"), _learned, set()) or [{}])[0].get("type") == "rejection",
+          "bank 'thank you for applying' mails and a learned company's orders are not jobs; its real rejection still is")
     gmail.MAIL_LABELS["xRej"] = ["Applied", "Rejected"]; gmail.MAIL_LABELS["xJb"] = ["Job boards"]; gmail.MAIL_LABELS["xInt"] = ["Applied/Interviews"]
     check(gmail.process_mail([("xRej", _mail("Acme HR <hr@acme.com>", "Your application", "Thanks for your time")[0][1])], [], set())[0]["type"] == "rejection"
           and gmail.process_mail([("xInt", _mail("Acme HR <hr@acme.com>", "Next steps", "see you")[0][1])], [], set())[0]["type"] == "interview"
@@ -152,6 +167,50 @@ def main():
     check(find_change("Rescheduled: your interview") == "reschedule" and find_change("Your interview was cancelled") == "cancel"
           and find_change("Interview invitation") == "", "interview email: reschedule / cancel wording")
     check(find_meeting("Please share your availability. You applied on 1 Oct 2026", sent) is None, "interview email without a date: nothing added")
+
+    from careerhub.meetings import find_details
+    mt = find_meeting("Your technical interview with Priya Sharma is on 8 Oct 2026 at 3:30 PM IST. Join: https://us02web.zoom.us/j/12345?pwd=abc.", sent)
+    check(mt and mt["link"] == "https://us02web.zoom.us/j/12345?pwd=abc" and mt["who"] == "Priya Sharma" and mt["round"] == "Technical round",
+          "interview email: meeting link, interviewer and round read")
+    check(find_details("Hi Anita, please share your first name. Your interview with the team. Meet with Our Team. HR will call.") == {},
+          "interview email: ordinary words are not taken as a name, round or link")
+    check(find_details("Interviewer: Dr. Rao Kumar\nJoin https://meet.google.com/abc-defg-hij\nSecond round")
+          == {"link": "https://meet.google.com/abc-defg-hij", "who": "Dr. Rao Kumar", "round": "Second round"}, "interview email: Meet link, titled name, second round")
+
+    from careerhub import planner as _pl
+    _pl_old = (_pl.data, _pl.save_data)
+    _ev = []
+    _pl.data = lambda: {"events": _ev}
+    _pl.save_data = lambda: None
+    at = datetime.datetime(2026, 10, 8, 9, 0)
+    _ev[:] = [{"id": "a", "title": "Interview", "company": "Acme", "date": "2026-10-08", "time": "09:30"},
+              {"id": "b", "title": "Interview", "company": "Beta", "date": "2026-10-08", "time": "15:00"},
+              {"id": "c", "title": "Test", "company": "Gamma", "date": "2026-10-08"},
+              {"id": "d", "title": "Interview", "company": "Delta", "date": "2026-10-09", "time": "09:00"}]
+    due = _pl.due_reminders(at)
+    check([e["id"] for e in due] == ["a", "c"] and _pl.due_reminders(at) == [] and [e["id"] for e in _pl.due_reminders(at.replace(hour=14, minute=30))] == ["b"],
+          "reminders: an hour before a timed interview, from 08:00 for one without a time, each only once")
+    check(_pl.reminder_text(_ev[0], at)[0] == "Interview at Acme starts in 30 minutes" and _pl.reminder_text(_ev[2], at)[0] == "Today: Test at Gamma",
+          "reminders: pop-up wording")
+    _ev[:] = []
+    note = {"id": "m1", "type": "interview", "date": "2026-10-04T10:00", "company": "Acme", "title": "", "subject": "Interview", "change": "",
+            "meeting": {"date": "2026-10-08", "time": "10:00", "link": "https://zoom.us/j/1", "who": "Priya Sharma", "round": "Technical round"}}
+    _pl.events_from_mail([note])
+    check(len(_ev) == 1 and _ev[0]["link"] == "https://zoom.us/j/1" and _ev[0]["who"] == "Priya Sharma" and _ev[0]["round"] == "Technical round",
+          "calendar: link, interviewer and round are kept from the email")
+    _ev[0]["reminded"] = True
+    _pl.events_from_mail([{**note, "cal_done": False, "id": "m2", "date": "2026-10-05T10:00", "change": "reschedule", "meeting": {"date": "2026-10-09", "time": "11:00"}}])
+    check(_ev[0]["date"] == "2026-10-09" and "reminded" not in _ev[0] and _ev[0]["link"] == "https://zoom.us/j/1",
+          "calendar: a reschedule moves the entry, resets its reminder and keeps the link")
+    check(_pl.add_event("x", "2026-10-08", link="javascript:alert(1)") and "link" not in _ev[-1], "calendar: only web addresses are kept as a link")
+    _pl.data, _pl.save_data = _pl_old
+
+    from careerhub.research import clean_brief, pick_title
+    check(pick_title("Nykaa", [{"title": "Falguni Nayar", "snippet": "founder of the company Nykaa"}, {"title": "Nykaa", "snippet": "an Indian retail company"}]) == "Nykaa"
+          and pick_title("Mint", [{"title": "Mint", "snippet": "Mint is a genus of plants"}]) == ""
+          and pick_title("Acme Pvt Ltd", [{"title": "Acme", "snippet": "a manufacturer of anvils"}]) == "Acme", "company brief: the right Wikipedia page is picked")
+    check(clean_brief("Sure!\n**What they do**\n- A\n- B\n- C\nMarketing angle to mention:\n- D\nPowered by x") == "What they do\n- A\n- B\n- C\nMarketing angle to mention\n- D"
+          and clean_brief("I do not know this company.") == "", "company brief: only headings and bullets are kept")
 
     from careerhub.overview import _timed_stage
     day = lambda n: (datetime.date.today() - datetime.timedelta(days=n)).isoformat()

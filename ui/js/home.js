@@ -13,7 +13,7 @@ async function loadHome(){
   const heard = s.interviews + s.offers + s.rejected;
   const lines = [];
   const prep = HOME.attention.filter(u => u.type === "interview" || u.type === "assessment").length;
-  if (HOME.attention.some(u => u.type === "offer")) lines.push("You have an offer waiting. Congratulations!");
+  if (s.offers) lines.push("You have an offer waiting. Congratulations!");      // same count as the Offers box, never an unmatched email
   else if (prep) lines.push(`${prep} interview${prep > 1 ? "s" : ""} or test${prep > 1 ? "s" : ""} to get ready for.`);
   else if (s.week) lines.push(`${s.week} application${s.week > 1 ? "s" : ""} sent this week. Nice momentum.`);
   else lines.push(s.applied ? "A quiet week so far. Paste a link below to keep it moving." : "Let's send your first application today.");
@@ -23,7 +23,7 @@ async function loadHome(){
     ["saved","Saved", HOME.list_count, "ready to apply", () => go("apply")],
     ["applied","Applied", s.applied, s.week ? `${s.week} this week` : "", () => go("jobs", {filter:"all"})],
     ["heard","Heard back", heard, s.applied ? `${s.reply_rate}% reply rate` : "", () => go("jobs", {filter:"replied"})],
-    ["int","Interviews", s.interviews, s.interviews ? "including tests" : "", () => go("jobs", {filter:"Interview"})],
+    ["int","Interviews", s.interviews, s.interviews ? "so far, including tests" : "", () => go("jobs", {filter:"Interview"})],
     ["offer","Offers", s.offers, s.offers ? "well done" : "", () => go("jobs", {filter:"Offer"})]];
   $("#funnel").innerHTML = stages.map(([k,l,n,sub]) => `<button class="stagebox k-${k} ${k==="offer" && n ? "win" : ""}" data-k="${k}">
      <div class="n" data-n="${n}">0</div><div class="l">${l}</div><div class="s">${esc(sub)}</div><div class="bar"><i></i></div></button>`).join("");
@@ -31,13 +31,14 @@ async function loadHome(){
     requestAnimationFrame(() => b.querySelector(".bar i").style.width = (100 * stages[i][2] / max) + "%"); });
   $("#weekline").innerHTML = [s.waiting ? `<span><b>${s.waiting}</b> waiting to hear back</span>` : "",
     s.rejected ? `<span><b>${s.rejected}</b> not selected</span>` : "", s.drafts ? `<span><b>${s.drafts}</b> draft${s.drafts > 1 ? "s" : ""} to finish</span>` : ""].join("");
-  renderWeekSum(HOME);
+  renderWeekSum(HOME); renderToday(HOME);
   $("#attnCount").textContent = HOME.attention.length ? `${HOME.attention.length} open` : "";
   $("#attention").innerHTML = HOME.attention.length ? HOME.attention.map(u => itemHTML(u, true)).join("")
     : emptyHTML("check", "You're all caught up", "Interview invites, tests and offers from your inbox land here.");
   $("#feed").innerHTML = HOME.feed.length ? HOME.feed.slice(0, 8).map(u => itemHTML(u, false)).join("")
     : emptyHTML("inbox", HOME.mail_ready ? "No job emails yet" : "Connect your job Gmail", HOME.mail_ready ? "Replies from companies will show up here." : `Settings, then Job email. <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Open settings</a>`);
   const more = (HOME.mail_total || HOME.feed.length) - 8;
+  if (HOME.mail_busy) mailBusy(HOME.mail_progress || "Starting…");
   if (more > 0) $("#feed").insertAdjacentHTML("beforeend", `<a href="#" class="feed-more" onclick="JVIEW='updates';go('jobs');return false">See all ${more + 8} emails</a>`);
   $("#mailInfo").textContent = HOME.mail_ready && HOME.last_mail_check ? "Checked " + when(HOME.last_mail_check).toLowerCase() + " at " + new Date(HOME.last_mail_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
   if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
@@ -52,13 +53,30 @@ async function loadHome(){
 }
 function renderWeekSum(H){
   const m = H.summary, box = $("#weekSum"); box.hidden = !H.stats.applied && !m.replies; if (box.hidden) return;
-  const diff = m.sent - m.sent_before, top = Math.max(1, ...H.weekly.map(w => w.count));
+  const top =Math.max(1, ...H.weekly.map(w => w.count));
   const cell = (n, l, d = "") => `<div><div class="ws-n">${n}</div><div class="ws-l">${l}</div>${d ? `<div class="ws-d">${d}</div>` : ""}</div>`;
   box.innerHTML = `<div class="panel-head"><h2 class="grow">Your last 7 days</h2></div><div class="ws-top">
-    ${cell(m.sent, "applications sent", diff ? `${diff > 0 ? "up" : "down"} ${Math.abs(diff)} from the week before` : "same as the week before")}
+    ${cell(m.sent, "applications sent", `${m.sent_before} the week before`)}
     ${cell(m.replies, m.replies === 1 ? "reply" : "replies")}${cell(m.interviews, m.interviews === 1 ? "interview or test" : "interviews or tests")}${m.offers ? cell(m.offers, "offer" + (m.offers > 1 ? "s" : "")) : ""}
     <div class="ws-bars" title="Applications sent per week, last 8 weeks">${H.weekly.map((w, i) => `<i class="${i === H.weekly.length - 1 ? "now" : ""}" style="height:${Math.max(6, 100 * w.count / top)}%" title="Week of ${esc(w.label)}: ${w.count}"></i>`).join("")}</div></div>
     ${m.follow_up ? `<div class="ws-note">${m.follow_up} application${m.follow_up > 1 ? "s have" : " has"} had no reply for a week or more. <a href="#" onclick="go('jobs',{filter:'Applied'});return false">See them</a>, and think about a short follow-up email.</div>` : ""}`;
+}
+/* "Today" strip under the greeting: interviews today or tomorrow, drafts waiting for Submit, jobs to follow up */
+function renderToday(H){
+  let box = $("#todayStrip");
+  if (!box){ box = document.createElement("div"); box.id = "todayStrip"; box.className = "row"; box.style.cssText = "gap:8px;flex-wrap:wrap;margin:0 0 16px"; $("#funnel").before(box); }
+  const t = H.today || {events:[]}, clock = x => x ? new Date(`2000-01-01T${x}`).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
+  const items = (t.events || []).map((e, i) => `<button class="btn sm" data-ev="${i}">${icon("cal")}<b>${esc(e.day)}${e.time ? " at " + esc(clock(e.time)) : ""}:</b>&nbsp;${esc(e.title)}${e.company ? ", " + esc(e.company) : ""}</button>`);
+  if (t.drafts) items.push(`<button class="btn sm" data-f="Draft">${icon("file")}${t.drafts} draft${t.drafts > 1 ? "s" : ""} waiting for Submit</button>`);
+  if (t.follow_up) items.push(`<button class="btn sm" data-f="Applied">${icon("mail")}${t.follow_up} job${t.follow_up > 1 ? "s" : ""} to follow up</button>`);
+  box.hidden = !items.length;
+  box.innerHTML = items.length ? `<b class="small" style="align-self:center">Today</b>` + items.join("") : "";
+  $$("#todayStrip [data-f]").forEach(b => b.onclick = () => go("jobs", {filter:b.dataset.f}));
+  $$("#todayStrip [data-ev]").forEach(b => b.onclick = async () => { const e = t.events[+b.dataset.ev];
+    const J = await api_jobs(), co = (e.company || "").trim().toLowerCase();
+    const j = J.jobs.find(x => e.ref && x.key === e.ref) || (co && J.jobs.find(x => (x.company || "").trim().toLowerCase() === co));
+    if (!j) return $("#calGrid")?.scrollIntoView({behavior:"smooth"});        // her own calendar entry: show the calendar
+    go("jobs"); JOBS = J; openJob(j.key); });
 }
 const TYPE = {offer:["Offer","Offer"], rejection:["Not selected","Rejected"], interview:["Interview","Interview"], assessment:["Test","Assessment"], received:["Received","received"], other:["Update","other"]};
 function itemHTML(u, attn){
@@ -71,7 +89,9 @@ function itemHTML(u, attn){
 }
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
-$("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking";
-  MAIL_SPIN_AT = Date.now(); $("#mailSpin span").textContent = "Starting…"; $("#mailSpin").hidden = false; $("#feed").hidden = true; await api_check_mail(true); };
+$("#checkMailBtn").onclick = async () => { mailBusy("Starting…"); await api_check_mail(true); };
+/* While any email check runs (hers or the hourly one): the button waits and the inbox box shows the live count */
+function mailBusy(text){ const b = $("#checkMailBtn"); if (!b.disabled) MAIL_SPIN_AT = Date.now(); b.disabled = true; b.lastChild.textContent = "Checking";
+  $("#mailSpin span").textContent = text; $("#mailSpin").hidden = false; $("#feed").hidden = true; }
 let MAIL_SPIN_AT = 0;
 function hideMailSpin(){ setTimeout(() => { $("#mailSpin").hidden = true; $("#feed").hidden = false; }, Math.max(0, 700 - (Date.now() - MAIL_SPIN_AT))); }

@@ -30,10 +30,12 @@ MAIL_TYPES = [
                   r"unable to (offer|move|proceed|take)|regret|after careful (consideration|review)|"
                   r"pursue (other|another)|not (be )?selected"),
     ("interview", r"\binterview|schedule (a|an|your) (call|chat|conversation|meeting)|phone screen|next round|your "
-                  r"availability|calendly\.com|meet with (you|our)|speak with you|invite you to"),
+                  r"availability|calendly\.com|meet with (you|our)|speak with you|invite you to|(you have been|you've been|"
+                  r"you are|your (profile|application|resume|cv) (has been|is|was)) shortlisted"),
     ("assessment", r"\bassessment|\bassignment|case study|take.?home|online test|hackerrank|testgorilla|task for you"),
     ("received", r"thank you for (applying|your application|your interest)|application (has been |was )?(received|"
-                 r"submitted)|we('ve| have) received your application|received your application"),
+                 r"submitted|sent)|we('ve| have) received your application|received your application|"
+                 r"you (have |just )?applied (for|to)|applied successfully|successfully applied"),
 ]
 
 
@@ -53,13 +55,15 @@ BLOCKED = set()           # senders she marked "Not a job email" (filled by chec
 
 BULK_SENDERS = re.compile(r"campaign|newsletter|marketing|promo|contests?@|news@|mailer|digest|letters?\b|offers@|"
                           r"events?@|community@", re.I)
+SOCIAL_SENDERS = re.compile(r"redditmail|quora|medium\.com|substack|facebookmail|discord|youtube|instagram|x\.com|"
+                            r"twitter|pinterest|telegram", re.I)        # forum and social digests: never job mail
 
 
 def is_bulk(msg, from_name, from_addr):
     """Newsletters and mass mails (unsubscribe link, bulk header or a marketing sender): judged by the subject only."""
     if any(a in from_addr.lower() for a in ATS_SENDERS):
         return False
-    return bool(msg.get("List-Unsubscribe") or re.search(r"bulk|list|junk", str(msg.get("Precedence") or ""), re.I)
+    return bool(msg.get("List-Unsubscribe") or msg.get("List-Id") or re.search(r"bulk|list|junk", str(msg.get("Precedence") or ""), re.I)
                 or BULK_SENDERS.search(f"{from_addr} {from_name}"))
 
 
@@ -78,7 +82,10 @@ ATS_SENDERS = ("myworkday", "greenhouse", "lever.co", "ashbyhq", "smartrecruiter
 
 
 OWN_APPLICATION = re.compile(r"your application|your candidacy|application (status|update)|regarding your (application|"
-                             r"candidature)|update on your|\bapplication (to|for|at)\b", re.I)
+                             r"candidature)|update on your|\bapplication (to|for|at)\b|thank you for applying|you (have |just )?applied|"
+                             r"applied (for|to) the|shortlisted", re.I)
+JOB_CONTEXT = re.compile(r"\b(jobs?|roles?|positions?|openings?|vacanc\w+|candida\w+|hiring|recruit\w*|careers?|interview\w*|"
+                         r"resume|cv)\b", re.I)    # "thank you for applying" for a credit card or a loan is not a job
 
 
 MAIL_LABELS = {}          # gmail id -> her Gmail labels (filled by imap_fetch)
@@ -183,7 +190,8 @@ def job_from_subject(subject):
     """LinkedIn-style 'Your application to <title> at <company>': (company, title), or ('', '')."""
     m = SUBJECT_JOB.search(subject or "")
     if not m:
-        return "", ""
+        m = re.search(r"(?i)your application (?:was sent|has been sent|was submitted) to\s+(.+?)\s*$", subject or "")
+        return (m.group(1).strip(" .-!"), "") if m else ("", "")     # "…your application was sent to Acme"
     return m.group(2).strip(" .-"), m.group(1).strip(" .-")
 
 
@@ -228,29 +236,37 @@ def process_mail(items, rows, known_ids):
         from_name, from_addr = email.utils.parseaddr(dec(msg.get("From")))
         if any(a in from_addr.lower() for a in ALERT_SENDERS) and re.search(r"(?i)alert|jobs? for you|new jobs|recommended|recommendation", subject):
             continue                                    # job-alert emails are handled by alert_links()
-        if lk == "skip" or from_addr.lower() in BLOCKED or (from_name or "").lower() in BLOCKED:
+        if lk == "skip" or (not lk and SOCIAL_SENDERS.search(from_addr)) or from_addr.lower() in BLOCKED or (from_name or "").lower() in BLOCKED:
             continue
         body = mail_body(msg)
         app = match_application(f"{from_name} {subject} {body[:4000]}", from_addr, rows)
         ats = any(a in from_addr.lower() for a in ATS_SENDERS)
-        bulk = not ats and (any(a in from_addr.lower() for a in BOARD_SENDERS) or is_bulk(msg, from_name, from_addr))
+        board = any(a in from_addr.lower() for a in BOARD_SENDERS)
+        bulk = not ats and (board or is_bulk(msg, from_name, from_addr))
         reply = not bulk and bool(msg.get("In-Reply-To")) and re.match(r"(?i)\s*(re|aw|sv)\s*:", subject or "")
+        real = app and not app.get("learned")           # a tracker row, not a company learned from an earlier email
+        own = OWN_APPLICATION.search(NOT_INVITE.sub(" ", f"{subject}\n{body[:3000]}")) and (
+            board or ats or JOB_CONTEXT.search(f"{from_name} {from_addr}\n{subject}\n{body[:3000]}"))
         if lk:                                          # 1. her own Gmail label decides
             kind = lk
         elif bulk:                                      # 2. job-board digests and newsletters: the subject only
             kind = classify_mail(subject, "")
-            if kind not in ("interview", "assessment", "offer", "rejection") and (app or OWN_APPLICATION.search(subject or "")):
-                kind = classify_mail(subject, body)     # ...unless it is about her own application (LinkedIn "Your application to X at Y")
-                kind = kind if kind in ("offer", "rejection") else None
-            if kind not in ("interview", "assessment", "offer", "rejection"):
+            if kind not in ("interview", "assessment", "offer", "rejection") and (real or (OWN_APPLICATION.search(subject or "") and own)):
+                kind = classify_mail(subject, body, strict=True)  # ...unless it is about her own application, even one
+            if kind == "received" and board and not (app or job_from_subject(subject)[0]):    # made outside the app
+                kind = None                             # a board's weekly "your application updates" names no company
+            if kind not in ("interview", "assessment", "offer", "rejection", "received"):
                 continue
-        elif app or ats or reply:                       # 3. about her applications: read the whole mail
-            kind = classify_mail(subject, body)
-        elif JOB_WORDS.search(subject or ""):           # 4. job-like mail from someone not in her list: stricter
+        elif real or ats or reply or own:
+            kind = classify_mail(subject, body)         # 3. about her applications (in the app or not): read it all
+        elif app or JOB_WORDS.search(subject or ""):    # 4. learned company, or job-like mail from someone new: stricter
             kind = classify_mail(subject, body, strict=True)
+            context = JOB_CONTEXT.search(f"{from_name} {from_addr}\n{subject}\n{body[:3000]}")
+            if not context and (kind == "received" or (app and not JOB_WORDS.search(subject or ""))):
+                continue                                # a credit-card "application received", a cancelled Swiggy order
         else:
             continue
-        if kind is None or (kind == "other" and not app):
+        if kind is None or (kind == "other" and not real):   # a learned company's order or offer mail is not an update
             continue
         try:
             when = email.utils.parsedate_to_datetime(msg.get("Date")).astimezone().isoformat(timespec="minutes")
@@ -328,8 +344,9 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500, progress=N
                 head = f"{dec(hdr.get('From'))} {dec(hdr.get('Subject'))}".lower()
                 lk = label_kind(MAIL_LABELS[gid])
                 if lk is None and (any(b in head for b in BLOCKED) or (meta.split()[0].encode() in promo and not any(
-                        a in head for a in ALERT_SENDERS + ATS_SENDERS))):
-                    continue                            # her blocked senders; promotions (job alerts and ATS mail still read)
+                        a in head for a in ALERT_SENDERS + ATS_SENDERS) and not OWN_APPLICATION.search(NOT_INVITE.sub(" ", head)))):
+                    continue                            # her blocked senders; promotions (job alerts, ATS mail and
+                                                        # "your application…" subjects are still read)
                 if (label_kind(MAIL_LABELS[gid]) not in (None, "skip") or any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
                         or any(re.search(rf"\b{re.escape(c)}\b", head) for c in names)):
                     wanted.append((meta.split()[0].encode(), gid))
@@ -375,7 +392,7 @@ def mail_failed(hint):
 
 async def check_mail(manual=False):
     if MAIL["busy"]:
-        return {"ok": False, "error": "Already checking."}
+        return {"ok": False, "error": "Already checking.", "busy": True}
     MAIL["busy"] = True
     try:
         ms = mail_settings()
@@ -388,10 +405,10 @@ async def check_mail(manual=False):
         updates = data()["email_updates"]
         updates[:] = [u for u in updates                # drop "you applied for 5 jobs" digests from job boards
                       if not (any(b.split(".")[0] in (u.get("from") or "").lower() for b in BOARD_SENDERS)
-                              and u.get("type") != "rejection"     # a board's "Your application to X" rejection stays
+                              and u.get("type") not in ("rejection", "received")   # a board's "Your application to X" stays
                               and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"))]
         old_unmatched = {}
-        if st.get("label_scan") != 7:                   # re-read unmatched, "received"/"update" and interview cards (7: board rejections)
+        if st.get("label_scan") != 8:                   # re-read unmatched, "received"/"update" and interview cards (8: outside applications)
             old_unmatched = {u["id"]: u for u in updates if not u.get("link")
                              or u.get("type") in ("received", "other", "interview", "assessment")}
             updates[:] = [u for u in updates if u["id"] not in old_unmatched]
@@ -402,16 +419,30 @@ async def check_mail(manual=False):
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)
         except Exception:
             last = datetime.datetime.now() - datetime.timedelta(days=60)
-        if st.get("label_scan") != 7:                   # one wider pass so labelled mail from before label reading is sorted
+        if st.get("label_scan") != 8:                   # one wider pass so labelled mail from before label reading is sorted
             last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
         rows = list(reversed(tracker_rows()))
+        tracked = {norm(r.get("Company")) for r in rows}
+        for u in sorted(updates, key=lambda x: x.get("date", ""), reverse=True):
+            c = (u.get("company") or "").strip()        # companies she applied to outside the app, learned from their emails
+            if (u.get("type") in ("received", "interview", "assessment", "offer") and len(c) >= 3 and norm(c) not in tracked
+                    and not any(b.split(".")[0] in c.lower() for b in BOARD_SENDERS + ATS_SENDERS)):
+                tracked.add(norm(c))
+                rows.append({"Company": c, "Job title": u.get("title", ""), "Link": "", "learned": True})
         log("📬 Checking the job inbox for updates…")
+        MAIL["progress"] = "Starting…"
+        UI._send({"type": "mail_start"})                 # also for the hourly check: the button waits and the box shows it
         names = [r.get("Company", "") for r in rows]
         have, found, new, reread = seen_links(), [], [], set()
         loop = asyncio.get_running_loop()
 
+        def show_progress(what, done, total):
+            MAIL["progress"] = f"{what} emails: {done} of {total}"
+            UI._send({"type": "mail_progress", "what": what, "done": done, "total": total})
+            log(f"   📨 {MAIL['progress']}", key="mail-" + what, file=done >= total)   # one live line; the file gets the final count
+
         def progress(what, done, total):                # runs in the reading thread: hand it to the window safely
-            loop.call_soon_threadsafe(UI._send, {"type": "mail_progress", "what": what, "done": done, "total": total})
+            loop.call_soon_threadsafe(show_progress, what, done, total)
         for n, (addr, pw) in enumerate(ms["boxes"]):    # the first inbox must work; extra ones are skipped if they fail
             try:
                 items = await asyncio.to_thread(imap_fetch, addr, pw, last.date(), known, names, 1500, progress, reread)
@@ -449,7 +480,7 @@ async def check_mail(manual=False):
         if booked:
             log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
         save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="",
-                       label_scan=7)
+                       label_scan=8)
         counts = {}
         for u in new:
             counts[u["type"]] = counts.get(u["type"], 0) + 1

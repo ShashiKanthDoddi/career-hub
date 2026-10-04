@@ -43,8 +43,9 @@
   <!-- HOME -->
   <section class="page" id="p-home">
     <div class="page-head">
-      <div><h1 id="hello">Hi Harshitha</h1><p id="helloSub"></p></div>
+      <div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-home"/></svg></div><div><h1 id="hello">Hi Harshitha</h1><p id="helloSub"></p></div>
     </div>
+    <div class="panel nextup" id="nextUp" hidden></div>
     <div class="funnel" id="funnel"></div>
     <div class="weekline" id="weekline"></div>
     <div class="panel weeksum" id="weekSum" hidden></div>
@@ -57,6 +58,7 @@
         <div class="cal" id="calGrid"></div>
         <form class="cal-form" id="calForm" hidden>
           <div class="row"><input type="text" id="evTitle" class="grow" placeholder="What, e.g. Phone interview"><input type="text" id="evCompany" class="grow" placeholder="Company"></div>
+          <div class="row"><input type="text" id="evLink" class="grow" placeholder="Meeting link, if you have it (Zoom, Meet, Teams)"></div>
           <div class="row"><input type="date" id="evDate"><input type="time" id="evTime"><button class="btn primary" type="submit">Save</button><button class="btn ghost" type="button" id="evCancel">Cancel</button></div>
         </form>
         <div id="calList"></div>
@@ -83,7 +85,7 @@
 
   <!-- APPLY -->
   <section class="page" id="p-apply" hidden>
-    <div class="page-head"><div><h1>Apply</h1><p>One list for every job you want to apply to. The app does the clicking, typing and uploading, and always stops before Submit.</p></div></div>
+    <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-send"/></svg></div><div><h1>Apply</h1><p>One list for every job you want to apply to. The app does the clicking, typing and uploading, and always stops before Submit.</p></div></div>
     <div class="panel">
       <div class="panel-head"><h2 class="grow">Add jobs</h2></div>
       <div class="row" style="align-items:flex-start">
@@ -111,7 +113,7 @@
 
   <!-- FIND -->
   <section class="page" id="p-find" hidden>
-    <div class="page-head"><div><h1>Find jobs</h1><p>Matches new openings against your resume and shows only what fits.</p></div></div>
+    <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-search"/></svg></div><div><h1>Find jobs</h1><p>Matches new openings against your resume and shows only what fits.</p></div></div>
     <div class="panel">
       <div class="panel-head"><h2 class="grow">What I read in your resume</h2><span class="muted small" id="expLine"></span></div>
       <div class="skillcloud" id="skills"></div>
@@ -120,11 +122,13 @@
     </div>
     <div class="panel">
       <div class="panel-head"><h2 class="grow">Where should I search?</h2></div>
-      <label class="switch"><input type="checkbox" id="autoSearch" checked> <span><b>Companies that are hiring</b><br><span class="muted small">I check job boards of many companies and the web. This is the easiest way, so keep it on.</span></span></label>
-      <div class="field" style="margin-top:16px"><label>Also check these companies (optional)</label>
+      <div class="seg" id="findMode"><button data-m="auto" class="on">Find jobs for me</button><button data-m="mine">Only companies I choose</button></div>
+      <input type="checkbox" id="autoSearch" checked hidden>
+      <p class="muted small" id="findModeHint" style="margin:10px 0 0"></p>
+      <div class="field" id="compField" style="margin-top:14px" hidden><label>Companies</label>
         <div class="taginput" id="compBox"><input type="text" id="compInput" placeholder="Type a company name, like Nykaa, and press Enter"></div>
-        <span class="muted small">Or paste the link of its careers page.</span>
-        <label class="switch" style="margin-top:10px"><input type="checkbox" id="allOpenings"> <span>Show every opening at these companies<br><span class="muted small">Ignores your job titles, cities and minimum match, and turns off the web search.</span></span></label></div>
+        <span class="muted small">You can also paste the link of a careers page. Some companies, like Swiggy or Zomato, use their own job website, which I can't read.</span>
+        <label class="switch" style="margin-top:10px"><input type="checkbox" id="allOpenings"> <span>Show all their openings, not only the ones that fit you</span></label></div>
       <div class="row" style="margin-top:14px">
         <label class="switch grow"><input type="checkbox" id="dailyFind"> Repeat this search daily</label>
         <button class="btn primary" id="findBtn"><svg class="i"><use href="#i-search"/></svg>Find jobs</button>
@@ -148,7 +152,7 @@
   <!-- MY JOBS -->
   <section class="page" id="p-jobs" hidden style="max-width:1400px">
     <div class="page-head">
-      <div><h1>My jobs</h1><p>Drag a card to change its stage. Click it for emails and notes.</p></div>
+      <div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-board"/></svg></div><div><h1>My jobs</h1><p>Drag a card to change its stage. Click it for emails and notes.</p></div>
       <div class="actions"><div class="seg" id="jobsTabs"><button data-t="board" class="on">Board</button><button data-t="list">List</button><button data-t="updates">Emails</button><button data-t="accounts">Accounts</button><button data-t="found">Found</button></div></div>
     </div>
     <div class="row fbar" style="margin-bottom:14px">
@@ -162,7 +166,7 @@
 
   <!-- PROFILE -->
   <section class="page" id="p-profile" hidden>
-    <div class="page-head"><div><h1>Profile</h1><p>Used to fill every application. Leave a box empty and the app asks when a site needs it.</p></div></div>
+    <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-user"/></svg></div><div><h1>Profile</h1><p>Used to fill every application. Leave a box empty and the app asks when a site needs it.</p></div></div>
     <div id="profileErr" class="panel" hidden style="border-color:var(--rose);color:var(--rose)"></div>
     <div class="sectioned">
       <nav class="secnav" id="profileNav"></nav>
@@ -195,13 +199,17 @@
 
   <!-- SETTINGS -->
   <section class="page" id="p-settings" hidden>
-    <div class="page-head"><div><h1>Settings</h1><p>How the app looks, connects and updates.</p></div></div>
+    <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-gear"/></svg></div><div><h1>Settings</h1><p>How the app looks, connects and updates.</p></div></div>
     <div class="sectioned">
       <nav class="secnav" id="settingsNav"></nav>
       <div>
         <div class="panel sec" id="set-appearance">
           <div class="panel-head"><h2 class="grow">Appearance</h2></div>
+          <h3>Colours</h3>
           <div class="themes" id="themes"></div>
+          <h3 style="margin-top:20px">Letters</h3>
+          <div class="fonts" id="fonts"></div>
+          <label class="switch" style="margin-top:18px"><input type="checkbox" id="calmMotion"> Calm mode: fewer moving things</label>
         </div>
         <div id="settingsForm"></div>
         <div class="panel sec" id="set-help">

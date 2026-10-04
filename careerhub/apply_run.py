@@ -82,7 +82,7 @@ async def apply_one(ctx, link, db, n, total):
                          message="Solve the check in the Chrome window yourself. If it keeps coming back, stop for today: "
                                  "pushing on can get the account restricted.",
                          choices=[("I solved it – continue", "go", "primary"), ("Stop for today", "stop", "danger")],
-                         kind="help")
+                         kind="help", chrome=page)
         if v == "stop" or await challenged(page):
             start_cooling_off(site)
             return "QUIT"
@@ -104,7 +104,7 @@ async def apply_one(ctx, link, db, n, total):
                                  "sign up (solve any \"I'm not a robot\" check) and click Apply until you see the "
                                  "first form with boxes to fill.",
                          choices=[("I'm on the form – continue", "go", "primary"), ("Skip this job", "skip", "ghost"),
-                                  ("Stop everything", "quit", "danger")], kind="help")
+                                  ("Stop everything", "quit", "danger")], kind="help", chrome=ctx.pages[-1])
         if v == "quit":
             return "QUIT"
         if v == "skip":
@@ -121,7 +121,7 @@ async def apply_one(ctx, link, db, n, total):
         if npw:
             if not await handle_auth(ctx, db, company):
                 await UI.ask(title="Please sign in", message="Finish signing in / signing up in the Chrome window.",
-                             choices=[("Done – continue", "ok", "primary")], kind="help")
+                             choices=[("Done – continue", "ok", "primary")], kind="help", chrome=ctx.pages[-1])
             page = ctx.pages[-1]
             await settle(page)
         pt = (await page_info(page))["title"] or f"Page {step}"
@@ -149,7 +149,7 @@ async def apply_one(ctx, link, db, n, total):
                 v = await UI.ask(title="No Next button found",
                                  message="Go to the next page in Chrome yourself, then come back here.",
                                  choices=[("I'm on the next page – fill it", "again", "primary"),
-                                          ("Stop here & show summary", "done", "ghost")], kind="help")
+                                          ("Stop here & show summary", "done", "ghost")], kind="help", chrome=page)
             if v == "done":
                 break
             if v == "again" or not nxt:
@@ -174,7 +174,7 @@ async def apply_one(ctx, link, db, n, total):
                              message="The website wants something fixed first:\n\n• " + "\n• ".join(errs[:8] or
                                      ["(no message shown — look for red text or empty required boxes)"]) +
                                      "\n\nFix it in Chrome, then continue.",
-                             choices=[("I fixed it – continue", "ok", "primary")], kind="help")
+                             choices=[("I fixed it – continue", "ok", "primary")], kind="help", chrome=page)
                 stuck = 0
             continue
         stuck = 0
@@ -195,17 +195,17 @@ async def apply_one(ctx, link, db, n, total):
                                  "tab in Chrome). Glance over the form for any empty boxes before submitting." + warn,
                          table=rows,
                          choices=[("Submit it for me", "submit", "primary"), ("I submitted it myself", "mine", "ghost"),
-                                  ("Don't submit (keep as draft)", "draft", "ghost")], kind="submit")
+                                  ("Don't submit (keep as draft)", "draft", "ghost")], kind="submit", chrome=page)
         if v == "submit":
             if await empty_captcha(page):                  # the site rejects an empty captcha, so she types it first
                 await page.bring_to_front()
                 await UI.ask(title="Type the captcha first",
                              message="This page has a captcha (the squiggly letters). Type it in Chrome, then come back here.",
-                             choices=[("I typed it – submit now", "ok", "primary")], kind="help")
+                             choices=[("I typed it – submit now", "ok", "primary")], kind="help", chrome=page)
             _, sub = await find_buttons(page)
             if not sub:
                 await UI.ask(title="Submit button not found", message="Please click Submit yourself in Chrome.",
-                             choices=[("OK", "ok", "primary")], kind="help")
+                             choices=[("OK", "ok", "primary")], kind="help", chrome=page)
                 continue
             await safe_click(sub)
             await settle(page)
@@ -229,12 +229,12 @@ async def apply_one(ctx, link, db, n, total):
                                      "\n\nLook at Chrome: was the application sent?",
                              choices=[("Yes, it's submitted", "yes", "primary"), ("No – I'll fix it and submit myself",
                                                                                    "fix", "ghost"),
-                                      ("No – keep as draft", "no", "ghost")], kind="help")
+                                      ("No – keep as draft", "no", "ghost")], kind="help", chrome=page)
             if c == "yes":
                 return "Submitted", company, title, summary
             if c == "fix":
                 await UI.ask(title="Over to you", message="Fix it in Chrome and click Submit there.",
-                             choices=[("I submitted it", "ok", "primary")], kind="help")
+                             choices=[("I submitted it", "ok", "primary")], kind="help", chrome=page)
                 return "Submitted (by you)", company, title, summary
             return "Not submitted (draft)", company, title, summary
         if v == "mine":

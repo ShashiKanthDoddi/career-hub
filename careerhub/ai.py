@@ -25,6 +25,23 @@ async def ai_complete(db, prompt, max_tokens=900):
     return "".join(b.get("text", "") for b in d.get("content", []) if b.get("type") == "text").strip()
 
 
+FREE_AI_URL = "https://text.pollinations.ai/"
+
+
+async def free_complete(prompt):
+    """A free AI that needs no key (Pollinations). Send it only public facts, never her resume or contact details."""
+    req = await PW["p"].request.new_context()
+    try:
+        r = await req.post(FREE_AI_URL, timeout=60000, headers={"content-type": "application/json"},
+                           data={"model": "openai-fast", "messages": [{"role": "user", "content": prompt}]})
+        text = await r.text()
+    finally:
+        await req.dispose()
+    if not r.ok:
+        raise RuntimeError(f"free AI error {r.status}")
+    return "\n".join(l for l in text.strip().splitlines() if "pollinations" not in l.lower()).strip()
+
+
 def ai_context(db):
     return (f"COMPANY: {CURRENT_JOB.get('company') or 'unknown'}\nROLE: {CURRENT_JOB.get('title') or 'unknown'}\n\n"
             f"JOB POSTING (excerpt):\n{(CURRENT_JOB.get('desc') or '')[:6000]}\n\n"

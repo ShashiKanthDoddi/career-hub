@@ -305,7 +305,7 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
     min_score = int(st.get("minimum_match") or 50)
     max_age = int(st.get("max_job_age_days") or 30)
 
-    jobs = []
+    jobs, missing = [], []
     req = await p.request.new_context(extra_http_headers={"User-Agent": UA})
     try:
         boards = {}
@@ -324,6 +324,8 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
                 found = await resolve_name(req, tok)
             if not found:
                 log(f"   ⚠  Couldn't find a job list for '{tok}'. Try pasting their careers-page link instead.")
+                if tok.lower() != "auto":
+                    missing.append(tok)
             for b in found:
                 boards[b] = True
         for i, b in enumerate(boards, 1):
@@ -340,7 +342,8 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
 
     seen = seen_links()
     matches, done = [], set()
-    diag = {"sites": len(boards), "fetched": len(jobs), "seen": 0, "title": 0, "city": 0, "old": 0, "match": 0}
+    diag = {"sites": len(boards), "fetched": len(jobs), "seen": 0, "title": 0, "city": 0, "old": 0, "match": 0,
+            "missing": missing, "new": 0}
     for j in jobs:
         t = norm(j["title"])
         if not j["link"] or norm_link(j["link"]) in seen or norm_link(j["link"]) in done:
@@ -365,9 +368,10 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
     matches.sort(key=lambda j: (-j["score"], j["age"] if j["age"] is not None else 99))
     if matches:
         save_found(matches)
+    diag["new"] = len(matches)
     FIND_DIAG.clear()
     FIND_DIAG.update(diag)
-    save_app_state(find_diag=diag)
+    save_app_state(find_diag=diag, last_found=[norm_link(j["link"]) for j in matches])   # Find jobs shows only these after a search
     log(f"✨ {len(matches)} new matching job(s). Checked {diag['sites']} career sites, {diag['fetched']} jobs; skipped "
         f"{diag['seen']} already seen, {diag['title']} other roles, {diag['city']} other cities, {diag['old']} too old, "
         f"{diag['match']} below your minimum match.")

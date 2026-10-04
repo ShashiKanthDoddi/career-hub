@@ -7,7 +7,7 @@ CURRENT_JOB = {"company": "", "title": "", "desc": ""}
 RESUME_CACHE = {"text": None}
 
 
-MAIL = {"busy": False}
+MAIL = {"busy": False, "progress": ""}
 
 
 JOB = {"ctx": None}

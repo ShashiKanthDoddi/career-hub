@@ -42,6 +42,10 @@ JOB_WORDS = re.compile(r"applica|applied|interview|position|candida|opportunit|o
                        r"next steps|talent", re.I)
 
 
+BOARD_SENDERS = ALERT_SENDERS + ("ambitionbox", "glassdoor", "foundit", "monster", "shine.com", "instahyre", "cutshort",
+                                 "iimjobs", "timesjobs", "hirist", "wellfound", "apna")
+
+
 ATS_SENDERS = ("myworkday", "greenhouse", "lever.co", "ashbyhq", "smartrecruiters", "workable", "icims", "taleo",
                "successfactors", "bamboohr", "jobvite", "recruitee")
 
@@ -136,7 +140,12 @@ def process_mail(items, rows, known_ids):
         if any(a in from_addr.lower() for a in ALERT_SENDERS) and re.search(r"(?i)alert|jobs? for you|new jobs|recommended|recommendation", subject):
             continue                                    # job-alert emails are handled by alert_links()
         body = mail_body(msg)
-        kind = classify_mail(subject, body)
+        if any(a in from_addr.lower() for a in BOARD_SENDERS):
+            kind = classify_mail(subject, "")           # job-board mails are digests: judge by the subject only
+            if kind not in ("interview", "assessment", "offer"):
+                continue
+        else:
+            kind = classify_mail(subject, body)
         if kind is None:
             continue
         app = match_application(f"{from_name} {subject} {body[:4000]}", from_addr, rows)
@@ -251,6 +260,11 @@ async def check_mail(manual=False):
                                "myaccount.google.com/apppasswords (it needs 2-Step Verification on).")
         st = app_state()
         updates = data()["email_updates"]
+        for u in list(updates):                         # clear digest mails from job boards wrongly kept as interviews
+            frm = (u.get("from") or "").lower()
+            if u.get("type") in ("interview", "assessment", "offer") and any(b.split(".")[0] in frm for b in BOARD_SENDERS) \
+                    and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"):
+                u["type"], u["done"], u["meeting"] = "other", True, None
         known = {u["id"] for u in updates}
         try:
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)

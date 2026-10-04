@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.6',
+CHANGELOG = [{'version': '2.6.7',
+  'title': 'Fewer wrong interview emails',
+  'new': ['New versions now download quietly in the background, so Update now finishes in a moment'],
+  'fixed': ["Daily emails from Naukri, AmbitionBox and other job sites were wrongly shown as Interview. They are now ignored, and the ones already in your list are cleaned up"]},
+ {'version': '2.6.6',
   'title': 'Experience in years and months',
   'new': [],
   'fixed': ["Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",

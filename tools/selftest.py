@@ -86,6 +86,16 @@ def main():
     check(jobsites.alert_jobs('<a href="https://www.naukri.com/job-listings-seo-manager-acme-123?src=m">SEO Manager</a>'
                               '<a href="https://www.naukri.com/jobs">More</a>') ==
           [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
+    import email.message
+    from careerhub import gmail
+    def _mail(frm, subj, body):
+        m = email.message.EmailMessage(); m["From"], m["Subject"], m["Date"] = frm, subj, "Mon, 28 Sep 2026 10:00:00 +0000"
+        m.set_content(body); return [("x" + subj, m.as_bytes())]
+    check(not gmail.process_mail(_mail("Naukri <info@naukri.com>", "You applied for 5 jobs on 28 Sep", "Top interview questions, invite you to apply"), [], set())
+          and not gmail.process_mail(_mail("AmbitionBox <no-reply@ambitionbox.com>", "Reviews of TNS India Foundation", "interview experiences"), [], set()),
+          "job-board digest mails are not marked as interviews")
+    check(gmail.process_mail(_mail("Naukri <info@naukri.com>", "Interview invitation from Acme", "hello"), [], set())[0]["type"] == "interview",
+          "job-board mail with interview in the subject still counts")
     check(jobsites.CHALLENGE_RE.search("Let's do a quick security check") and not jobsites.CHALLENGE_RE.search("Marketing Manager"),
           "robot-check wording detected")
     check(jobsites.allowed("LinkedIn")[0], "daily limit allows the first application")

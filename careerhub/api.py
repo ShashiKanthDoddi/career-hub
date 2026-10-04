@@ -21,7 +21,7 @@ from .resume import resume_info
 from .state import TASKS
 from .store import ProfileError, app_state, data, export_csv, folder_files, save_app_state, save_data, table_of
 from .textutil import norm, norm_link
-from .updater import check_for_update, install_latest, install_zip
+from .updater import check_for_update, install_latest, install_zip, prefetch_update
 from .ai import ai_answer
 from .state import APP
 from .config import UPDATE_SOURCE
@@ -327,6 +327,8 @@ async def api_report(note):
 
 async def api_check_update(manual=False):
     r = await check_for_update()
+    if r.get("available"):
+        asyncio.create_task(prefetch_update())
     if r.get("available") or manual:
         await UI.emit({"type": "update_check", "manual": bool(manual), **r})
     return r

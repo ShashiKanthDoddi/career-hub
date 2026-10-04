@@ -1,8 +1,18 @@
 {
- "version": "2.6.6",
+ "version": "2.6.7",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.7",
+   "title": "Fewer wrong interview emails",
+   "new": [
+    "New versions now download quietly in the background, so Update now finishes in a moment"
+   ],
+   "fixed": [
+    "Daily emails from Naukri, AmbitionBox and other job sites were wrongly shown as Interview. They are now ignored, and the ones already in your list are cleaned up"
+   ]
+  },
   {
    "version": "2.6.6",
    "title": "Experience in years and months",
@@ -66,14 +76,6 @@
    "fixed": [
     "Times written like 3:30 - 4:00pm are read as pm"
    ]
-  },
-  {
-   "version": "2.5.1",
-   "title": "A shorter kind note",
-   "new": [],
-   "fixed": [
-    "The note shown after many rejection emails is now just two short lines"
-   ]
   }
  ],
  "files": [
@@ -95,7 +97,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "2a6777e0c5c9a064944aeafd0db766d2a00d4fc2e0753cc3dd384ea6f048fe3e"
+   "sha256": "73315712e4aa9d2d74afa69c4f6ca3beb393aa4d1e5b4ff6ee9a56dd8e9d2d2d"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -111,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "ae658b139dea2d930b3a95d1ce69eaf9e24ed7a14e40a6e891dd61d0273e1101"
+   "sha256": "713541a8d28e5df536518333ab1d09d2bea44df98d33d93c53b0445090a47d02"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "488314e27ce35cf7a36ba481ab86718d8717c34ceacb1e73e8a922b80fedd175"
+   "sha256": "4b11ee0394844acbb30c5a82643a57f331fe1fbfbb2a8904abfcdacd31726f73"
   },
   {
    "path": "careerhub/filler.py",
@@ -127,7 +129,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "e16805ae1691bd68573f5f7bc54453d7a282e4aa551c38c3c68b8d21f93d9000"
+   "sha256": "77cb2651c3782c1fdcabf8144f673fb6b089f3ebec135f8c1d1c28a25cbcb598"
   },
   {
    "path": "careerhub/history.py",
@@ -191,7 +193,7 @@
   },
   {
    "path": "careerhub/updater.py",
-   "sha256": "8053eb534d285f9a1127c8aee142cab4950e2fc3c0c879294e783a3888857c0b"
+   "sha256": "11b3e3988ff3c58e9a1719606d51c5e2a8e76143e470cd6d76918016df823121"
   },
   {
    "path": "careerhub/workday.py",
@@ -267,15 +269,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "81ceff166ffad20c0b609358aec1cb4faf9fb4357ec3ad5ff749898990695adf"
+   "sha256": "e867c6ac9a27205ab1485b3571fc1384fce5f3920fa76cd5cdfbf0d2411c94c7"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "7d21717dc2cdfc9ee659494762c815c58b9e9d7b2d0e67207b0e266ce663706c"
+   "sha256": "678d5847a7a22cbb814169f1252e9e44b75612aff336841edd7cd6a228f27652"
   },
   {
    "path": "MAP.md",
-   "sha256": "11a73d42566b7c9275883a04bc41987058f47e8f1dc1504ae5a6ce531985040a"
+   "sha256": "a39f7b429a694324fe47886e60c619e764114ce33c110a51acf327ec61c8d867"
   },
   {
    "path": "Setup (Mac).command",

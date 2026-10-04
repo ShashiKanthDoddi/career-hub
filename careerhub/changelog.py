@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.21',
+CHANGELOG = [{'version': '2.7.0',
+  'title': 'A fresher look',
+  'new': ['A cleaner design: separate coloured cards on Home, a lighter calendar, softer shadows and a tidier side bar'],
+  'fixed': ['On My jobs the stage filter no longer stretches across the whole page']},
+ {'version': '2.6.21',
   'title': 'Sign-in fix',
   'new': [],
   'fixed': ['Google no longer says "This browser or app may not be secure" when you sign in to LinkedIn in the job window']},

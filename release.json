@@ -1,8 +1,18 @@
 {
- "version": "2.6.21",
+ "version": "2.7.0",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.0",
+   "title": "A fresher look",
+   "new": [
+    "A cleaner design: separate coloured cards on Home, a lighter calendar, softer shadows and a tidier side bar"
+   ],
+   "fixed": [
+    "On My jobs the stage filter no longer stretches across the whole page"
+   ]
+  },
   {
    "version": "2.6.21",
    "title": "Sign-in fix",
@@ -65,14 +75,6 @@
    "fixed": [
     "LinkedIn \"Not selected\" emails now show as separate cards in My jobs, with the right company and job title, instead of one \"LinkedIn\" card"
    ]
-  },
-  {
-   "version": "2.6.14",
-   "title": "Only jobs where you can work",
-   "new": [],
-   "fixed": [
-    "Find jobs no longer shows \"remote\" jobs tied to other countries, such as Germany remote or Remote in the US. Remote jobs open to India or anywhere still show"
-   ]
   }
  ],
  "files": [
@@ -110,11 +112,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "76f010515f2059e98b98763a09eb1809cb3ceebaad14d2f79b4883472b52e61f"
+   "sha256": "e5b09ea632b02a1d0f62568b121ded24a20622964338f78bce4c50abca8ec259"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b3cba1b8ffa4a99f03118a82c3d1fd223e6fcf292b395f95a564f3d893fbfc57"
+   "sha256": "b2c8bc47982d8e228a52a1dd6a63224c4a5773ca6c0673d9197cf1cae5ef7cd6"
   },
   {
    "path": "careerhub/filler.py",
@@ -198,11 +200,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "753662d4f6a1f69c133e3ed3c3dad4596cc6639124bd6a0e86df6260a4d3336a"
+   "sha256": "8bbf0bfb5feacb08cac8a9ba357337b5a7372e656f0a8bdad7b6ce74d1862ec2"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "eaab49b4473565086d0a1b9170b699ff7001941b7a525c529c2a9e929bdb2be7"
+   "sha256": "c660f9e2695e29715fb920793c0949a8a8eefb8190fce99dfd9adb5794101533"
   },
   {
    "path": "ui/js/apply.js",
@@ -270,11 +272,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "e7cbff7fd287fbb44ca6a8be2272199daedbc359cea42a2586287a3403f51c4d"
+   "sha256": "e857583b03b53918d25a5fc49154a9fb99f1a1c5d250cb5b16f5a6239b8e5c77"
   },
   {
    "path": "MAP.md",
-   "sha256": "2cb7f017c6c3af975720cd72da2b4d23481e1a764affa3337f7ca52d2f0321ad"
+   "sha256": "91a521c0c30c216eece2b8af05c32ce9ed76b7c3145048356efd8158c9694411"
   },
   {
    "path": "Setup (Mac).command",

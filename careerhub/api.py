@@ -120,23 +120,23 @@ async def api_resume():
     return {"ok": True, **prof}
 
 
-async def api_start_find(roles_text, companies_text, auto):
+async def api_start_find(roles_text, companies_text, auto, all_openings=False):
     if UI.busy:
         return {"ok": False, "error": "Already working. Wait for it to finish or press Stop."}
     roles = [norm(x) for x in (roles_text or "").split(",") if x.strip()]
     tokens = [t.strip() for t in (companies_text or "").split(",") if t.strip()]
-    if auto:
+    if auto and not all_openings:
         tokens.append("auto")
     if not tokens:
         return {"ok": False, "error": "Add a company name, or switch on “Search the web for companies hiring”."}
-    if not roles:
+    if not roles and not all_openings:
         try:
             has_resume = resume_info(Answers()) is not None
         except ProfileError:
             has_resume = False
         if not has_resume:
             return {"ok": False, "error": "I need a job title to look for. Add one above, or add your resume in Profile → Files."}
-    start_task(run_find(roles, tokens))
+    start_task(run_find(roles, tokens, bool(all_openings)))
     return {"ok": True}
 
 

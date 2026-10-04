@@ -13,6 +13,7 @@ SANDBOX = os.name == "nt" or sys.platform == "darwin"
 
 
 KEEP_DAYS = 90
+_TASKS = set()
 
 
 def _cookie_file(user_dir):
@@ -24,7 +25,14 @@ async def _restore_cookies(ctx, user_dir):
     try:
         saved = json.loads(_cookie_file(user_dir).read_text(encoding="utf-8"))
         if saved:
-            await ctx.add_cookies(saved)
+            try:
+                await ctx.add_cookies(saved)
+            except Exception:                           # one bad cookie rejects the whole batch: add them one by one
+                for c in saved:
+                    try:
+                        await ctx.add_cookies([c])
+                    except Exception:
+                        pass
     except Exception:
         pass
 
@@ -40,14 +48,18 @@ async def _save_cookies_loop(ctx, user_dir):
                     c["expires"] = time.time() + KEEP_DAYS * 86400
                 keep.append(c)
             _cookie_file(user_dir).write_text(json.dumps(keep), encoding="utf-8")
-        except Exception:
-            return  # window closed
+        except Exception as e:
+            if "closed" in str(e).lower():
+                return  # window closed
+            log(f"ℹ  Couldn't save the browser login: {str(e).splitlines()[0][:120]}")
 
 
 async def launch_chrome(p, user_dir, **opts):
     ctx = await _launch(p, user_dir, **opts)
     await _restore_cookies(ctx, user_dir)
-    asyncio.get_running_loop().create_task(_save_cookies_loop(ctx, user_dir))
+    task = asyncio.get_running_loop().create_task(_save_cookies_loop(ctx, user_dir))
+    _TASKS.add(task)                                    # keep a reference so it is not garbage-collected
+    task.add_done_callback(_TASKS.discard)
     return ctx
 
 

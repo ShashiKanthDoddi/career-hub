@@ -1,6 +1,12 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.5',
+CHANGELOG = [{'version': '2.7.6',
+  'title': 'Company search and tidier boards',
+  'new': ['Find jobs has a new tick box, "Show every opening at these companies": type a company and see all its current jobs',
+          'The browser keeps your logins more reliably, and says so in the log if it cannot save them'],
+  'fixed': ['In My jobs, the number at the top of the "Waiting for reply" column no longer spills outside its box',
+            'If one saved login cookie is rejected, the rest are still restored']},
+ {'version': '2.7.5',
   'title': 'Safer updates',
   'new': ['Updates are now checked against a signature from your helper before they install, so only genuine updates are accepted'],
   'fixed': ['The app window now only accepts commands from the app itself']},

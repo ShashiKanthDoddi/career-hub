@@ -1,8 +1,20 @@
 {
- "version": "2.7.5",
+ "version": "2.7.6",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.6",
+   "title": "Company search and tidier boards",
+   "new": [
+    "Find jobs has a new tick box, \"Show every opening at these companies\": type a company and see all its current jobs",
+    "The browser keeps your logins more reliably, and says so in the log if it cannot save them"
+   ],
+   "fixed": [
+    "In My jobs, the number at the top of the \"Waiting for reply\" column no longer spills outside its box",
+    "If one saved login cookie is rejected, the rest are still restored"
+   ]
+  },
   {
    "version": "2.7.5",
    "title": "Safer updates",
@@ -64,14 +76,6 @@
    "fixed": [
     "Google no longer says \"This browser or app may not be secure\" when you sign in to LinkedIn in the job window"
    ]
-  },
-  {
-   "version": "2.6.20",
-   "title": "Clearer report messages",
-   "new": [],
-   "fixed": [
-    "When a report or idea cannot be sent to GitHub, the message now says why (for example no token, or the token is missing a permission)"
-   ]
   }
  ],
  "files": [
@@ -93,7 +97,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "ea0e14379c6948cff201938c5c332e4530af1ee5b0fc022af7ae68a62526e9cc"
+   "sha256": "d6deed0b1e323dc3f0fbda75a920ef2491665614e6e22f193de995a01d6c8599"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -109,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "592861b1df957f7cf3ea5725b63a3c0d9bde6f6dadaef83f55a5fbd5bbff9e6f"
+   "sha256": "19bf8f4a96e4b300b6da2f6d17214fee70fb2217bf70592341f08b4b481b4986"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "fa027287a319f691b802d61b8e1905f97a20d8f307bcb02ee45a3c817fe7c550"
+   "sha256": "17d623c9491d17913698a76d1081aca29b70b08d078d9d7ac20597c992a6c23c"
   },
   {
    "path": "careerhub/filler.py",
@@ -121,7 +125,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "e5b3eb9ca467c7f1aeb17ec7ca760c6690e358c981336a3f6debae932204b5e5"
+   "sha256": "125a2efda586be5d70ca4385b4388dffcbaad4e096b1d3bc6fc203d0d763eb87"
   },
   {
    "path": "careerhub/gmail.py",
@@ -137,7 +141,7 @@
   },
   {
    "path": "careerhub/launch.py",
-   "sha256": "a041a96282326cf42503da95c64a2dfa725abc76037407ad1b3c1b0ed4895012"
+   "sha256": "52e7cd485b6e343c443c1f1f4bf51604a8b22e279aeb85d6df2a1e578bf1e262"
   },
   {
    "path": "careerhub/main.py",
@@ -201,11 +205,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "7c4404597eef54bb4b369405a3b70c78fa51b9cb7bb4fdfd8f8a71752306efb6"
+   "sha256": "823c00827f375c87826c6c28f9275b4e2cdb9523516fbbd9d1e0ee5bd5fddb08"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "c660f9e2695e29715fb920793c0949a8a8eefb8190fce99dfd9adb5794101533"
+   "sha256": "182df61775e0206282e1cb8a4aa34eb061f249622ffe774500630f24a7abe308"
   },
   {
    "path": "ui/js/apply.js",
@@ -221,7 +225,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "082220bf7fbe1e6174036ad3d8364042124eb44509c0f8855139a7d5ca7118b0"
+   "sha256": "44862d7b6bb5e75e6b3eb8c44dba42df265ee1a15b72ea01b4656a0084488e77"
   },
   {
    "path": "ui/js/forms.js",
@@ -277,11 +281,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "2e9291e74d497838ab213fceb2e25dd8c86f36e73f53ac2937051ec4f81799e3"
+   "sha256": "d95eb306360c68fe8ca84102309f4e6f58b5825c439179668878f1e6c08670a0"
   },
   {
    "path": "MAP.md",
-   "sha256": "6a37bdc091f8b6a93a345a32e9f2f60eb013123a64096c1e05bcdd625623aada"
+   "sha256": "f885ef4a54e7afb10330f19af981a52a163ce257e1239bcbbf5c37a4492e068d"
   },
   {
    "path": "Setup (Mac).command",
@@ -300,5 +304,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "x5TOqMpUjI0gG5iNwx//y/R1DAYAlzyfEPySJ4Oiv20sMW6TYMnfF0RjG8+tH8pdpK5hU7WxW/nkECQghSa1AQ=="
+ "signature": "yw+S3IvBGlXdrsTO7+E235I2/DcywuhTGbBqF3rebb7nGsgXGV2I/FxWRLjcbLV93OTrhEOmGR/FoYH2AM5nCQ=="
 }

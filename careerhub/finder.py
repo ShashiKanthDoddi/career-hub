@@ -281,9 +281,16 @@ async def discover(req, prof, locations):
     return list(found)[:60]
 
 
-async def search_jobs(p, db, roles, tokens):
-    prof = resume_info(db)
-    if prof is None:
+async def search_jobs(p, db, roles, tokens, all_openings=False):
+    try:
+        prof = resume_info(db)
+    except ProfileError:
+        if not all_openings:
+            raise
+        prof = None
+    if prof is None and all_openings:
+        prof = {"skills": [], "roles": roles, "years": None}
+    elif prof is None:
         if not roles:
             log("⚠  I can't read your resume and no job title was given. Add a job title above, or put your resume in Profile → Files.")
             return []
@@ -339,17 +346,18 @@ async def search_jobs(p, db, roles, tokens):
         if not j["link"] or norm_link(j["link"]) in seen or norm_link(j["link"]) in done:
             diag["seen"] += 1
             continue
-        if not relevant_title(j["title"], prof) or any(has_phrase(x, t) for x in excludes):
-            diag["title"] += 1
-            continue
-        if not location_ok(j["location"], locations):
-            diag["city"] += 1
-            continue
-        if j["age"] is not None and j["age"] > max_age:
-            diag["old"] += 1
-            continue
+        if not all_openings:
+            if not relevant_title(j["title"], prof) or any(has_phrase(x, t) for x in excludes):
+                diag["title"] += 1
+                continue
+            if not location_ok(j["location"], locations):
+                diag["city"] += 1
+                continue
+            if j["age"] is not None and j["age"] > max_age:
+                diag["old"] += 1
+                continue
         j["score"] = match_score(j["title"], j["desc"], prof)
-        if j["score"] >= min_score:
+        if all_openings or j["score"] >= min_score:
             matches.append(j)
             done.add(norm_link(j["link"]))
         else:
@@ -366,7 +374,7 @@ async def search_jobs(p, db, roles, tokens):
     return matches
 
 
-async def run_find(roles, tokens):
+async def run_find(roles, tokens, all_openings=False):
     UI.busy, UI.stop = True, False
     save_app_state(last_find=datetime.datetime.now().isoformat(timespec="seconds"),
                    find_roles=", ".join(roles), find_tokens=tokens)
@@ -374,9 +382,9 @@ async def run_find(roles, tokens):
     await UI.emit({"type": "run_start", "what": "find", "total": 0})
     try:
         db = Answers()
-        found = await search_jobs(PW["p"], db, roles, tokens)
+        found = await search_jobs(PW["p"], db, roles, tokens, all_openings)
         jobs = [{"score": j["score"], "title": j["title"], "company": j["company"], "location": j["location"],
-                 "age": j["age"], "link": j["link"]} for j in found[:100]]
+                 "age": j["age"], "link": j["link"]} for j in found[:(500 if all_openings else 100)]]
     except StopRun:
         log("⏹ Stopped.")
     except ProfileError as e:

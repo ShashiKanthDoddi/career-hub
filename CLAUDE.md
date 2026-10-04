@@ -85,4 +85,5 @@ maintains it and ships fixes through automatic updates from GitHub.
 - "Continue with Google" on LinkedIn may still be refused by Google even with automation flags hidden (`launch.py`); she should sign in with her LinkedIn email and password.
 - Logins persist because `launch.py` re-saves session cookies (`.job_browser_cookies.json`, `.app_window_cookies.json` in her data folder, plain text) every minute; a login made in the last minute before closing may be lost.
 - The app window opens maximised (`main.open_app_window`: `--start-maximized`, then forced through Chrome's DevTools protocol because Chrome may restore a saved smaller size). She can still resize it.
+- "Show every opening at these companies" (`all_openings` in `finder.search_jobs`) skips the role, city, age and minimum-match filters and the web search; it only works for companies on the five supported systems.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

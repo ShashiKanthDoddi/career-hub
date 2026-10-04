@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.18',
+CHANGELOG = [{'version': '2.6.19',
+  'title': 'Pictures in reports and ideas',
+  'new': ['Report a problem and Suggest a feature let you add pictures: pick them or paste a screenshot with Ctrl+V'],
+  'fixed': []},
+ {'version': '2.6.18',
   'title': 'A sweeter hello',
   'new': ['The Home greeting uses a different pet name each hour',
           'A "Suggest a feature" button (side bar and Settings, Help) sends your idea to the person who looks after the app'],

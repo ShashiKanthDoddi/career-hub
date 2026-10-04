@@ -4,6 +4,7 @@ import html
 import json
 from .answers import Answers
 from .auth import auth_state, get_to_form, handle_auth
+from .jobsites import allowed, challenged, pace, site_of, start_cooling_off
 from .launch import launch_chrome
 from .bridge import StopRun, UI, check_stop, log
 from .config import BROWSER_DIR, DRAFT_DIR
@@ -75,6 +76,16 @@ async def apply_one(ctx, link, db, n, total):
         page_title = (await page.title()).strip()
     except Exception:
         page_title = ""
+    site = site_of(link)
+    if site and await challenged(page):
+        v = await UI.ask(title=f"{site} wants to check you're human",
+                         message="Solve the check in the Chrome window yourself. If it keeps coming back, stop for today: "
+                                 "pushing on can get the account restricted.",
+                         choices=[("I solved it – continue", "go", "primary"), ("Stop for today", "stop", "danger")],
+                         kind="help")
+        if v == "stop" or await challenged(page):
+            start_cooling_off(site)
+            return "QUIT"
     company = guess_company(link, page_title)
     title = page_title.split("|")[0].strip()[:100] or "Job"
     CURRENT_JOB.update(company=company, title=title, desc=(await page_text(page))[:8000])
@@ -263,8 +274,17 @@ async def run_apply(links):
             log("Nothing to apply for.")
             return
         ctx = await job_browser()
+        last_site = None
         for i, link in enumerate(todo, 1):
             check_stop()
+            site = site_of(link)
+            if site:
+                ok, why = allowed(site)
+                if not ok:
+                    log(f"⏸ Skipped (left in your list): {link}\n   {why}")
+                    continue
+                if last_site == site:
+                    await pace(site)
             try:
                 res = await apply_one(ctx, link, db, i, len(todo))
             except StopRun:
@@ -281,6 +301,7 @@ async def run_apply(links):
             if res == "QUIT":
                 break
             status, company, title, summary = res
+            last_site = site
             tracker_add(company, title, status, link, summary)
             if status.startswith("Submitted") and link in data()["saved_links"]:
                 data()["saved_links"].remove(link)          # one list: sent jobs leave it

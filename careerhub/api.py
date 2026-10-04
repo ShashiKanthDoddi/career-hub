@@ -68,7 +68,7 @@ async def api_save_profile(items):
         for it in items:
             where, key, value = it["where"], it["key"], str(it.get("value", "")).strip()
             if where == "settings":
-                if key in ("minimum_match", "max_job_age_days") and value.isdigit():
+                if key in ("minimum_match", "max_job_age_days", "jobsite_daily_limit") and value.isdigit():
                     prof["settings"][key] = int(value)
                 else:
                     prof["settings"][key] = value

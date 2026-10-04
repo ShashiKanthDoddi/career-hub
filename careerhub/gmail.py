@@ -7,10 +7,11 @@ import html
 import imaplib
 import re
 from .bridge import log, notify
-from .records import tracker_rows
+from .jobsites import ALERT_SENDERS, alert_jobs
+from .records import save_found, seen_links, tracker_rows
 from .state import MAIL
 from .store import app_state, data, load_profile, save_app_state, save_data
-from .textutil import norm, truthy
+from .textutil import norm, norm_link, truthy
 
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -130,6 +131,8 @@ def process_mail(items, rows, known_ids):
         msg = email.message_from_bytes(raw)
         subject = dec(msg.get("Subject"))
         from_name, from_addr = email.utils.parseaddr(dec(msg.get("From")))
+        if any(a in from_addr.lower() for a in ALERT_SENDERS) and re.search(r"(?i)alert|jobs? for you|new jobs|recommended|recommendation", subject):
+            continue                                    # job-alert emails are handled by alert_links()
         body = mail_body(msg)
         kind = classify_mail(subject, body)
         if kind is None:
@@ -147,6 +150,25 @@ def process_mail(items, rows, known_ids):
                     "company": (app or {}).get("Company") or company_from_sender(from_name, from_addr),
                     "title": (app or {}).get("Job title", ""), "link": (app or {}).get("Link", ""),
                     "snippet": body[:300], "done": kind in ("received", "rejection", "other")})
+    return out
+
+
+def alert_links(items):
+    """Job links from LinkedIn / Indeed / Naukri alert emails: [(link, title, site)]."""
+    out = []
+    for _gid, raw in items:
+        msg = email.message_from_bytes(raw)
+        _n, from_addr = email.utils.parseaddr(dec(msg.get("From")))
+        site = next((s for s in ("linkedin", "indeed", "naukri") if s in from_addr.lower()), None)
+        if not site:
+            continue
+        for part in msg.walk():
+            if part.get_content_type() == "text/html":
+                try:
+                    htm = (part.get_payload(decode=True) or b"").decode(part.get_content_charset() or "utf-8", "replace")
+                except Exception:
+                    continue
+                out += [(l, t, site.title()) for l, t in alert_jobs(htm)]
     return out
 
 
@@ -172,7 +194,7 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=400):
                     continue
                 hdr = email.message_from_bytes(part[1])
                 head = f"{dec(hdr.get('From'))} {dec(hdr.get('Subject'))}".lower()
-                if (JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
+                if (any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
                         or any(re.search(rf"\b{re.escape(c)}\b", head) for c in names)):
                     wanted.append((meta.split()[0].encode(), gid))
         out = []
@@ -235,6 +257,15 @@ async def check_mail(manual=False):
         items = await asyncio.to_thread(imap_fetch, ms["addr"], ms["pw"], last.date(), known,
                                         [r.get("Company", "") for r in rows])
         new = process_mail(items, rows, known)
+        have, found = seen_links(), []
+        for link, title, site in alert_links(items):
+            if norm_link(link) not in have:
+                have.add(norm_link(link))
+                found.append({"score": "", "company": f"{site} alert", "title": title, "location": "", "age": None,
+                              "link": link})
+        if found:
+            save_found(found)
+            log(f"   🔎 {len(found)} new job link(s) from job-alert emails (see Find jobs).")
         for u in new:
             u["gmail"] = gmail_link(ms["addr"], u["id"])
         if new:

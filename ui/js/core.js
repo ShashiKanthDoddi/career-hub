@@ -29,6 +29,7 @@ function go(p, opts={}){
   if (p === "home") loadHome();
   if (p === "jobs") loadJobs(opts.filter);
   if (p === "find"){ $("#navFound").hidden = true; if (!RESUME) loadResume(); loadFound(); }
+  if (p === "settings") loadFeedback();
   if (p === "profile"){ loadAnswers(); loadHistory(); }
 }
 $$(".nav[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));

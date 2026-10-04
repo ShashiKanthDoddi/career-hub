@@ -209,6 +209,11 @@
           <div class="row"><button class="btn primary" id="reportBtn2">Report a problem</button><button class="btn" id="suggestBtn2">Suggest a feature</button><button class="btn" data-open="logs">Open logs</button></div>
           <p class="kbdhint" style="margin-top:14px">Shortcuts: <kbd>⌘K</kbd> quick actions, <kbd>1</kbd>–<kbd>6</kbd> switch pages, <kbd>Esc</kbd> close.</p>
         </div>
+        <div class="panel sec" id="set-feedback">
+          <div class="panel-head"><h2 class="grow">Your reports and ideas</h2><button class="btn sm" id="feedbackRefresh">Refresh</button></div>
+          <p class="muted small" style="margin-top:-6px">What you sent, and where it stands. Open means not looked at yet or still being worked on.</p>
+          <div id="feedbackList" class="muted small">Loading…</div>
+        </div>
         <div class="panel sec" id="set-updates">
           <div class="panel-head"><h2 class="grow">Updates and backups</h2><span class="tag" id="verTag"></span></div>
           <p class="muted" style="margin-top:-6px">New versions arrive by themselves from GitHub: checked when the app opens and every hour. You'll see what's new before anything changes. Your data is never touched, and a backup is made first.</p>

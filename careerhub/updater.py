@@ -104,6 +104,10 @@ def install_files(files, newv):
     for rel, blob in files.items():
         target = BASE / rel
         target.parent.mkdir(parents=True, exist_ok=True)
+        if rel.endswith(".bat"):                       # the launcher is running right now: Windows needs CRLF, and
+            blob = blob.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")    # other bytes would break its restart loop
+            if target.exists() and target.read_bytes() == blob:
+                continue
         target.write_bytes(blob)
         if rel.endswith(".command"):
             target.chmod(0o755)

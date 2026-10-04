@@ -76,6 +76,20 @@ def main():
     check(textutil.pick("India (+91)", ["+93", "+91"]) == "+91", "phone code +91 matches 'India (+91)'")
     check(textutil.adapt_value({"label": "Available To Join (in days)"}, "30 days") == "30", "'in days' fields get a number")
 
+    from careerhub import jobsites
+    check(jobsites.site_of("https://in.indeed.com/viewjob?jk=abc") == "Indeed" and jobsites.site_of("https://x.com/linkedin.com") is None,
+          "job sites recognised by host")
+    check(jobsites.clean_job_link("https://www.linkedin.com/comm/jobs/view/3912345678/?trackingId=x") == "https://www.linkedin.com/jobs/view/3912345678",
+          "LinkedIn alert link cleaned")
+    check(jobsites.clean_job_link("https://in.indeed.com/rc/clk?jk=0123456789abcdef&fccid=1") == "https://in.indeed.com/viewjob?jk=0123456789abcdef",
+          "Indeed alert link cleaned")
+    check(jobsites.alert_jobs('<a href="https://www.naukri.com/job-listings-seo-manager-acme-123?src=m">SEO Manager</a>'
+                              '<a href="https://www.naukri.com/jobs">More</a>') ==
+          [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
+    check(jobsites.CHALLENGE_RE.search("Let's do a quick security check") and not jobsites.CHALLENGE_RE.search("Marketing Manager"),
+          "robot-check wording detected")
+    check(jobsites.allowed("LinkedIn")[0], "daily limit allows the first application")
+
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

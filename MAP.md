@@ -32,6 +32,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `apply_run.py` | 310 | Runs a list of jobs: apply_one (page loop, summary, submit), run_apply, job browser. | `save_draft`, `open_browser`, `table_rows`, `apply_one`, `job_browser`, `run_apply` |
 | `launch.py` | 26 | Starts Chrome/Chromium with the sandbox on; downloads the browser if missing. | `launch_chrome`, `SANDBOX` |
 | `finder.py` | 363 | Find jobs: hiring-system APIs (Workday, Greenhouse, Lever, Ashby, SmartRecruiters), web discovery, filters, scoring, diagnostics. | `boards_in`, `board_label`, `seniority_excludes`, `location_ok`, `relevant_title`, `match_score`, `get_json`, `fetch_board`, `web_search`, `UA`, `STRONG_TITLE_WORDS`, `TECH_WORDS`, `CITY_ALIASES` … |
+| `jobsites.py` | 100 | LinkedIn / Indeed / Naukri safety: daily limit, pacing between jobs, robot-check detection, rest-for-the-day, job links from alert emails. | `site_of`, `allowed`, `pace`, `challenged`, `alert_jobs`, `clean_job_link` |
 | `gmail.py` | 258 | Reads the job Gmail (IMAP, read-only), classifies replies, friendly errors. | `mail_settings`, `classify_mail`, `dec`, `mail_body`, `company_from_sender`, `match_application`, `process_mail`, `imap_fetch`, `gmail_link`, `MONTHS`, `MAIL_TYPES`, `MAIL_SKIP`, `JOB_WORDS` … |
 | `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. | `make_report`, `smtp_send`, `send_report` |
 | `overview.py` | 38 | Combines applications + emails into stages for Home and My jobs. | `jobs_overview`, `STAGE_ORDER` |

@@ -111,6 +111,33 @@ def install_files(files, newv):
     return dest
 
 
+async def download_files(m):
+    """Downloads and checks every file of release manifest m. Kept in memory so 'Update now' is instant."""
+    cached = UPDATE.get("files")
+    if cached and cached[0] == m["version"]:
+        return cached[1]
+    base, files = source_base(), {}
+    for f in m.get("files", []):
+        rel = safe_path(f["path"])
+        blob = await _get(base + rel.replace(" ", "%20").replace("(", "%28").replace(")", "%29"))
+        if hashlib.sha256(blob).hexdigest() != f["sha256"]:
+            raise ValueError(f"{rel} didn't download correctly (checksum mismatch)")
+        files[rel] = blob
+    UPDATE["files"] = (m["version"], files)
+    return files
+
+
+async def prefetch_update():
+    """Quietly downloads the new version in the background; a failure here is harmless (Update now retries)."""
+    m = UPDATE.get("manifest")
+    try:
+        if m:
+            await download_files(m)
+            log(f"⬇️  Version {m['version']} is downloaded and ready to install.")
+    except Exception as e:
+        log(f"⚠  Background download of the update failed (will retry on Update now): {str(e)[:120]}")
+
+
 async def install_latest():
     m = UPDATE.get("manifest")
     if not m:
@@ -118,14 +145,8 @@ async def install_latest():
         if not r.get("available"):
             return {"ok": False, "error": r.get("error") or "You already have the latest version."}
         m = UPDATE["manifest"]
-    base, files = source_base(), {}
     try:
-        for f in m.get("files", []):
-            rel = safe_path(f["path"])
-            blob = await _get(base + rel.replace(" ", "%20").replace("(", "%28").replace(")", "%29"))
-            if hashlib.sha256(blob).hexdigest() != f["sha256"]:
-                raise ValueError(f"{rel} didn't download correctly (checksum mismatch)")
-            files[rel] = blob
+        files = await download_files(m)
         install_files(files, m["version"])
     except Exception as e:
         log(f"⚠  Update failed, nothing was changed: {e}")

@@ -59,7 +59,7 @@ function wireBoard(){
     col.ondragleave = () => col.classList.remove("over");
     col.ondrop = async e => { e.preventDefault(); col.classList.remove("over"); const j = JOBS.jobs.find(x => x.key === dragKey); if (!j || j.stage === col.dataset.col) return;
       j.stage = col.dataset.col; renderJobs(); await api_set_note(j.key, j.stage, j.notes);
-      if (j.stage === "Offer") confetti(); toast(`${j.company} moved to ${COLNAME[j.stage] || j.stage}`); };
+      if (j.stage === "Offer") confetti(); toast(`${j.company} moved to ${COLNAME[j.stage] || j.stage}`); await askWhen(j); };
   });
 }
 function openJob(key){
@@ -81,7 +81,27 @@ function openJob(key){
   const close = () => { $("#layer").innerHTML = ""; renderJobs(); };
   $("#scrim").onclick = close; $("#closeDrawer").onclick = close;
   $$(".stagepick button").forEach(b => b.onclick = async () => { j.stage = b.dataset.s; $$(".stagepick button").forEach(x => x.classList.toggle("on", x === b));
-    await api_set_note(j.key, j.stage, $("#jobNotes").value); if (j.stage === "Offer") confetti(); toast(`Moved to ${COLNAME[j.stage] || j.stage}`); });
+    await api_set_note(j.key, j.stage, $("#jobNotes").value); if (j.stage === "Offer") confetti(); toast(`Moved to ${COLNAME[j.stage] || j.stage}`); await askWhen(j); });
   let t; $("#jobNotes").oninput = e => { clearTimeout(t); $("#noteState").textContent = "Saving"; t = setTimeout(async () => { j.notes = e.target.value;
     await api_set_note(j.key, j.stage, j.notes); $("#noteState").textContent = "Saved"; }, 600); };
+}
+
+/* Moving a card to Interview or Test asks when it is, and puts it on the Home calendar */
+function askWhen(j){
+  if (j.stage !== "Interview" && j.stage !== "Assessment") return Promise.resolve();
+  const what = j.stage === "Assessment" ? "test" : "interview";
+  return new Promise(res => {
+    const box = document.createElement("div"); box.className = "modal"; box.style.zIndex = 70;
+    box.innerHTML = `<form class="sheet" style="--k:var(--hi)"><div class="sh"><div class="kind" style="color:var(--hi-ink)">Calendar</div>
+      <h2>When is the ${what}?</h2><p class="muted">${esc(j.company)}${j.title ? ", " + esc(j.title) : ""}. It will show on the Home calendar.</p></div>
+      <div class="row" style="gap:8px;margin:14px 0"><input type="date" id="wDate" required><input type="time" id="wTime"></div>
+      <div class="row" style="gap:8px"><button class="btn primary" type="submit">Save to calendar</button><button class="btn ghost" type="button" id="wSkip">I don't know yet</button></div></form>`;
+    document.body.appendChild(box);
+    const d = box.querySelector("#wDate"); d.value = iso(new Date()); d.focus();
+    const close = () => { box.remove(); res(); };
+    box.querySelector("#wSkip").onclick = close;
+    box.querySelector("form").onsubmit = async e => { e.preventDefault();
+      await api_set_job_event(j.key, j.stage, j.company, j.title, d.value, box.querySelector("#wTime").value);
+      toast(`Added to your calendar: ${dayName(d.value)}`); close(); if (typeof loadHome === "function") loadHome(); };
+  });
 }

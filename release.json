@@ -1,8 +1,24 @@
 {
- "version": "2.4.1",
+ "version": "2.5",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.5",
+   "title": "Calendar, to-do and a smarter inbox",
+   "new": [
+    "Home has a calendar for interviews and a to-do list",
+    "The app reads your job Gmail when it opens and every hour, and puts interview dates from emails on the calendar",
+    "Moving a card to Interview or Test asks for the date and adds it to the calendar",
+    "My jobs now also shows companies that emailed you but were not applied to through the app",
+    "A spinning circle shows while Check email works, and it tells you the result",
+    "A kind note appears after more than 6 rejection emails"
+   ],
+   "fixed": [
+    "A card you moved by hand now follows a newer email (for example a rejection after an interview)",
+    "The calendar and to-do update without reloading the whole Home page"
+   ]
+  },
   {
    "version": "2.4.1",
    "title": "Fixes for forms, captcha and the icon",
@@ -121,30 +137,6 @@
     "Closing the app no longer waits on a slow email check",
     "Home cards no longer spill off the side of the window"
    ]
-  },
-  {
-   "version": "1.1",
-   "title": "Smarter and safer",
-   "new": [
-    "Mac notification and sound when the app needs you",
-    "Copy and Logs buttons for the activity panel",
-    "Required boxes that are still empty are flagged before you submit",
-    "Old written answers that mention another company are shown for review, not pasted",
-    "Edit or delete remembered answers in Profile",
-    "Checks for the “thank you” message after submitting",
-    "Best-guess dropdown answers are highlighted in orange",
-    "Label on the job window so you can tell the two Chrome windows apart",
-    "Spots the same job opened through a different link",
-    "Better date fields (e.g. “Immediately”, “15/11/2026”)",
-    "Optional AI helper: drafts written answers and tailored cover letters",
-    "Second and third resumes, chosen automatically by job title",
-    "Daily automatic job search",
-    "Windows support"
-   ],
-   "fixed": [
-    "The AI button no longer appears on date and link fields",
-    "Submit confirmation now reads the application page, not the summary tab"
-   ]
   }
  ],
  "files": [
@@ -166,7 +158,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "676d18198a5fbb8d01e87760dfb2fccf6dc26d11adfbb2ee1b67809f8a138768"
+   "sha256": "f416ba4108c3f337c7d1cea6d0a99027ddfed982a04282826301ed19d84a2cbb"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -182,11 +174,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "1c5602aa685e2257f809c0569f7c4d4186c670ca84f84b9b8f1b58cb2dc6aa1a"
+   "sha256": "f486be0bdc6cf736137a95bbde9a11987005cf29e9f706fbedb9652920eaa2cf"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "d67585fc9e21c733547e9bc290048598b7d18d70dd01b7d78e1af511974dfc13"
+   "sha256": "de716386e2a2faa530a46e393f24e322c1d08bebec5a9fc7c736fde46b9eebc0"
   },
   {
    "path": "careerhub/filler.py",
@@ -198,7 +190,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "28563389778d0915fdc36ed011b39b862ee3040f1243ac26d7b27835fe2493b5"
+   "sha256": "8be43e14da15ad969cc4b2bfe6b8d656f637ca7f990b7a98df086079d026d432"
   },
   {
    "path": "careerhub/jobsites.py",
@@ -210,15 +202,23 @@
   },
   {
    "path": "careerhub/main.py",
-   "sha256": "7454375adda967d44b723c7e968209cf42e5fb5605b42e8d4f5d00c649c78774"
+   "sha256": "55a37474def936e0fe900476093feef3894b3be71654f01970f3293190884126"
+  },
+  {
+   "path": "careerhub/meetings.py",
+   "sha256": "3f55c155682774922ff4491b58d51066b4f15b181bf69b450c34998c1434ef73"
   },
   {
    "path": "careerhub/overview.py",
-   "sha256": "8d41c384c2a1c3f7c10f97bce4d6de0c4c96d6c1b310d384200a7c74bb33a4bb"
+   "sha256": "99dabf9bf1569ba7f722a2dc6c17d85bbf818672a9cb883be45de92964e7af35"
   },
   {
    "path": "careerhub/page_js.py",
-   "sha256": "a15d37a5f6df28e86b8fbdbfe601df868d2812dba39906d5fe931877a7510d08"
+   "sha256": "76abfba12edec1fb7567571239cdff5500a341ee241af9ecb08455786d2bb9e5"
+  },
+  {
+   "path": "careerhub/planner.py",
+   "sha256": "91ae2f736df45595cf2581d641c320d0050158e43edc8e4c9652221623fdf075"
   },
   {
    "path": "careerhub/profile_form.py",
@@ -242,7 +242,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "d8cff1c1ebe6b171dc340374ce4c8eb03aaf3b160d22b88f1d65d2d4f9fce73e"
+   "sha256": "0934d8737329d85499cc6ab22de9ebaa37c0d9262855d3bd073d774bf468825e"
   },
   {
    "path": "careerhub/textutil.py",
@@ -254,11 +254,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "2f722d833091a78ef7b18067fcabd8384e36de65ab34ff84a3eaaa9fe798137f"
+   "sha256": "7a0da222bb414f2b64f05ee075bd966547a6dc17acef33f4bb9a0e95516f6e83"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "8d8e0b34c4c052c46a75518d673fbd9bbddb5a3ff30c24aac0045628b00bd0a5"
+   "sha256": "6c2123ec537099a8cfda9f24e514bb3c4a07341710cfe5dd405baf780be230c7"
   },
   {
    "path": "ui/js/apply.js",
@@ -270,7 +270,7 @@
   },
   {
    "path": "ui/js/events.js",
-   "sha256": "f39e5c68689595f811ffa60bcd3d90b4e6e318062eae36cf3dd29d3c44aed251"
+   "sha256": "04605b8a79dde779efb4ce3844be0d3662765607544a8c754a0599af2741fa21"
   },
   {
    "path": "ui/js/find.js",
@@ -282,15 +282,19 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "7141435e2c685b068a10b2b551b154fc585aeadba892a0b9eaccc996a30481c8"
+   "sha256": "57ff15dad8381da83bc541b89c7b4dfb4929e972c661bea6fdb174dd7401962e"
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "f790bd2144a7012404a8849cdeee8534345f0e298412ccb55189a09dc78407f2"
+   "sha256": "cc7f3e02564f4c7904fa058f3c7652c119fb9e5efb501d4c5658604c078d0deb"
   },
   {
    "path": "ui/js/palette.js",
    "sha256": "96f7302e2f310875910bc8c2c3c220d9337664411708147d974ce18b20685ed3"
+  },
+  {
+   "path": "ui/js/planner.js",
+   "sha256": "89c3f6b7e5402accca0c812f041d59fc193628cbf4ec89c9125cd54f25e4f7c3"
   },
   {
    "path": "ui/js/questions.js",
@@ -306,7 +310,7 @@
   },
   {
    "path": "tools/make_icon.py",
-   "sha256": "2e6cb49094394a5779aa0bc62eb5e4dfd04ceb6d10bfff20cbf000ac61a05ea4"
+   "sha256": "4f3a6887ea257ff2f754cb00d8d1ad2bd6676d2586061e257ce0a17deb94f91d"
   },
   {
    "path": "tools/make_release.py",
@@ -314,15 +318,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "aad084104a9c33a395ebb92fdbfe689d4dc7077205e2ae1a5062c698c11ef4c3"
+   "sha256": "1f95f2dab764b3f4e732314aaef24dcd9a20051bb6663a257407155b2d2b5e6b"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "5cf7d554777c2654a66d145a6fdceee14bbea1d0d5e94595b11d73d1b1c21f80"
+   "sha256": "641a8dc032bb6e97ee2fdd1a900f4234f5ed209e822dd4dfc002f94e6a559b34"
   },
   {
    "path": "MAP.md",
-   "sha256": "7727c5f34b2823f7c19e54c252eacd0656d770c6270e78d569ab5e96f2320b24"
+   "sha256": "d9fab42612ed3b6ddc2ef4271d3af9e39775b676d87bcbd51a9a381e820bba36"
   },
   {
    "path": "Setup (Mac).command",

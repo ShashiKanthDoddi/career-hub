@@ -6,6 +6,7 @@ from playwright.async_api import async_playwright
 from . import api
 from .bridge import LOG, UI, log
 from .config import APP_NAME, APP_VERSION, APP_WINDOW_DIR, BASE, LOG_DIR, RESTART_CODE
+from .gmail import mail_settings
 from .launch import launch_chrome
 from .state import APP, JOB, PW, TASKS
 from .store import backup_data, data
@@ -26,6 +27,19 @@ async def update_loop():
             await api.api_check_update(False)
         except Exception as e:
             log(f"⚠  Update check failed: {e}")
+        await asyncio.sleep(3600)
+
+
+async def mail_loop():
+    """Reads the job Gmail when the app starts and then every hour (unless switched off in Settings)."""
+    await asyncio.sleep(12)
+    while True:
+        try:
+            ms = mail_settings()
+            if ms["auto"] and ms["addr"] and ms["pw"]:
+                await api.api_check_mail(False)
+        except Exception as e:
+            log(f"⚠  Automatic email check failed: {e}")
         await asyncio.sleep(3600)
 
 
@@ -55,7 +69,7 @@ async def main():
         page = app.pages[0] if app.pages else await app.new_page()
         await page.goto(UI_INDEX.as_uri())
         UI.page = page
-        for coro in (after_load(confirm_started()), update_loop()):
+        for coro in (after_load(confirm_started()), update_loop(), mail_loop()):
             t = asyncio.get_running_loop().create_task(coro)
             TASKS.add(t)
             t.add_done_callback(TASKS.discard)

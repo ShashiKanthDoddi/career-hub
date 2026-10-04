@@ -90,6 +90,14 @@ def main():
           "robot-check wording detected")
     check(jobsites.allowed("LinkedIn")[0], "daily limit allows the first application")
 
+    import datetime
+    from careerhub.meetings import find_meeting
+    sent = datetime.date(2026, 10, 4)
+    check(find_meeting("Your interview is on Thursday, 8 October 2026 at 3:30 PM IST", sent) == {"date": "2026-10-08", "time": "15:30"},
+          "interview email: date and time read")
+    check(find_meeting("Interview slot: Oct 12th, 10.30 am", sent) == {"date": "2026-10-12", "time": "10:30"}, "interview email: Oct 12th 10.30 am")
+    check(find_meeting("Please share your availability. You applied on 1 Oct 2026", sent) is None, "interview email without a date: nothing added")
+
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

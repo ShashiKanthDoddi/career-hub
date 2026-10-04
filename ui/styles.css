@@ -284,3 +284,27 @@ main{height:100vh}
 .filled div span:first-child{color:var(--muted);flex:none;max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .filled div span:last-child{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .muted{color:var(--muted)}
+
+/* home: calendar + to-do */
+.cal-nav{display:flex;align-items:center;gap:6px;margin-bottom:8px}.cal-nav b{flex:1;text-align:center}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .dow{text-align:center;font-size:12px;color:var(--muted);padding:2px 0}
+.cal .day{position:relative;border:1px solid transparent;background:var(--surface-2);border-radius:8px;padding:7px 0;font-size:14px;cursor:pointer}
+.cal .day:hover{border-color:var(--line-2)}
+.cal .day.today{border-color:var(--violet);font-weight:700}
+.cal .day.sel{background:var(--violet-soft);border-color:var(--violet)}
+.cal .day.has{font-weight:700}
+.cal .day u{text-decoration:none;position:absolute;right:3px;top:1px;min-width:15px;height:15px;border-radius:99px;background:var(--hi);color:#fff;font-size:10px;line-height:15px}
+.cal-form{display:grid;gap:8px;margin-top:12px}
+.cal-form input[type=date],.cal-form input[type=time]{background:var(--surface-2);border:1px solid var(--line-2);border-radius:10px;padding:9px 10px}
+.cal-h{margin:12px 0 2px}
+.item.todo{align-items:center}.item.todo.done .body b{text-decoration:line-through;color:var(--muted);font-weight:500}
+#todoForm{margin-bottom:6px}
+
+/* centred "checking email" spinner */
+.spin-wrap{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(20,24,28,.35)}
+.spin-wrap[hidden]{display:none}
+.spin-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);box-shadow:var(--shadow-1);padding:28px 40px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:pop .2s ease}
+.spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--line-2);border-top-color:var(--violet);animation:spin .8s linear infinite;margin-bottom:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cols>.panel{margin-top:0}.cols .panel-head{min-height:34px}

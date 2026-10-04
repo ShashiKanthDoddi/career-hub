@@ -33,6 +33,8 @@ async function loadHome(){
   if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
   $$("#attention [data-done]").forEach(b => b.onclick = async () => { const it = b.closest(".item"); it.classList.add("done-anim");
     await api_dismiss(b.dataset.done); setTimeout(loadHome, 330); });
+  renderPlanner(HOME);
+  if (HOME.cheer) showCheer(HOME.cheer);
   setCount("#navAttn", HOME.attention.length); setCount("#navSaved", HOME.list_count);
   return HOME;
 }
@@ -42,8 +44,12 @@ function itemHTML(u, attn){
   return `<div class="item ${attn ? "new" : ""}"><span class="stage s-${cls}">${label}</span>
     <div class="body"><b>${esc(u.company || u.from)}${u.title ? `, ${esc(u.title)}` : ""}</b><span>${esc(u.subject)}</span><span>${when(u.date)}</span></div>
     <div class="side-acts"><a class="btn sm ghost" href="${esc(u.gmail || "#")}" target="_blank" title="Open in Gmail">${icon("ext")}</a>
+    ${attn && (u.type === "interview" || u.type === "assessment") ? `<button class="btn sm ghost" data-cal="${esc(u.company || u.from)}|${esc(u.title || "")}" title="Put it on the calendar">${icon("cal")}</button>` : ""}
     ${attn ? `<button class="btn sm" data-done="${esc(u.id)}">Done</button>` : ""}</div></div>`;
 }
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
-$("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking"; await api_check_mail(); };
+$("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking";
+  MAIL_SPIN_AT = Date.now(); $("#mailSpin").hidden = false; await api_check_mail(true); };
+let MAIL_SPIN_AT = 0;
+function hideMailSpin(){ setTimeout(() => { $("#mailSpin").hidden = true; }, Math.max(0, 700 - (Date.now() - MAIL_SPIN_AT))); }

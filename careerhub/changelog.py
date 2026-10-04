@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.8.0',
+CHANGELOG = [{'version': '2.8.1',
+  'title': 'Check email shows its progress',
+  'new': ['While Check email runs, Home shows how many emails it has scanned and read, for example "Reading emails: 25 of 40"'],
+  'fixed': ['The first email check is much quicker: job emails are downloaded in groups instead of one by one']},
+ {'version': '2.8.0',
   'title': 'Quicker app, weekly summary and interview prep',
   'new': ['Home has a new "Your last 7 days" summary: applications sent, replies, interviews, offers, a weekly chart and a reminder when a job has had no reply for a week',
           'Find jobs warns you when you already applied to the same job through another link, and leaves it unticked',

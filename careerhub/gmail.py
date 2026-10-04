@@ -7,7 +7,7 @@ import html
 import imaplib
 import re
 from . import planner
-from .bridge import log, notify
+from .bridge import UI, log, notify
 from .jobsites import ALERT_SENDERS, alert_jobs
 from .meetings import find_change, find_meeting
 from .records import save_found, seen_links, tracker_rows
@@ -234,7 +234,7 @@ def alert_links(items):
     return out
 
 
-def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500):
+def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500, progress=None):
     """Reads (never changes) the job inbox. Returns [(gmail_id, raw_bytes)] for likely job emails."""
     M = imaplib.IMAP4_SSL("imap.gmail.com", 993, timeout=30)
     try:
@@ -246,6 +246,8 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500):
         wanted = []
         names = [c.lower() for c in company_names if len(c) >= 3]
         for i in range(0, len(ids), 100):
+            if progress:
+                progress("Scanning", min(i + 100, len(ids)), len(ids))
             typ, resp = M.fetch(b",".join(ids[i:i + 100]), "(X-GM-MSGID X-GM-LABELS BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
             for k, part in enumerate(resp):
                 if not isinstance(part, tuple):
@@ -267,13 +269,16 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500):
                 if (label_kind(MAIL_LABELS[gid]) not in (None, "skip") or any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
                         or any(re.search(rf"\b{re.escape(c)}\b", head) for c in names)):
                     wanted.append((meta.split()[0].encode(), gid))
-        out = []
-        for seq, gid in wanted:
-            typ, resp = M.fetch(seq, "(BODY.PEEK[])")
+        out, by_seq = [], {seq: gid for seq, gid in wanted}
+        log(f"   📨 Reading {len(wanted)} likely job email(s)…")
+        for i in range(0, len(wanted), 25):             # 25 at a time: one by one took minutes on a first run
+            batch = [seq for seq, _g in wanted[i:i + 25]]
+            if progress:
+                progress("Reading", min(i + 25, len(wanted)), len(wanted))
+            typ, resp = M.fetch(b",".join(batch), "(BODY.PEEK[])")
             for part in resp:
-                if isinstance(part, tuple):
-                    out.append((gid, part[1]))
-                    break
+                if isinstance(part, tuple) and part[0].split()[0] in by_seq:
+                    out.append((by_seq[part[0].split()[0]], part[1]))
         return out
     finally:
         try:
@@ -335,9 +340,13 @@ async def check_mail(manual=False):
         log("📬 Checking the job inbox for updates…")
         names = [r.get("Company", "") for r in rows]
         have, found, new = seen_links(), [], []
+        loop = asyncio.get_running_loop()
+
+        def progress(what, done, total):                # runs in the reading thread: hand it to the window safely
+            loop.call_soon_threadsafe(UI._send, {"type": "mail_progress", "what": what, "done": done, "total": total})
         for n, (addr, pw) in enumerate(ms["boxes"]):    # the first inbox must work; extra ones are skipped if they fail
             try:
-                items = await asyncio.to_thread(imap_fetch, addr, pw, last.date(), known, names)
+                items = await asyncio.to_thread(imap_fetch, addr, pw, last.date(), known, names, 1500, progress)
             except Exception as e:
                 if n == 0:
                     raise

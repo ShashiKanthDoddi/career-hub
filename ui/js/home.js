@@ -70,6 +70,6 @@ function itemHTML(u, attn){
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
 $("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking";
-  MAIL_SPIN_AT = Date.now(); $("#mailSpin").hidden = false; $("#feed").hidden = true; await api_check_mail(true); };
+  MAIL_SPIN_AT = Date.now(); $("#mailSpin span").textContent = "Starting…"; $("#mailSpin").hidden = false; $("#feed").hidden = true; await api_check_mail(true); };
 let MAIL_SPIN_AT = 0;
 function hideMailSpin(){ setTimeout(() => { $("#mailSpin").hidden = true; $("#feed").hidden = false; }, Math.max(0, 700 - (Date.now() - MAIL_SPIN_AT))); }

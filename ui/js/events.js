@@ -8,6 +8,7 @@ window.onPy = ev => {
   else if (ev.type === "run_end") runEnd(ev);
   else if (ev.type === "filled") filledToast(ev.items);
   else if (ev.type === "manual") toast("Type these yourself in Chrome: " + ev.items.join(", "));
+  else if (ev.type === "mail_progress"){ const s = $("#mailSpin span"); if (s) s.textContent = `${ev.what} emails: ${ev.done} of ${ev.total}`; }
   else if (ev.type === "mail_done"){ hideMailSpin(); const b = $("#checkMailBtn"); b.disabled = false; b.lastChild.textContent = "Check email";
     if (ev.manual) ev.ok ? toast("Email checked: " + ev.summary) : toast(ev.error, true);   // automatic checks stay quiet
     loadHome(); if (PAGE === "jobs") loadJobs(); }

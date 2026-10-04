@@ -1,8 +1,18 @@
 {
- "version": "2.8.0",
+ "version": "2.8.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.8.1",
+   "title": "Check email shows its progress",
+   "new": [
+    "While Check email runs, Home shows how many emails it has scanned and read, for example \"Reading emails: 25 of 40\""
+   ],
+   "fixed": [
+    "The first email check is much quicker: job emails are downloaded in groups instead of one by one"
+   ]
+  },
   {
    "version": "2.8.0",
    "title": "Quicker app, weekly summary and interview prep",
@@ -68,16 +78,6 @@
    "fixed": [
     "Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly"
    ]
-  },
-  {
-   "version": "2.7.1",
-   "title": "Stay signed in",
-   "new": [
-    "LinkedIn and other sites you sign in to in the job window stay signed in after you close and reopen the app"
-   ],
-   "fixed": [
-    "The Chrome bar about an \"unsupported command-line flag\" no longer shows"
-   ]
   }
  ],
  "files": [
@@ -115,11 +115,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "a7d6ac8621e0b0061de9fcce0adc757d5028751c5ae03bbfa761f10223263b94"
+   "sha256": "74b327c52f987cf4d1b6f08e0ccf684cd9e915947d64ca1bbcce42204da1c558"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "5db48520d7b63be12b341eee75aa4d8239d78678484f45fa3b13370fa3ff91b1"
+   "sha256": "6bde7a616e9beb0d66feea9d87566cef9b593ac9bb0e18a9b07331669c999b9d"
   },
   {
    "path": "careerhub/filler.py",
@@ -131,7 +131,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "5fd2ca8863185bdbeaa3f2f5c8a433d90b32eb6afad4bad667320556711e6835"
+   "sha256": "4aaaff533df636547b5fa43f02f44eacf22c89cfe49c6f63e21118691aef2bf1"
   },
   {
    "path": "careerhub/history.py",
@@ -223,7 +223,7 @@
   },
   {
    "path": "ui/js/events.js",
-   "sha256": "55630f83b86d8d6c35a3df73efbeb7dc9407384cf6ed4338097bc6f5d373e32a"
+   "sha256": "20e76e6045974321d97e42929ee12584a4dd0f40fdac8129f8f6416495fdb615"
   },
   {
    "path": "ui/js/find.js",
@@ -239,7 +239,7 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "ffaae1bd235f5b4e6bbb936f23e0ae2e4d144c2db914abc1792d439046eb00c3"
+   "sha256": "0b48022a80f07c516b0f623aaf3d644f314602b76c0a33fa49d7c17d2c3467ab"
   },
   {
    "path": "ui/js/jobs.js",
@@ -283,11 +283,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "cdb4e5e79f111a32b8b2cc4f07e21cf50de8c2aba79c17e5ad51d337c609ff7f"
+   "sha256": "7b766b5c7d8378cc0e8687050e3c841237064e1c827c1133c99eb26f23126be4"
   },
   {
    "path": "MAP.md",
-   "sha256": "e7311dbab69a7a7f376c635b460c1c1a6acc5e9d2164359804b1df748506612d"
+   "sha256": "68b9f03a9b1971be068a0b8abc036e683b52913c41ab2143c0367fade845ab19"
   },
   {
    "path": "Setup (Mac).command",
@@ -306,5 +306,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "438B4iBvdHowLYNQ9fTUQeRk3xnuvv3S9ayoMS+Dlz2i/C5AWhVruUu7OV69xQ38VWvWUN/piFOkRvae/egvDQ=="
+ "signature": "C7FYnECXx/8TGztrtwoO2CJWPw5h1XNy7S26iNnbK9AoGLfpn3Wp3nCH5cKL0h5vt/+Aooh9F+aMjnqklRo0Cw=="
 }

@@ -74,6 +74,6 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Web search for companies: DuckDuckGo and Bing block automatic requests, so `discover()` relies on `DEFAULT_BOARDS`
   (`careerhub/finder.py`, live-checked in 2.4; re-check now and then, boards come and go). Companies on their own hiring system
   (Nykaa, Swiggy, Zomato, Freshworks) can't be read: she can only add companies on the five supported systems.
-- Themes: Clean white (default), Sand, Emerald, Slate, Mint. A saved theme that no longer exists falls back to Clean white.
+- Look (2.7): stat cards on Home are separate tiles coloured by `--c`; the jobs filter row uses `.row.fbar` so selects stay narrow. Themes: Clean white (default), Sand, Emerald, Slate, Mint. A saved theme that no longer exists falls back to Clean white.
 - "Continue with Google" on LinkedIn may still be refused by Google even with automation flags hidden (`launch.py`); she should sign in with her LinkedIn email and password.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

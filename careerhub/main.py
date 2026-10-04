@@ -16,8 +16,16 @@ UI_INDEX = BASE / "ui" / "index.html"
 
 
 async def open_app_window(p):
-    return await launch_chrome(p, APP_WINDOW_DIR, args=[f"--app={UI_INDEX.as_uri()}", "--window-size=1320,880",
-                                                         "--allow-file-access-from-files", "--enable-lcd-text", "--high-dpi-support=1"])
+    ctx = await launch_chrome(p, APP_WINDOW_DIR, args=[f"--app={UI_INDEX.as_uri()}", "--start-maximized",
+                                                        "--allow-file-access-from-files", "--enable-lcd-text", "--high-dpi-support=1"])
+    try:  # Chrome may restore a saved smaller size for app windows: force maximised
+        page = ctx.pages[0] if ctx.pages else await ctx.wait_for_event("page")
+        cdp = await ctx.new_cdp_session(page)
+        win = await cdp.send("Browser.getWindowForTarget")
+        await cdp.send("Browser.setWindowBounds", {"windowId": win["windowId"], "bounds": {"windowState": "maximized"}})
+    except Exception:
+        pass
+    return ctx
 
 
 async def update_loop():

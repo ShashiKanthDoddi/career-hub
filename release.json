@@ -1,8 +1,16 @@
 {
- "version": "2.7.2",
+ "version": "2.7.3",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.3",
+   "title": "Opens maximised",
+   "new": [
+    "The Career Hub window now always opens maximised, filling the screen"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.7.2",
    "title": "Reports reach GitHub on a Mac",
@@ -65,14 +73,6 @@
    "fixed": [
     "Find jobs no longer shows older saved jobs that are outside the locations you want"
    ]
-  },
-  {
-   "version": "2.6.17",
-   "title": "Rejection emails show again",
-   "new": [],
-   "fixed": [
-    "Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card"
-   ]
   }
  ],
  "files": [
@@ -110,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "9c2779349ab4c3903a26de3d11f5483e49e648feaa1753c5164dcce42ed03320"
+   "sha256": "048dbd463b5ca4ac8251b091f41e3e035b4eaaf02e2e1d08440fd60967bbfbc0"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b76f7525dc3e1ede8b26beb38a5587060395c3b618dc938a3683901ca9d3ca05"
+   "sha256": "e41d712a1cd01af0c620973ee1e66f9d8fb97522a3198d977f4832a8bd1440ac"
   },
   {
    "path": "careerhub/filler.py",
@@ -142,7 +142,7 @@
   },
   {
    "path": "careerhub/main.py",
-   "sha256": "f054b158bd3bea8cb444b138b7c9c92ca2d62cba79e1ba89eb265a8276d23765"
+   "sha256": "35126f8f118ffff786dda0d3368455c3d67a5855e817892a8cf1b2a719d71fbd"
   },
   {
    "path": "careerhub/meetings.py",
@@ -270,11 +270,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "038b083f8fdd8062ff3aeb3ab03141e0d6e070a960dd315f497205a60ce02f47"
+   "sha256": "aca4ddb461be24297f8d3ecb48775f92d62b2e27bf85bfd3b625eb3b691e558e"
   },
   {
    "path": "MAP.md",
-   "sha256": "bac82cb84edcbac1dc17def2e67fabc316a85207461f4a25cb70bc2844ebec17"
+   "sha256": "f827daa9e7f492fcc319898e9e992be4df49ccce67d265047c9dd7c9ba5350f3"
   },
   {
    "path": "Setup (Mac).command",

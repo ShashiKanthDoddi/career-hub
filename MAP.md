@@ -45,7 +45,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
 | `updater.py` | 177 | Automatic updates from GitHub: check, background download (cached in `UPDATE['files']`), verify SHA-256, install, rollback info. | `vt`, `source_base`, `safe_path`, `check_for_update`, `download_files`, `prefetch_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
 | `api.py` | 383 | Every api_* function the window calls (exposed automatically by main.py). | `start_task`, `api_state`, `api_save_profile`, `api_save_list`, `api_add_to_list`, `api_start_apply`, `api_resume`, `api_start_find`, `api_answers`, `THEMES` … |
-| `main.py` | 86 | Opens the app window (ui/index.html), exposes api_*, hourly update check, returns restart code. | `open_app_window`, `update_loop`, `after_load`, `main`, `run`, `UI_INDEX` |
+| `main.py` | 86 | Opens the app window (maximised) (ui/index.html), exposes api_*, hourly update check, returns restart code. | `open_app_window`, `update_loop`, `after_load`, `main`, `run`, `UI_INDEX` |
 
 ## Interface `ui/` (plain HTML/CSS/JS, loaded straight from disk)
 

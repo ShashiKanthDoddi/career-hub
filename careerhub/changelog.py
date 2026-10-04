@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6',
+CHANGELOG = [{'version': '2.6.1',
+  'title': 'Updates in the side menu',
+  'new': ['An Updates button at the bottom of the left menu checks for a new version, and shows a "new" tag when one is waiting'],
+  'fixed': ['The update source is set automatically, so the empty box is gone from Settings']},
+ {'version': '2.6',
   'title': 'Work history on Workday, and smarter interview dates',
   'new': ['Profile has a new Work and education section. "Read from my resume" fills it in for you to check',
           'On Workday applications the app now adds each job and degree from that section',

@@ -28,6 +28,7 @@
     <button class="nav" id="activityBtn"><svg class="i"><use href="#i-activity"/></svg><span>Activity</span></button>
     <button class="nav" id="reportBtn"><svg class="i"><use href="#i-help"/></svg><span>Report a problem</span></button>
   </div>
+  <button class="nav" id="sideUpd" title="Check for a new version"><svg class="i"><use href="#i-download"/></svg><span>Updates</span><span class="count" id="navUpd" hidden>new</span></button>
   <div class="side-status"><i class="dot" id="statusDot"></i><span id="statusText">Ready</span></div>
 </aside>
 
@@ -206,7 +207,6 @@
             <button class="btn" id="zipBtn">Install from a zip file</button>
             <button class="btn" data-open="backups">Open backups</button><button class="btn" data-open="data">Open my data folder</button></div>
           <input type="file" id="zipFile" accept=".zip" hidden>
-          <div class="formgrid" id="updateFields" style="margin-top:16px"></div>
         </div>
         <div class="panel sec" id="set-news">
           <div class="panel-head"><h2 class="grow">What's new</h2></div>

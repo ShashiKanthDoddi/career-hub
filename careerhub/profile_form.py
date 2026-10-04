@@ -69,7 +69,6 @@ PROFILE_FORM = [
     ("Job email (Gmail)", "Gmail app password", "settings", "gmail_app_password", "secret"),
     ("Job email (Gmail)", "Check this inbox automatically", "settings", "gmail_auto", "switch"),
     ("Help", "Send problem reports to (email)", "settings", "helper_email", "text"),
-    ("Updates", "Update source (GitHub owner/repo, set by your helper)", "settings", "update_source", "text"),
     ("AI helper (optional)", "Claude API key (from console.anthropic.com)", "settings", "claude_api_key", "secret"),
     ("AI helper (optional)", "Write a tailored cover letter for every job", "settings", "ai_cover_letters", "switch"),
 ]

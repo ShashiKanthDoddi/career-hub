@@ -25,7 +25,6 @@ function renderForms(){
   for (const [sec, items] of Object.entries(groups)){
     if (sec === "Files"){ $("#fileForm").innerHTML = items.map(([f, i]) => fieldHTML(f, i)).join(""); continue; }
     if (sec === "Help"){ $("#helpFields").innerHTML = items.map(([f, i]) => fieldHTML(f, i)).join(""); continue; }
-    if (sec === "Updates"){ $("#updateFields").innerHTML = items.map(([f, i]) => fieldHTML(f, i)).join(""); continue; }
     const id = SETTINGS_SECTIONS[sec];
     const block = `<div class="panel sec" id="${id || "sec-" + sec.replace(/\W+/g, "-").toLowerCase()}"><div class="panel-head"><h2 class="grow">${esc(SETTINGS_TITLES[sec] || sec)}</h2>
       ${sec === "Job email (Gmail)" ? `<button class="btn sm" id="testMailBtn">Test connection</button>` : ""}</div>

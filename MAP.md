@@ -72,6 +72,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | --- | --- |
 | Make a profile answer match a new label wording | `careerhub/answers.py` FIELD_ALIASES (then add a case to `tools/selftest.py`) |
 | Add a new profile/settings box | `careerhub/profile_form.py` PROFILE_FORM (+ default in `store.py` if needed) |
+| The Updates button / update source | `ui/js/events.js` (`checkUpdates`), `careerhub/config.py` `UPDATE_SOURCE` (no Settings box any more) |
 | Fix how a field's label is read on a site | `careerhub/page_js.py` COLLECT_JS (`labelOf`, `visualLabel`) |
 | Dropdown pre-selected by the site, read-only calendar boxes, captcha before Submit | `careerhub/filler.py` (`plan_field`, `fill_field`, `empty_captcha`), `careerhub/apply_run.py`, `COLLECT_JS` `picker` flag |
 | Change filling / asking behaviour | `careerhub/filler.py` (`plan_field`, `ask_batch`, `fill_field`) |

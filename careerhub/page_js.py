@@ -141,6 +141,7 @@ BUTTONS_JS = r"""
     .filter(b => shown(b) && !b.disabled && b.getAttribute('aria-disabled') !== 'true')
     .map(b => { if (!b.dataset.afbtn) b.dataset.afbtn = String(++window.__afb);
       return {id: b.dataset.afbtn, auto: b.dataset.automationId || '',
+              filt: !!(b.closest('[class*="filter" i], [class*="pill" i], [role=toolbar]')),   // search filters, not real buttons
               text: (b.innerText || b.value || b.getAttribute('aria-label') || '').replace(/\s+/g, ' ').trim()}; });
 }
 """

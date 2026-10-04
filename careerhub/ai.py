@@ -68,6 +68,18 @@ async def ai_prep(db, company, title, kind="interview"):
     return await ai_complete(db, prompt, 700)
 
 
+async def ai_tailor(db, resume, job):
+    """Suggestions to fit one resume to one job posting. Only facts already in the resume; she edits her file herself."""
+    prompt = ("You are helping a marketing professional tailor her resume to one job. Use ONLY facts from the resume; "
+              "never invent numbers, employers, tools or skills. Reply in plain text with exactly three sections, each "
+              "starting with its heading on its own line:\nA summary for the top\nLines to rewrite\nWords from the job to use, if true for you\n"
+              "Under the first heading give 1 line starting with '- ' (a 2-3 sentence summary). Under the second give 4 lines "
+              "starting with '- ', each one an improved version of a real resume line that fits this job better. Under the "
+              "third give up to 8 lines starting with '- '. No other text.\n\n"
+              f"JOB POSTING:\n{(job or '')[:6000]}\n\nRESUME:\n{(resume or '')[:8000]}\n")
+    return await ai_complete(db, prompt, 900)
+
+
 async def text_to_pdf(text, path):
     browser = await PW["p"].chromium.launch()
     try:

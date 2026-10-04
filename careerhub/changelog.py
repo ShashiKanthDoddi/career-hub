@@ -1,6 +1,15 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '3.0',
+CHANGELOG = [{'version': '3.1',
+  'title': 'A Resume page',
+  'new': ['A new Resume page: your resume on the left, the way it looks or the way job sites read it (with marketing keywords highlighted)',
+          'Resume health: a score out of 100 and a short list of what to fix so job sites read it well',
+          'Fit to a job: paste a job link or text and see which of its words your resume is missing; with a Claude key, get rewrite suggestions',
+          'Skills to build for the roles you look for, each with a free course',
+          'Your files (resumes and cover letter) moved from Profile to the Resume page, and they save by themselves'],
+  'fixed': ['The app no longer clicks a job site\'s search filter thinking it is the Next button',
+            'After you pick a different resume, the app uses it straight away']},
+ {'version': '3.0',
   'title': 'A friendlier look',
   'new': ['Choose the letters you like in Settings, Appearance: Classic, Friendly, Elegant, Bold or Handwritten',
           'Calm mode in Settings, Appearance turns off the small animations',

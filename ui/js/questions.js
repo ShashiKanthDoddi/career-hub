@@ -44,7 +44,7 @@ function formField(x){
 }
 function showForm(q){
   ASK = q;
-  const files = q.questions.some(x => x.kind === "file") ? `<p class="hint">New file? Add it in Profile, Your files, then come back.</p>` : "";
+  const files = q.questions.some(x => x.kind === "file") ? `<p class="hint">New file? Add it on the Resume page, in Your files, then come back.</p>` : "";
   $("#layer").innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="sheet" style="--k:var(--violet);width:min(720px,100%)">
      <div class="sh"><div class="kind">New questions</div><h2>${esc(q.title)}</h2><p class="msg">${esc(q.message || "")}</p></div>
      <div class="sb"><div style="display:grid;gap:16px">${q.questions.map(formField).join("")}</div>${files}

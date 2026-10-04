@@ -56,8 +56,13 @@ def read_resume(db):
             path = resolve_path(p)
     path = path or BASE / "Resume.pdf"
     if not path.is_file():
-        log(f"\n⚠  I can't find your resume ({path.name}). Drop it into Profile → Files.")
+        log(f"\n⚠  I can't find your resume ({path.name}). Drop it into Resume → Your files.")
         return ""
+    return pdf_text(path)
+
+
+def pdf_text(path):
+    """The text an application system would read from this PDF ('' when it can't be read)."""
     try:
         from pypdf import PdfReader
     except ImportError:

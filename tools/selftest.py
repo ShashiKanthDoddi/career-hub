@@ -76,6 +76,22 @@ def main():
     check(textutil.pick("India (+91)", ["+93", "+91"]) == "+91", "phone code +91 matches 'India (+91)'")
     check(textutil.adapt_value({"label": "Available To Join (in days)"}, "30 days") == "30", "'in days' fields get a number")
 
+    from careerhub import resume_tools as rt
+    cv = "\n".join(["Priya Sharma", "priya@example.com | +91 98765 43210 | linkedin.com/in/priya", "Summary",
+                    "Performance marketer.", "Work experience", "Growth Marketing Manager, Mamaearth, 2021 - 2024"]
+                   + [f"{v} Google Ads and Meta Ads campaigns, grew leads by {n}0%" for n, v in
+                      enumerate(["Led", "Grew", "Launched", "Managed", "Built", "Ran"], 2)]
+                   + ["Education", "MBA, 2019", "Skills",
+                      "SEO, SEM, GA4, HubSpot, CRM, Canva, Excel, email marketing, content marketing", "marketing work " * 150])
+    a = rt.ats_check(cv)
+    check(a["score"] >= 80 and all(c["ok"] for c in a["checks"]), f"resume check: a complete resume scores well ({a['score']})")
+    b = rt.ats_check("")
+    check(b["score"] < 30 and not b["checks"][0]["ok"] and "picture" in b["checks"][0]["tip"], "resume check: an unreadable (scanned) PDF is flagged")
+    m = rt.keyword_match("Google Ads and SEO", "Must know Google Ads, GA4 and SEO. HubSpot is a plus.")
+    check({"ga4", "hubspot"} <= set(m["missing"]) and "google ads" in m["have"], f"resume fit: missing job keywords found ({m['missing']})")
+    check(rt.target_roles("Performance Marketing Manager", []) == ["performance marketing"], "resume skills: role from Find jobs titles")
+    g = rt.skill_gaps("Google Ads, GA4", ["performance marketing"])[0]
+    check("Google Ads" in g["have"] and all(x["url"].startswith("https://") for x in g["missing"]), "resume skills: gaps come with a course link")
     from careerhub import jobsites
     check(jobsites.site_of("https://in.indeed.com/viewjob?jk=abc") == "Indeed" and jobsites.site_of("https://x.com/linkedin.com") is None,
           "job sites recognised by host")
@@ -297,6 +313,23 @@ def main():
                     res.append(await pg.evaluate("window.api_probe().then(v => v, e => 'blocked')"))
                 await b.close()
                 return res
+        async def apply_test():
+            from careerhub.config import APPLY_WORDS
+            from careerhub.filler import find_clickable
+            page_html = ('<ul class="filters"><li><a class="pill" href="#">Easy Apply</a></li></ul>'
+                         '<button class="apply-button">Apply</button>')    # LinkedIn's public job page
+            async with _apw() as p:
+                b = await p.chromium.launch()
+                pg = await b.new_page()
+                await pg.set_content(page_html)
+                _, text = await find_clickable(pg, APPLY_WORDS)
+                await b.close()
+                return text
+        try:
+            got = asyncio.run(apply_test())
+            check(got == "Apply", f"Apply button found, not the Easy Apply search filter (got {got})")
+        except Exception as e:
+            check(False, f"apply button test failed: {str(e)[:150]}")
         try:
             got = asyncio.run(guard_test())
             check(got == ["ran", "blocked"], f"app functions work from the app window only (got {got})")
@@ -328,7 +361,7 @@ def main():
             await page.add_init_script(js)
             await page.goto((ROOT / "ui" / "index.html").as_uri())
             await page.wait_for_timeout(800)
-            for n in range(1, 7):
+            for n in range(1, 8):
                 await page.keyboard.press(str(n))
                 await page.wait_for_timeout(150)
             await b.close()

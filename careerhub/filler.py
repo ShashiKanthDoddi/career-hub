@@ -343,7 +343,7 @@ async def find_clickable(page, words, ids=(), exclude=r"\bwith\b|google|linkedin
                 rank = ids.index(b["auto"]) - len(ids)
             else:
                 t = norm(b["text"])
-                if not t or len(t) > 40 or re.search(exclude, t):
+                if b.get("filt") or not t or len(t) > 40 or re.search(exclude, t):
                     continue
                 for i, w in enumerate(words):
                     if t == w or t.startswith(w + " "):

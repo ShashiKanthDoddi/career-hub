@@ -2,7 +2,7 @@
 
 Read this first, then open only the file you need. Each Python module is small and focused.
 
-Docs updated: 2026-10-04 (3.0)
+Docs updated: 2026-10-04 (3.1)
 
 ## Start and launchers
 
@@ -29,7 +29,8 @@ Docs updated: 2026-10-04 (3.0)
 | `records.py` | 127 | Applications, accounts/passwords, saved links, found jobs: read/write helpers on the data file. | `known_companies`, `answer_mentions_other_company`, `already_applied_same_job`, `account_rows`, `saved_password`, `log_account`, `save_default_password`, `tracker_rows`, `tracker_add`, `ACCOUNT_COLS`, `TRACKER_COLS` … |
 | `page_js.py` | 179 | JavaScript run inside job pages: COLLECT_JS (field + label detection), BUTTONS_JS, TITLE_JS, ERRORS_JS, job-window badge. | `COLLECT_JS`, `BUTTONS_JS`, `TITLE_JS`, `ERRORS_JS` |
 | `answers.py` | 89 | Answers.lookup(): finds an answer from memory/profile. FIELD_ALIASES (extra wordings per profile field) and COMPUTED answers. | `Answers`, `FIELD_ALIASES`, `COMPUTED` |
-| `resume.py` | 92 | Reads the resume PDF; skills/titles/years; picks 2nd/3rd resume by job title. | `resume_for_job`, `resume_text`, `read_resume`, `resume_profile`, `resume_info`, `MKT_SKILLS`, `ROLE_PHRASES` |
+| `resume.py` | 92 | Reads the resume PDF (`pdf_text` for any version); skills/titles/years; picks 2nd/3rd resume by job title. | `resume_for_job`, `resume_text`, `read_resume`, `resume_profile`, `resume_info`, `MKT_SKILLS`, `ROLE_PHRASES` |
+| `resume_tools.py` | 208 | Resume page logic, pure text functions: `ats_check` (score + plain-words tips), `keyword_match` (job words in / missing, lowercased before `norm` so HubSpot stays one word), `skill_gaps` / `target_roles` (ROLE_SKILLS with free COURSES), `html_to_text`. | `ats_check`, `keyword_match`, `skill_gaps`, `target_roles`, `ROLE_SKILLS`, `COURSES` |
 | `ai.py` | 108 | Claude API calls: drafts for questions, interview prep tips (`ai_prep`), tailored cover letters (PDF). `free_complete`: a keyless free AI (Pollinations) for public text only, never her resume. | `ai_complete`, `free_complete`, `ai_context`, `ai_answer`, `ai_prep`, `text_to_pdf`, `ai_cover_letter_flow` |
 | `filler.py` | 343 | Fills one page: plan_field -> ask_batch (one card for all unknowns) -> fill_field. Next/Submit button detection. | `click_check`, `popup_options`, `plan_field`, `ask_batch`, `fill_field`, `scan`, `fill_page`, `find_buttons`, `settle`, `SUCCESS_RE` … |
 | `auth.py` | 146 | Gets from job posting to the form: clicks Apply, signs in / creates accounts. | `get_password`, `auth_state`, `handle_auth`, `get_to_form` |
@@ -48,7 +49,7 @@ Docs updated: 2026-10-04 (3.0)
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
 | `updater.py` | 177 | Automatic updates from GitHub: check (`pinned_base`: files read from the newest commit, not the cached branch), background download (cached in `UPDATE['files']`), verify SHA-256, install, rollback info. | `vt`, `source_base`, `pinned_base`, `safe_path`, `check_for_update`, `download_files`, `prefetch_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
 | `sigcheck.py` | 120 | Ed25519 check (pure Python) of the signed `release.json`; `PUBLIC_KEY` is the helper's key. | `manifest_ok`, `canonical`, `sign`, `verify`, `public_key`, `PUBLIC_KEY` |
-| `api.py` | 383 | Every api_* function the window calls (exposed automatically by main.py). | `start_task`, `api_state`, `api_save_profile`, `api_save_list`, `api_add_to_list`, `api_start_apply`, `api_resume`, `api_start_find`, `api_answers`, `THEMES` … |
+| `api.py` | 682 | Every api_* function the window calls (exposed automatically by main.py). Resume page: `api_resume_page`, `api_resume_pdf`, `api_resume_open`, `api_resume_match`, `api_resume_tailor`. | `start_task`, `api_state`, `api_save_profile`, `api_save_list`, `api_add_to_list`, `api_start_apply`, `api_resume`, `api_start_find`, `api_answers`, `THEMES` … |
 | `main.py` | 150 | Opens the app window (maximised) (ui/index.html), exposes api_*, hourly update and mail checks, `remind_loop` (interview pop-ups every minute), returns restart code; `_force_exit_soon` ends the process so the black window closes. | `open_app_window`, `update_loop`, `mail_loop`, `remind_loop`, `after_load`, `main`, `run`, `UI_INDEX` |
 
 ## Interface `ui/` (plain HTML/CSS/JS, loaded straight from disk)
@@ -63,10 +64,11 @@ Docs updated: 2026-10-04 (3.0)
 | `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |
 | `ui/js/apply.js` | 52 | Apply: the one job list (add links, filter, apply to one/selected/all), daily limit line per job site (`renderLimits`, `api_site_limits`). |
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
+| `ui/js/resume.js` | 118 | Resume page: summary tiles (`renderSummary`), PDF preview from a blob (`api_resume_pdf`) or the read text with keywords highlighted (`resumeHTML`), tabs Health / Fit / Skills / Files (`setRsTab`); Files is the moved Your files form (`renderFileForm` in forms.js). | `loadResumePage`, `setRsTab` |
 | `ui/js/questions.js` | 62 | Question cards from Python: single questions and the all-at-once form (showForm). `askYes` is the in-app Yes/Cancel: never use confirm(), Playwright closes it at once. |
 | `ui/js/find.js` | 99 | Find jobs: resume tags, one search choice (`setFindMode`: Find jobs for me / Only companies I choose), results list with filters (text, posted, match, sort), only the last search by default (`ONLY_LAST`, `last` from state `last_found`), unreadable companies (`diag.missing`), dismiss. |
 | `ui/js/jobs.js` | 115 | Interview 'Get ready' card in the drawer (`prepHTML`, `api_prep`). My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
-| `ui/js/forms.js` | 137 | Profile and Settings forms, files, saved answers, themes, What's new, zip install. |
+| `ui/js/forms.js` | 156 | Profile and Settings forms, the Your files form on the Resume page (`renderFileForm`, autosave `saveFileFields`), saved answers, themes, What's new, zip install. |
 | `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
 | `ui/js/events.js` | 68 | window.onPy event handling, filled-fields pop-up, update modal, startup sequence. |
 

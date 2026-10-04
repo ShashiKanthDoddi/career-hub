@@ -23,7 +23,7 @@ function renderForms(){
   const groups = {}; STATE.profile.forEach((f, i) => (groups[f.section] = groups[f.section] || []).push([f, i]));
   let pHTML = "", sHTML = "", pNav = [], sNav = [["set-appearance","Appearance"]];
   for (const [sec, items] of Object.entries(groups)){
-    if (sec === "Files"){ $("#fileForm").innerHTML = items.map(([f, i]) => fieldHTML(f, i)).join(""); continue; }
+    if (sec === "Files") continue;                       // drawn on the Resume page by renderFileForm
     if (sec === "Help"){ $("#helpFields").innerHTML = items.map(([f, i]) => fieldHTML(f, i)).join(""); continue; }
     const id = SETTINGS_SECTIONS[sec];
     const block = `<div class="panel sec" id="${id || "sec-" + sec.replace(/\W+/g, "-").toLowerCase()}"><div class="panel-head"><h2 class="grow">${esc(SETTINGS_TITLES[sec] || sec)}</h2>
@@ -32,7 +32,7 @@ function renderForms(){
       <div class="formgrid">${items.map(([f, i]) => fieldHTML(f, i)).join("")}</div></div>`;
     if (id){ sHTML += block; sNav.push([id, SETTINGS_TITLES[sec]]); } else { pHTML += block; pNav.push(["sec-" + sec.replace(/\W+/g, "-").toLowerCase(), sec]); }
   }
-  pNav.push(["sec-history","Work and education"],["sec-files","Your files"],["sec-answers","Saved answers"]); sNav.push(["set-help","Help"],["set-feedback","Reports and ideas"],["set-updates","Updates"],["set-news","What's new"]);
+  pNav.push(["sec-history","Work and education"],["sec-answers","Saved answers"]); sNav.push(["set-help","Help"],["set-feedback","Reports and ideas"],["set-updates","Updates"],["set-news","What's new"]);
   $("#profileForm").innerHTML = pHTML; $("#settingsForm").innerHTML = sHTML;
   $("#profileNav").innerHTML = pNav.map(([id, t]) => `<a href="#${id}" data-sec="${id}">${esc(t)}</a>`).join("");
   $("#settingsNav").innerHTML = sNav.map(([id, t]) => `<a href="#${id}" data-sec="${id}">${esc(t)}</a>`).join("");
@@ -43,7 +43,7 @@ function renderForms(){
   $$('.switch input[data-i]').forEach(el => el.addEventListener("change", () => { const s = el.parentElement.querySelector("span"); if (s) s.textContent = el.checked ? "On" : "Off"; }));
   $$("[data-secret]").forEach(el => { el.onfocus = () => el.type = "text"; el.onblur = () => el.type = "password"; });
   $("#testMailBtn") && ($("#testMailBtn").onclick = async () => { if (DIRTY.settings) await saveForm("settings"); const r = await api_test_mail(); r.ok ? toast("Gmail connected") : toast(r.error, true); });
-  renderFiles(); DIRTY = {profile:false, settings:false}; $("#saveBar").hidden = $("#saveBar2").hidden = true;
+  renderFileForm(); renderFiles(); DIRTY = {profile:false, settings:false}; $("#saveBar").hidden = $("#saveBar2").hidden = true;
 }
 function markDirty(which){ DIRTY[which] = true; $(which === "profile" ? "#saveBar" : "#saveBar2").hidden = false; }
 async function saveForm(which){
@@ -59,15 +59,23 @@ function renderFiles(){
   STATE.profile.filter(f => f.type === "file" && f.value).forEach(f => (used[f.value] = used[f.value] || []).push(f.label.replace(/\s*\(optional\)/, "")));
   $("#fileList").innerHTML = files.map(n => `<div class="file">${icon("file")}<span class="grow">${esc(n)}</span>${used[n] ? `<span class="tag">${esc(used[n].join(", "))}</span>` : `<span class="muted small">not used yet</span>`}</div>`).join("");
 }
+/* Your files (on the Resume page): each box saves as soon as she changes it, then the resume checks refresh */
+function renderFileForm(){
+  $("#fileForm").innerHTML = STATE.profile.map((x, i) => [x, i]).filter(([x]) => x.section === "Files").map(([x, i]) => fieldHTML(x, i)).join("");
+  $$("#fileForm [data-i]").forEach(el => el.onchange = () => saveFileFields([el]));
+}
+async function saveFileFields(els){
+  const r = await api_save_profile(els.map(el => { const f = STATE.profile[+el.dataset.i]; return {where:f.where, key:f.key, value:el.value.trim()}; }));
+  if (!r.ok) return toast("Couldn't save: " + r.error, true);
+  toast("Saved"); await loadState(); RESUME = null; renderFileForm(); renderFiles();
+  if (PAGE === "resume") loadResumePage(); }
 async function addFile(f){
   const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result.split(",")[1]); r.readAsDataURL(f); });
   const r = await api_add_file(f.name, b64);
-  if (r.ok){ const dirty = DIRTY.profile, vals = $$("#p-profile [data-i]").map(el => [el.dataset.i, el.value]); STATE.files = r.files;
-    $("#fileForm").innerHTML = STATE.profile.map((x, i) => [x, i]).filter(([x]) => x.section === "Files").map(([x, i]) => fieldHTML(x, i)).join("");
-    vals.forEach(([i, v]) => { const el = $(`#p-profile [data-i="${i}"]`); if (el) el.value = v; });
-    const resumeSel = $$("#fileForm select")[0]; if (resumeSel && !resumeSel.value && /\.pdf$/i.test(r.name)) { resumeSel.value = r.name; markDirty("profile"); }
-    $$("#fileForm [data-i]").forEach(el => el.oninput = el.onchange = () => markDirty("profile")); if (dirty) markDirty("profile");
-    renderFiles(); toast(`${r.name} added`); }
+  if (!r.ok) return toast("Couldn't add the file", true);
+  STATE.files = r.files; renderFileForm(); renderFiles(); toast(`${r.name} added`);
+  const resumeSel = $$("#fileForm select")[0];           // the first resume is used straight away
+  if (resumeSel && !resumeSel.value && /\.pdf$/i.test(r.name)){ resumeSel.value = r.name; await saveFileFields([resumeSel]); }
 }
 const drop = $("#drop");
 drop.onclick = () => $("#addFile").click();

@@ -29,10 +29,10 @@ $("#findBtn").onclick = async () => {
 };
 /* One choice instead of three switches: search widely for her, or only the companies she lists */
 function setFindMode(m){
-  $("#autoSearch").checked = m === "auto"; $("#compField").hidden = m === "auto";
+  $("#autoSearch").checked = m === "auto"; $("#compField").hidden = m === "auto"; $("#allWrap").hidden = m === "auto";
   $$("#findMode button").forEach(b => b.classList.toggle("on", b.dataset.m === m));
-  $("#findModeHint").textContent = m === "auto" ? "I look through the job pages of many companies for roles that fit your resume and cities."
-    : "I look only at the companies you add below.";
+  $("#findModeHint").textContent = m === "auto" ? "I look through the job pages of many companies for roles that fit your resume and cities." : "";
+  $("#findModeHint").hidden = m !== "auto";
 }
 $$("#findMode button").forEach(b => b.onclick = () => setFindMode(b.dataset.m));
 setFindMode("auto");

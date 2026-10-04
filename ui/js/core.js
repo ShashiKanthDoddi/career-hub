@@ -26,7 +26,7 @@ document.addEventListener("pointerdown", e => { const b = e.target.closest?.(".b
   b.classList.remove("rip"); void b.offsetWidth; b.classList.add("rip"); clearTimeout(b._rip); b._rip = setTimeout(() => b.classList.remove("rip"), 650); });
 
 /* ===== navigation ===== */
-const PAGES = ["home","apply","find","jobs","profile","settings"];
+const PAGES = ["home","apply","find","jobs","resume","profile","settings"];
 function go(p, opts={}){
   if (!PAGES.includes(p)) return; PAGE = p;
   $$(".nav[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === p));
@@ -37,6 +37,7 @@ function go(p, opts={}){
   if (p === "jobs") loadJobs(opts.filter || "all");     // from the sidebar: never keep an old stage filter (it looked like an empty board)
   if (p === "find"){ $("#navFound").hidden = true; if (!RESUME) loadResume(); loadFound(); }
   if (p === "settings") loadFeedback();
+  if (p === "resume") loadResumePage();
   if (p === "profile"){ loadAnswers(); loadHistory(); }
 }
 $$(".nav[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));

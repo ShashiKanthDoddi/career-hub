@@ -19,6 +19,7 @@
   <button class="nav" data-go="apply"><svg class="i"><use href="#i-send"/></svg><span>Apply</span><span class="count" id="navSaved" hidden></span></button>
   <button class="nav" data-go="find"><svg class="i"><use href="#i-search"/></svg><span>Find jobs</span><span class="count" id="navFound" hidden></span></button>
   <button class="nav" data-go="jobs"><svg class="i"><use href="#i-board"/></svg><span>My jobs</span><span class="count" id="navAttn" hidden></span></button>
+  <button class="nav" data-go="resume"><svg class="i"><use href="#i-file"/></svg><span>Resume</span></button>
   <button class="nav" data-go="profile"><svg class="i"><use href="#i-user"/></svg><span>Profile</span></button>
   <button class="nav" data-go="settings"><svg class="i"><use href="#i-gear"/></svg><span>Settings</span><span class="count" id="navNew" hidden>new</span></button>
   <div class="grow"></div>
@@ -125,12 +126,13 @@
       <div class="seg" id="findMode"><button data-m="auto" class="on">Find jobs for me</button><button data-m="mine">Only companies I choose</button></div>
       <input type="checkbox" id="autoSearch" checked hidden>
       <p class="muted small" id="findModeHint" style="margin:10px 0 0"></p>
-      <div class="field" id="compField" style="margin-top:14px" hidden><label>Companies</label>
-        <div class="taginput" id="compBox"><input type="text" id="compInput" placeholder="Type a company name, like Nykaa, and press Enter"></div>
-        <span class="muted small">You can also paste the link of a careers page. Some companies, like Swiggy or Zomato, use their own job website, which I can't read.</span>
-        <label class="switch" style="margin-top:10px"><input type="checkbox" id="allOpenings"> <span>Show all their openings, not only the ones that fit you</span></label></div>
-      <div class="row" style="margin-top:14px">
-        <label class="switch grow"><input type="checkbox" id="dailyFind"> Repeat this search daily</label>
+      <div id="compField" style="margin-top:14px" hidden>
+        <div class="taginput" id="compBox"><input type="text" id="compInput" placeholder="Add a company, like Nykaa, and press Enter"></div>
+        <p class="muted small" style="margin:6px 0 0">You can also paste a careers-page link. Swiggy and Zomato use their own site, which I can't read.</p></div>
+      <div class="row" style="margin-top:16px">
+        <div class="grow" style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <label class="switch" id="allWrap" hidden><input type="checkbox" id="allOpenings"> Show all their openings</label>
+          <label class="switch"><input type="checkbox" id="dailyFind"> Repeat this search daily</label></div>
         <button class="btn primary" id="findBtn"><svg class="i"><use href="#i-search"/></svg>Find jobs</button>
       </div>
     </div>
@@ -164,6 +166,46 @@
     <div id="jobsView"></div>
   </section>
 
+  <!-- RESUME: her resume on the left, helpers in tabs on the right -->
+  <section class="page" id="p-resume" hidden style="max-width:1440px">
+    <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-file"/></svg></div>
+      <div><h1>Resume</h1><p>See your resume the way job sites read it, and make it stronger for the jobs you want.</p></div>
+      <div class="actions"><select id="rsPick" title="Which resume"></select></div></div>
+    <div class="rs-sum" id="rsSum"></div>
+    <div class="rs-grid">
+      <div class="rs-left">
+        <div class="rs-bar"><b class="grow" id="rsName">Your resume</b>
+          <div class="seg" id="rsView"><button data-v="pdf" class="on">As it looks</button><button data-v="text">As job sites read it</button></div>
+          <button class="btn sm ghost" id="rsOpen" title="Open the file"><svg class="i"><use href="#i-ext"/></svg></button></div>
+        <div class="rs-paper">
+          <iframe id="rsPdf" title="Your resume"></iframe>
+          <div id="rsText" hidden></div>
+        </div>
+        <p class="muted small" id="rsHint" hidden>Highlighted words are marketing keywords that job sites look for.</p>
+      </div>
+      <div class="rs-right panel">
+        <div class="seg rs-tabs" id="rsTabs"><button data-t="health" class="on">Health</button><button data-t="fit">Fit to a job</button><button data-t="skills">Skills</button><button data-t="files">Files</button></div>
+        <div class="rs-tab" data-t="health" id="rsAts"></div>
+        <div class="rs-tab" data-t="fit" hidden>
+          <h2>Fit it to a job</h2>
+          <p class="muted small">Paste a job link or the job text. You see which words the job asks for that your resume doesn't have yet.</p>
+          <textarea id="rsJob" rows="4" placeholder="Paste a job link, or the job description"></textarea>
+          <div class="row" style="margin-top:10px;gap:8px"><button class="btn primary" id="rsMatchBtn">Check the fit</button><button class="btn" id="rsTailorBtn"><svg class="i"><use href="#i-sparkle"/></svg>Suggest rewrites</button></div>
+          <div id="rsMatch"></div>
+        </div>
+        <div class="rs-tab" data-t="skills" id="rsSkills" hidden></div>
+        <div class="rs-tab" data-t="files" id="sec-files" hidden>
+          <h2>Your files</h2>
+          <p class="muted small">Your resumes and cover letter. Changes here save by themselves.</p>
+          <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
+            <input type="file" id="addFile" accept=".pdf,.doc,.docx" hidden>
+            <div class="filelist" id="fileList"></div>
+            <div class="formgrid" id="fileForm" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PROFILE -->
   <section class="page" id="p-profile" hidden>
     <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-user"/></svg></div><div><h1>Profile</h1><p>Used to fill every application. Leave a box empty and the app asks when a site needs it.</p></div></div>
@@ -179,13 +221,6 @@
           <h3 style="margin:18px 0 8px">Education</h3>
           <div id="histEdu"></div><button class="btn sm ghost" id="histAddEdu">+ Add education</button>
           <div class="row" style="margin-top:16px"><button class="btn primary" id="histSave">Save work and education</button><span class="muted small" id="histState"></span></div>
-        </div>
-        <div class="panel sec" id="sec-files">
-          <div class="panel-head"><h2 class="grow">Your files</h2></div>
-          <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
-          <input type="file" id="addFile" accept=".pdf,.doc,.docx" hidden>
-          <div class="filelist" id="fileList"></div>
-          <div class="formgrid" id="fileForm" style="margin-top:16px"></div>
         </div>
         <div class="panel sec" id="sec-answers">
           <div class="panel-head"><h2 class="grow">Saved answers</h2><input type="text" id="ansSearch" placeholder="Search answers" style="max-width:220px"></div>
@@ -217,7 +252,7 @@
           <p class="muted" style="margin-top:-6px">Something odd? Send a report: it includes the activity log and screenshots, never passwords.</p>
           <div class="formgrid" id="helpFields" style="margin-bottom:14px"></div>
           <div class="row"><button class="btn primary" id="reportBtn2">Report a problem</button><button class="btn" id="suggestBtn2">Suggest a feature</button><button class="btn" data-open="logs">Open logs</button></div>
-          <p class="kbdhint" style="margin-top:14px">Shortcuts: <kbd>⌘K</kbd> quick actions, <kbd>1</kbd>–<kbd>6</kbd> switch pages, <kbd>Esc</kbd> close.</p>
+          <p class="kbdhint" style="margin-top:14px">Shortcuts: <kbd>⌘K</kbd> quick actions, <kbd>1</kbd>–<kbd>7</kbd> switch pages, <kbd>Esc</kbd> close.</p>
         </div>
         <div class="panel sec" id="set-feedback">
           <div class="panel-head"><h2 class="grow">Your reports and ideas</h2><button class="btn sm" id="feedbackRefresh">Refresh</button></div>
@@ -282,6 +317,7 @@
 <script src="js/questions.js"></script>
 <script src="js/find.js"></script>
 <script src="js/jobs.js"></script>
+<script src="js/resume.js"></script>
 <script src="js/forms.js"></script>
 <script src="js/palette.js"></script>
 <script src="js/events.js"></script>

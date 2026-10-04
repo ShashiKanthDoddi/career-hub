@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.3',
+CHANGELOG = [{'version': '2.7.4',
+  'title': 'See what happened to your reports',
+  'new': ['Settings has a new section, Your reports and ideas: everything you sent, with Open, Done or Not planned, and a link to read it'],
+  'fixed': []},
+ {'version': '2.7.3',
   'title': 'Opens maximised',
   'new': ['The Career Hub window now always opens maximised, filling the screen'],
   'fixed': []},

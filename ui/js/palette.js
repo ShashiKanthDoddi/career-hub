@@ -87,3 +87,14 @@ document.addEventListener("keydown", e => {
 });
 
 $("#moreBtn").onclick = () => { const box = $("#moreBox"); box.hidden = !box.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!box.hidden)); };
+
+async function loadFeedback(){
+  const box = $("#feedbackList"); box.textContent = "Loading…";
+  const r = await api_my_issues();
+  if (!r.ok) { box.textContent = r.error; return; }
+  if (!r.items || !r.items.length) { box.textContent = "Nothing sent yet."; return; }
+  const tone = {Done: "color:var(--ok,#2e7d32)", "Won't do": "color:var(--muted)"};
+  box.innerHTML = r.items.map(i => `<div class="item"><div class="body"><b>${esc(i.title)}</b><span>${i.kind === "bug" ? "Problem" : "Idea"} · ${when(i.date)}${i.comments ? ` · ${i.comments} repl${i.comments === 1 ? "y" : "ies"}` : ""}${i.labels.length ? " · " + esc(i.labels.join(", ")) : ""}</span></div>
+    <div class="side-acts"><span class="tag" style="${tone[i.status] || ""}">${i.status}</span><a class="btn sm ghost" href="${esc(i.url)}">View</a></div></div>`).join("");
+}
+$("#feedbackRefresh").onclick = loadFeedback;

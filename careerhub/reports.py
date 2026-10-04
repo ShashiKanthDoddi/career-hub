@@ -232,3 +232,28 @@ async def send_report(note, images=None):
         webbrowser.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + quote(ms["helper"]) + "&su=" +
                         quote(subject) + "&body=" + quote(body[:1800]))
     return {"ok": True, "sent": False, "path": str(zpath), "helper": ms["helper"], "why": why}
+
+
+async def my_issues():
+    """Reports and ideas sent so far, with their GitHub status (needs the token, same as sending)."""
+    repo = issue_repo()
+    token = str((load_profile().get("settings") or {}).get("github_token") or "").strip()
+    if not repo or not token:
+        return {"ok": False, "error": "Needs the GitHub token in Settings (Help)."}
+    try:
+        rows = await gh_call("GET", f"https://api.github.com/repos/{repo}/issues?state=all&per_page=50&sort=created", token)
+    except GhError as e:
+        return {"ok": False, "error": {401: "The GitHub token is wrong or has expired.", 403: "The GitHub token is missing permission.",
+                                       404: "The GitHub token can't reach the reports repository."}.get(e.code, f"GitHub error {e.code}.")}
+    out = []
+    for r in rows:
+        if r.get("pull_request"):
+            continue
+        labels = [l["name"] for l in r.get("labels", [])]
+        closed = r.get("state") == "closed"
+        status = ("Won't do" if r.get("state_reason") == "not_planned" else "Done") if closed else "Open"
+        title = re.sub(r"^(Bug|Suggestion):\s*", "", r.get("title", ""))
+        out.append({"title": title, "kind": "bug" if "bug" in labels else "idea", "status": status, "date": r.get("created_at", ""),
+                    "url": r.get("html_url", ""), "comments": r.get("comments", 0),
+                    "labels": [l for l in labels if l not in ("bug", "enhancement")]})
+    return {"ok": True, "items": out}

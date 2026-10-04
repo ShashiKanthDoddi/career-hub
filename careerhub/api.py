@@ -16,7 +16,7 @@ from . import history, planner
 from .overview import jobs_overview
 from .profile_form import profile_values
 from .records import add_to_jobs_file, read_jobs_file
-from .reports import send_report, send_suggestion
+from .reports import my_issues, send_report, send_suggestion
 from .resume import resume_info
 from .state import TASKS
 from .textutil import split_list
@@ -322,6 +322,13 @@ async def api_test_mail():
 async def api_report(note, images=None):
     try:
         return await send_report(note, images)
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:200]}
+
+
+async def api_my_issues():
+    try:
+        return await my_issues()
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 

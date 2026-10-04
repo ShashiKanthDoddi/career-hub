@@ -48,7 +48,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Debugging her problems
 
-- **Suggest a feature** (and Report a problem, when the `github_token` setting is set) creates a GitHub issue in the private `ISSUES_SOURCE` repo (config.py), with the log, screenshots and her pictures on its `issue-files` branch. The token (fine-grained, that repo only, Issues + Contents write) is set in her Settings; without it reports go by email and ideas are refused.
+- **Suggest a feature** (and Report a problem, when the `github_token` setting is set) creates a GitHub issue in the private `ISSUES_SOURCE` repo (config.py), with the log, screenshots and her pictures on its `issue-files` branch. The token (fine-grained, that repo only, Issues + Contents write) is set in her Settings; without it reports go by email and ideas are refused. Settings, Your reports and ideas, lists them with Open / Done / Won't do (`my_issues`, last 50, same token).
 - She sends **Report a problem**: a zip with `activity_log.txt`, `info.txt`, and screenshots of both windows.
 - Field answered wrongly? Find the label in the log. Then decide: is the label read wrongly (`page_js.py`), or is
   the wording missing (`answers.py` FIELD_ALIASES)? Then add a selftest case.

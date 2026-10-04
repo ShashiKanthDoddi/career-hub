@@ -1,8 +1,16 @@
 {
- "version": "2.7.3",
+ "version": "2.7.4",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.4",
+   "title": "See what happened to your reports",
+   "new": [
+    "Settings has a new section, Your reports and ideas: everything you sent, with Open, Done or Not planned, and a link to read it"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.7.3",
    "title": "Opens maximised",
@@ -62,17 +70,6 @@
     "Report a problem and Suggest a feature let you add pictures: pick them or paste a screenshot with Ctrl+V"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.6.18",
-   "title": "A sweeter hello",
-   "new": [
-    "The Home greeting uses a different pet name each hour",
-    "A \"Suggest a feature\" button (side bar and Settings, Help) sends your idea to the person who looks after the app"
-   ],
-   "fixed": [
-    "Find jobs no longer shows older saved jobs that are outside the locations you want"
-   ]
   }
  ],
  "files": [
@@ -94,7 +91,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "06adfa7f60083c6068c9aea7cd30ef7224d18cf6feb17ae4672bb6e5c287572f"
+   "sha256": "ea0e14379c6948cff201938c5c332e4530af1ee5b0fc022af7ae68a62526e9cc"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -110,11 +107,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "048dbd463b5ca4ac8251b091f41e3e035b4eaaf02e2e1d08440fd60967bbfbc0"
+   "sha256": "58ed203c55bb5924af9d3763c9e32ab1fc08331e79b7b38320586d471a180d64"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "e41d712a1cd01af0c620973ee1e66f9d8fb97522a3198d977f4832a8bd1440ac"
+   "sha256": "11be441adc9ac48336cae221a44b6c1f2aba8152e49b5ffc8ecc16c158285e23"
   },
   {
    "path": "careerhub/filler.py",
@@ -170,7 +167,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "46329574d74e81dc58e3c05786b3fd8aaff26f3de98c0fe1b3495eaefad740a2"
+   "sha256": "fd73b30492c048713e0bc5c30e94772b813d00ba7aab7cbefdc1a6660d7d5a70"
   },
   {
    "path": "careerhub/resume.py",
@@ -198,7 +195,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "8bbf0bfb5feacb08cac8a9ba357337b5a7372e656f0a8bdad7b6ce74d1862ec2"
+   "sha256": "7c4404597eef54bb4b369405a3b70c78fa51b9cb7bb4fdfd8f8a71752306efb6"
   },
   {
    "path": "ui/styles.css",
@@ -210,7 +207,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "0cf78f5d46f234bbdb003f28fac5d46f5f364b957de9a23365e2018a00dd7c45"
+   "sha256": "fefada55a1ab9f0afa2c4865cfd0442f3dd79b02bc4968d8ed2e12bb4e90edd1"
   },
   {
    "path": "ui/js/events.js",
@@ -222,7 +219,7 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "f3298dc75da0f3e6c38b84da374ce8e29c6880226d1b4edabafea527915c7610"
+   "sha256": "a5cf2e00f2f75850d3d77f277d916cde1324cf4575c21566dd36e4037a7adfda"
   },
   {
    "path": "ui/js/history.js",
@@ -238,7 +235,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "f1c4e84dabd2b367f470b615ab0e912d306ba78a2bfee09bc43ce203fce0ef6b"
+   "sha256": "bfb31c73ece568136f858d3863392b77794c59205675fb2d514dd5c4e61f3dd9"
   },
   {
    "path": "ui/js/planner.js",
@@ -270,11 +267,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "aca4ddb461be24297f8d3ecb48775f92d62b2e27bf85bfd3b625eb3b691e558e"
+   "sha256": "5cefbf9907751dcb51beaea4ac9690edc0c964d54707fd52f713e881add972c9"
   },
   {
    "path": "MAP.md",
-   "sha256": "f827daa9e7f492fcc319898e9e992be4df49ccce67d265047c9dd7c9ba5350f3"
+   "sha256": "8e782c4fad12eb8734cff93c4bb9e7d73da2c7e0977aaee58b294b6f66f7bb1c"
   },
   {
    "path": "Setup (Mac).command",

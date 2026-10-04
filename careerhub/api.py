@@ -153,7 +153,7 @@ async def api_set_daily(flag):
     return True
 
 
-THEMES = ["auto", "lavender", "midnight", "ocean", "forest", "sand", "rose", "slate"]
+THEMES = ["auto", "peach", "mint", "lavender", "midnight", "ocean", "forest", "sand", "rose", "slate"]
 
 
 async def api_home():

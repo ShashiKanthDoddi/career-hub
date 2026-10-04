@@ -97,22 +97,23 @@ $("#ansSearch").oninput = renderAnswers;
 /* appearance & what's new */
 // [sidebar, background, card, accent, mode] per theme; previews and data-mode come from here
 const THEMES = {
-  auto:["#241A38","#ECE8F4","#F7F5FB","#6B4FD8","auto"], lavender:["#241A38","#ECE8F4","#F7F5FB","#6B4FD8","light"],
+  auto:["#3A2822","#F3E6DA","#FFF7F0","#C0532B","auto"], peach:["#3A2822","#F3E6DA","#FFF7F0","#C0532B","light"],
+  mint:["#12403A","#DDEBE6","#F2FAF7","#0E8A70","light"], lavender:["#241A38","#ECE8F4","#F7F5FB","#6B4FD8","light"],
   midnight:["#120D1C","#15111F","#1E182C","#FFD84D","dark"], ocean:["#0A141C","#0E1A24","#142533","#4FC3D6","dark"],
   forest:["#1F3A2B","#E3EBE3","#F3F7F1","#2E7D55","light"], sand:["#23324A","#EFE7DA","#FAF6EE","#2F6D8A","light"],
   rose:["#4A1F35","#F4E6EB","#FCF5F8","#B03A6F","light"], slate:["#0F1114","#16181C","#1E2126","#F0A43A","dark"]};
-const THEME_LABEL = {auto:"Match my computer", lavender:"Lavender", midnight:"Midnight", ocean:"Ocean", forest:"Forest", sand:"Sand", rose:"Rose", slate:"Slate"};
+const THEME_LABEL = {auto:"Match my computer", peach:"Peach", mint:"Mint", lavender:"Lavender", midnight:"Midnight", ocean:"Ocean", forest:"Forest", sand:"Sand", rose:"Rose", slate:"Slate"};
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme(t){
   t = THEMES[t] ? t : "auto";
-  const real = t === "auto" ? (darkQuery.matches ? "midnight" : "lavender") : t;
+  const real = t === "auto" ? (darkQuery.matches ? "slate" : "peach") : t;
   document.documentElement.dataset.theme = real; document.documentElement.dataset.mode = THEMES[real][4];
 }
 darkQuery.addEventListener("change", () => applyTheme(STATE.theme));
 function renderThemes(){
   const cur = THEMES[STATE.theme] ? STATE.theme : "auto";
   $("#themes").innerHTML = Object.keys(THEMES).map(t => { const [sb, bg, card, acc] = THEMES[t];
-    const half = t === "auto" ? `background:linear-gradient(90deg,${bg} 50%,#15111F 50%)` : `background:${bg}`;
+    const half = t === "auto" ? `background:linear-gradient(90deg,${bg} 50%,#16181C 50%)` : `background:${bg}`;
     return `<button class="themecard ${t === cur ? "on" : ""}" data-t="${t}"><div class="pv"><div class="a" style="background:${sb}"></div>
       <div class="b" style="${half}"><i style="background:${acc}"></i><i style="background:${card}"></i><i style="background:${card}"></i></div></div><b>${THEME_LABEL[t]}</b></button>`; }).join("");
   $$(".themecard").forEach(b => b.onclick = () => setTheme(b.dataset.t));

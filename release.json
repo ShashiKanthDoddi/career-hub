@@ -10,7 +10,8 @@
     "Paste LinkedIn, Indeed or Naukri links on Apply: the app keeps to a daily limit (default 10 per site) so your accounts stay safe",
     "The app waits a little between jobs on these sites, like a person would",
     "If a site asks you to prove you are human, the app waits for you and rests from that site if it keeps happening",
-    "Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs"
+    "Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs",
+    "New warm default look (Peach) and a new Mint theme; the other themes are still in Settings, Appearance"
    ],
    "fixed": []
   },
@@ -153,7 +154,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "e4d71b44853f356dbfe1b995f2c38d5da626d67a8cbccaba1a81269019c68ec8"
+   "sha256": "f24ac84ddd9afa23542698304378fb29dda66de625b281b50b76a020dfb3e21f"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -169,7 +170,7 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "11a1c424b7497150aae8a020b501016d3d4576402e248c3586a12cd9ecefc5f4"
+   "sha256": "546336d898428da55269233b57dfffcda91601f40a05e56cec0ebe43326f9458"
   },
   {
    "path": "careerhub/config.py",
@@ -241,11 +242,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "a8d86d299e408ad6e594b84dc2aa3518ccd4a7614f4b45a965f68a8e6a5a8470"
+   "sha256": "2b8b730f811e56792862cef58dd8f2252eb27d9264f0faca0bb4f5f7cba68a28"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "81a64d5f83f250400bc12237e1a013334a617897de476d3903507d6f98531e7f"
+   "sha256": "9afb1e6e22d6c0ca9a07e190b59d4341205b62f1b7c6a80ab5821fb043cb9319"
   },
   {
    "path": "ui/js/apply.js",
@@ -253,7 +254,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "6bbe7d856edc80aeb0ba3496311a96f9ee46508e747b7d2511316480a17b8a55"
+   "sha256": "2d5a27ec713fde1e929c0d24a233ca3e579ed711519863524b600437aa6f03e4"
   },
   {
    "path": "ui/js/events.js",
@@ -265,7 +266,7 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "75cfdcda05f0c4cb99f40612e1d58569e36a9bd7f5808fb8c2af3551ae10abea"
+   "sha256": "0dd94fb314112b04c1db44c14d80d0a78f6a8e77f99d8cc6aa24e7895c664595"
   },
   {
    "path": "ui/js/home.js",

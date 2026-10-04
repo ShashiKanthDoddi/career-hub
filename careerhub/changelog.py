@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '3.2',
+CHANGELOG = [{'version': '3.3',
+  'title': 'Check your answers before they are filled in',
+  'new': ['Before each page is filled, a card lists every answer the app is about to type. Change anything that is wrong (it is remembered), or tick Leave empty to skip one',
+          'You can turn this off in Settings, Applying'],
+  'fixed': []},
+ {'version': '3.2',
   'title': 'Resume page: files first, skills for each job',
   'new': ['After you check a job on the Resume page, Skills to build shows the skills for that job compared with your resume, each missing one with a free course',
           'Your files are now the first tab on the Resume page'],

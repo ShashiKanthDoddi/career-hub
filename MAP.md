@@ -2,7 +2,7 @@
 
 Read this first, then open only the file you need. Each Python module is small and focused.
 
-Docs updated: 2026-10-04 (3.1)
+Docs updated: 2026-10-04 (3.3)
 
 ## Start and launchers
 
@@ -32,7 +32,7 @@ Docs updated: 2026-10-04 (3.1)
 | `resume.py` | 92 | Reads the resume PDF (`pdf_text` for any version); skills/titles/years; picks 2nd/3rd resume by job title. | `resume_for_job`, `resume_text`, `read_resume`, `resume_profile`, `resume_info`, `MKT_SKILLS`, `ROLE_PHRASES` |
 | `resume_tools.py` | 208 | Resume page logic, pure text functions: `ats_check` (score + plain-words tips), `keyword_match` (job words in / missing, lowercased before `norm` so HubSpot stays one word), `skill_gaps` / `target_roles` (ROLE_SKILLS with free COURSES), `html_to_text`. | `ats_check`, `keyword_match`, `skill_gaps`, `target_roles`, `ROLE_SKILLS`, `COURSES` |
 | `ai.py` | 108 | Claude API calls: drafts for questions, interview prep tips (`ai_prep`), tailored cover letters (PDF). `free_complete`: a keyless free AI (Pollinations) for public text only, never her resume. | `ai_complete`, `free_complete`, `ai_context`, `ai_answer`, `ai_prep`, `text_to_pdf`, `ai_cover_letter_flow` |
-| `filler.py` | 343 | Fills one page: plan_field -> ask_batch (one card for all unknowns) -> fill_field. Next/Submit button detection. | `click_check`, `popup_options`, `plan_field`, `ask_batch`, `fill_field`, `scan`, `fill_page`, `find_buttons`, `settle`, `SUCCESS_RE` … |
+| `filler.py` | 400 | Fills one page: plan_field -> ask_batch (one card for all unknowns) -> `review_before_fill` (3.3: one card with every answer about to be typed, setting `review_before_fill`) -> fill_field. Next/Submit button detection. | `click_check`, `popup_options`, `plan_field`, `ask_batch`, `fill_field`, `scan`, `fill_page`, `find_buttons`, `settle`, `SUCCESS_RE` … |
 | `auth.py` | 146 | Gets from job posting to the form: clicks Apply, signs in / creates accounts. | `get_password`, `auth_state`, `handle_auth`, `get_to_form` |
 | `apply_run.py` | 310 | Runs a list of jobs: apply_one (page loop, summary, submit), run_apply, job browser. | `save_draft`, `open_browser`, `table_rows`, `apply_one`, `job_browser`, `run_apply` |
 | `launch.py` | 29 | Starts Chrome/Chromium with the sandbox on and automation flags hidden (so Google sign-in is not refused; `--test-type` hides the flag warning bar); saves cookies every minute with a 90-day expiry (task kept in `_TASKS`; a rejected cookie no longer blocks the rest) to `<profile>_cookies.json` and restores them on start, so session logins survive a restart; downloads the browser if missing. | `launch_chrome`, `SANDBOX` |

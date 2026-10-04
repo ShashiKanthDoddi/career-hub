@@ -5,7 +5,7 @@ const SETTINGS_INTRO = {"Job email (Gmail)":"Reads your job Gmail for replies fr
   "Job-site accounts":"The password the app uses when it creates a new account on a job site. Use one that's only for job sites.",
   "Applying":"", "Finding jobs":"Used by Find jobs to decide what fits.", "AI helper (optional)":"With a Claude API key, the app can draft written answers and tailored cover letters. You always review them first."};
 let DIRTY = {profile:false, settings:false};
-const SWITCHES = ["pause_after_each_page", "ai_cover_letters", "gmail_auto"];
+const SWITCHES = ["pause_after_each_page", "review_before_fill", "ai_cover_letters", "gmail_auto"];
 function fieldHTML(f, i){
   let input;
   if (f.type === "switch" || SWITCHES.includes(f.key))

@@ -42,7 +42,7 @@ async def plan_field(f, db, page):
         c = pick(ans, f["options"]) if ans not in (None, SKIP, "") else None
         if not c or norm(c) == norm(f["value"]):
             return {"action": "have"}
-        return {"action": "fill", "value": c, "src": src}
+        return {"action": "fill", "value": c, "src": src, "options": f["options"]}
     if ans in (SKIP, ""):
         return {"action": "skip"}
     q = {"label": pretty_label(f["label"]) or "(this field has no label)", "required": bool(f.get("required")),
@@ -65,10 +65,11 @@ async def plan_field(f, db, page):
         if ans is not None and kind != "checkbox":
             c = pick(ans, options)
             if c:
-                return {"action": "fill", "value": c, "src": src if norm(c) == norm(ans) else f"best guess from “{ans}”"}
+                return {"action": "fill", "value": c, "options": options,
+                        "src": src if norm(c) == norm(ans) else f"best guess from “{ans}”"}
             q["note"] = f"Your saved answer “{ans}” isn't one of the options."
         elif ans is not None:
-            return {"action": "fill", "value": ans, "src": src}
+            return {"action": "fill", "value": ans, "src": src, "options": options}
         if f.get("weak") and not f.get("required"):
             return {"action": "skip"}
         q.update(kind="choice", options=options)
@@ -127,6 +128,50 @@ async def ask_batch(db, asks):
                 db.remember(f["label"], v, f.get("nm", ""))
             out[i] = v
     return out
+
+
+def review_questions(plans):
+    """Questions for the check-before-filling card: every answer the app is about to type, except those she just typed."""
+    items = []
+    for f, p in plans:
+        if p["action"] != "fill" or p.get("src") == "you":
+            continue
+        v, opts = str(p["value"]), p.get("options")
+        q = {"label": pretty_label(f["label"]) or "(this field has no label)", "required": bool(f.get("required")),
+             "options": [], "value": v, "note": "From " + str(p.get("src") or "your profile"), "review": True}
+        if f["kind"] == "file":
+            q.update(kind="fixed", value=Path(v).name)
+        elif opts:
+            q.update(kind="choice", options=list(opts))
+        else:
+            q["kind"] = "textarea" if f["kind"] == "textarea" or len(v) > 80 else "text"
+        items.append((f, p, q))
+    return items
+
+
+async def review_before_fill(db, plans):
+    """Shows the planned answers on one card; she can change any, or leave one empty. Changes are remembered."""
+    items = review_questions(plans)
+    if not items:
+        return
+    qs = [{**q, "qid": i} for i, (_, _, q) in enumerate(items)]
+    n = len(qs)
+    res = await UI.ask(title=f"Check {n} answer{'s' if n > 1 else ''} before I fill them in",
+                       message="This is what I'm about to type on this page. Change anything that's wrong, or tick “Leave empty” "
+                               "to skip one. Changes are remembered.",
+                       questions=qs, choices=[("Looks good, fill these in", "__form__", "primary"),
+                                              ("Don't fill, I'll do it", "__skip__", "ghost")], kind="form")
+    for i, (f, p, q) in enumerate(items):
+        if not isinstance(res, dict):
+            p["action"] = "skip"
+            continue
+        r = res.get(str(i)) or {}
+        v = str(r.get("value") or "").strip()
+        if r.get("never") or (not v and q["kind"] != "fixed"):
+            p["action"] = "skip"
+        elif q["kind"] != "fixed" and v != q["value"]:
+            db.remember(f["label"], v, f.get("nm", ""))
+            p["value"], p["src"] = (v if q["kind"] == "choice" else adapt_value(f, v)), "you"
 
 
 async def fill_field(f, value, src, page, db):
@@ -241,6 +286,8 @@ async def fill_page(page, db):
                 if i in answers:
                     p.update(action="fill", value=adapt_value(f, answers[i]) if p["q"]["kind"] != "file" else answers[i],
                              src="you")
+        if truthy(db.settings.get("review_before_fill", "Yes")):
+            await review_before_fill(db, plans)
         new = False
         for f, p in plans:
             if p["action"] == "have":

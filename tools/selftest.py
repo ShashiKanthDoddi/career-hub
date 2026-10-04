@@ -106,6 +106,11 @@ def main():
           and gmail.process_mail([("xInt", _mail("Acme HR <hr@acme.com>", "Next steps", "see you")[0][1])], [], set())[0]["type"] == "interview"
           and not gmail.process_mail([("xJb", _mail("Foo <a@foo.com>", "Application update", "applied")[0][1])], [], set()),
           "Gmail labels (Interviews, Rejected, Job boards) decide the type")
+    check(all((gmail.process_mail(_mail("Acme HR <hr@acme.com>", sub, body), [], set()) or [{}])[0].get("type") == "rejection" for sub, body in
+              [("Thank you for your interest in Acme", "We have decided not to take your application further."),
+               ("Update on your application", "We are moving ahead with other candidates."),
+               ("Your application at Acme", "You have not been shortlisted for this role.")]),
+          "Rejection wordings without 'unfortunately' are still read as rejections")
     check(jobsites.CHALLENGE_RE.search("Let's do a quick security check") and not jobsites.CHALLENGE_RE.search("Marketing Manager"),
           "robot-check wording detected")
     check(jobsites.allowed("LinkedIn")[0], "daily limit allows the first application")

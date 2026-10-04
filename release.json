@@ -1,8 +1,16 @@
 {
- "version": "2.6.1",
+ "version": "2.6.2",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.2",
+   "title": "Reads more kinds of resumes",
+   "new": [],
+   "fixed": [
+    "Work and education: \"Read from my resume\" now finds sections written in normal capitals (like Professional Experience) and jobs without a heading"
+   ]
+  },
   {
    "version": "2.6.1",
    "title": "Updates in the side menu",
@@ -92,32 +100,6 @@
     "A gold \"H\" icon for the app window in the taskbar"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.2",
-   "title": "Smarter forms and automatic updates",
-   "new": [
-    "Updates install themselves from GitHub: checked at start, every hour, or with Check for updates",
-    "All new questions on a page come together on one card, with AI drafts per question",
-    "A small pop-up shows what was filled on each page",
-    "Profile knows many more ways sites ask the same thing: experience, notice period, current location, location preference, company, job title, education",
-    "New profile fields: gender, date of birth, current location, education, currently employed, key skills",
-    "Eight colour themes in Settings, Appearance",
-    "One job list on Apply: add links, apply to one, some or all; sent jobs leave the list",
-    "Find jobs keeps every found job on the page and explains why jobs were skipped",
-    "Install an update from a zip file if GitHub isn't set up"
-   ],
-   "fixed": [
-    "Windows launcher failed when the folder name had brackets",
-    "Removed the --no-sandbox warning bar in Chrome",
-    "Example text inside empty boxes was treated as a question",
-    "The privacy / terms tick box wasn't ticked",
-    "Captcha boxes are left for you instead of asked as a question",
-    "Phone country code didn't match '+91'",
-    "Clear message when Gmail needs an app password; automatic checks no longer pop up errors",
-    "Sidebar didn't reach the bottom of the window",
-    "Version 2.1 was listed twice in What's new"
-   ]
   }
  ],
  "files": [
@@ -139,7 +121,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "56543cc4da00c63964952f0ae31c5c655c070206169a707ce282c525ad5456f5"
+   "sha256": "5100492e39c6ee3220c4a34acdf5f36fe91871eef01e6fd340cc083cc7fbcfbf"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -155,11 +137,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "8de9ee499d15a23eff6c952fb57b9a57b10602e42fafdcbe70b4d8aa2aa74cfd"
+   "sha256": "bb0108d90f791e372a0bfece7a33a5afa810d2cb916d0b419d693269ab38bfa8"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "e743afa036afc986721c06e8f50627b5e60da7806cbd9ce779f32f261def33e8"
+   "sha256": "b17a8c658016f748db954ecab67363437e5680793823d5521265f5f3668380fd"
   },
   {
    "path": "careerhub/filler.py",
@@ -175,7 +157,7 @@
   },
   {
    "path": "careerhub/history.py",
-   "sha256": "99830f1880ecf2405a8f2bffe131a88aeb15a8d74944036f772b8586c2edcb05"
+   "sha256": "7472ee1a3f239fb719e09cf7384490981c7f59e0da6d0dd791a3252cbd8606e0"
   },
   {
    "path": "careerhub/jobsites.py",

@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.1',
+CHANGELOG = [{'version': '2.6.2',
+  'title': 'Reads more kinds of resumes',
+  'new': [],
+  'fixed': ['Work and education: "Read from my resume" now finds sections written in normal capitals (like Professional Experience) and jobs without a heading']},
+ {'version': '2.6.1',
   'title': 'Updates in the side menu',
   'new': ['An Updates button at the bottom of the left menu checks for a new version, and shows a "new" tag when one is waiting'],
   'fixed': ['The update source is set automatically, so the empty box is gone from Settings']},

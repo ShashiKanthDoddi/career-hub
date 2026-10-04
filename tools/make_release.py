@@ -23,6 +23,16 @@ def vt(v):
     return tuple(int(x) for x in re.findall(r"\d+", str(v)))
 
 
+TEXT = {".py", ".js", ".html", ".css", ".md", ".bat", ".command", ".json", ".txt"}
+
+
+def git_bytes(p):
+    """The bytes GitHub will serve. On Windows the working copy may use CRLF line ends while git stores LF,
+    and the app checks the downloaded bytes against this hash."""
+    b = p.read_bytes()
+    return b.replace(b"\r\n", b"\n") if p.suffix.lower() in TEXT else b
+
+
 def main():
     args = set(sys.argv[1:])
     version = re.search(r'APP_VERSION = "([^"]+)"', (ROOT / "careerhub/config.py").read_text(encoding="utf-8")).group(1)
@@ -43,7 +53,7 @@ def main():
     for pattern in INCLUDE:
         for p in sorted(ROOT.glob(pattern)):
             if p.is_file() and "__pycache__" not in p.parts:
-                files.append({"path": p.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()})
+                files.append({"path": p.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(git_bytes(p)).hexdigest()})
     release = {"version": version, "date": datetime.date.today().isoformat(), "urgent": "--urgent" in args,
                "changelog": CHANGELOG[:8], "files": files}
     old.write_text(json.dumps(release, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

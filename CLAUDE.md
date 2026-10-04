@@ -41,7 +41,7 @@ maintains it and ships fixes through automatic updates from GitHub.
    (uses Word or LibreOffice). Never edit the PDF by hand. No release without this.
 1. Bump `APP_VERSION` in `careerhub/config.py`.
 2. Add an entry at the top of `CHANGELOG` in `careerhub/changelog.py` (title, `new`, `fixed`).
-3. `python3 tools/make_release.py` (add `--urgent` for important fixes). It runs the self-test and writes `release.json`.
+3. `python3 tools/make_release.py` (hashes use LF line ends, like GitHub serves, so CRLF files on Windows still verify) (add `--urgent` for important fixes). It runs the self-test and writes `release.json`.
 4. Commit and push to the GitHub repo set in `careerhub/config.py` (`UPDATE_SOURCE = "owner/repo"`).
 5. Her app checks on start and every hour, shows "What's new", installs on "Update now", and restarts.
    If the new version crashes on start, `career_hub.py` restores the previous files automatically.

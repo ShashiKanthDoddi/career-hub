@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.4',
+CHANGELOG = [{'version': '2.6.5',
+  'title': 'Updates install again',
+  'new': [],
+  'fixed': ["Updating failed with a 'didn't download correctly' message. Updates now install normally"]},
+ {'version': '2.6.4',
   'title': 'Links open in your own browser',
   'new': [],
   'fixed': ['Links to Gmail, job pages and other websites now open in your normal browser instead of a new tab inside the app window']},

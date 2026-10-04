@@ -39,20 +39,34 @@ function showFound(jobs, diag){
   FOUND = jobs; $("#foundPanel").hidden = false;
   $("#foundTitle").textContent = jobs.length ? `${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you` : "No matching jobs yet";
   $("#findDiag").textContent = diagText(diag || STATE.find_diag);
-  $("#foundList").innerHTML = jobs.length ? jobs.map((j, i) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}" checked>
+  $("#foundFilters").hidden = !jobs.length; drawFound();
+  if (PAGE !== "find" && diag && jobs.length){ setCount("#navFound", jobs.length); toast(`${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you`); }
+}
+function foundView(){
+  const q = $("#fQ").value.trim().toLowerCase(), age = +$("#fAge").value, min = +$("#fMin").value, sort = $("#fSort").value;
+  const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!q || `${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
+    (!age || j.age == null || +j.age < age + (age === 1 ? 1 : 0)) && (!min || j.score >= min));
+  if (sort === "new") rows.sort((a, b) => (a[0].age ?? 999) - (b[0].age ?? 999));
+  else if (sort === "co") rows.sort((a, b) => a[0].company.localeCompare(b[0].company));
+  return rows;
+}
+function drawFound(){
+  const jobs = FOUND, rows = foundView();
+  $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}" checked>
       <div class="ring" style="--p:${j.score}">${j.score}</div>
       <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span></div>
       <span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
       <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></label>`).join("")
+    : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
     : emptyHTML("search", "Nothing here yet", "Add companies or careers-page links, keep web search on, and press Find jobs. A lower minimum match in Settings shows more.");
   $("#bulk").hidden = !jobs.length; updateBulk();
   $$(".fj").forEach(c => c.onchange = updateBulk);
   $$("#foundList [data-dis]").forEach(b => b.onclick = async e => { e.preventDefault(); e.stopPropagation();
     await api_dismiss_found(FOUND[+b.dataset.dis].link); loadFound(); });
-  if (PAGE !== "find" && diag && jobs.length){ setCount("#navFound", jobs.length); toast(`${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you`); }
 }
+$("#fQ").oninput = $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = drawFound;
 function picked(){ return $$(".fj:checked").map(c => FOUND[+c.dataset.i].link); }
-function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; $("#allFound").checked = n === FOUND.length; }
+function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; $("#allFound").checked = n > 0 && n === $$(".fj").length; }
 $("#allFound").onchange = e => { $$(".fj").forEach(c => c.checked = e.target.checked); updateBulk(); };
 $("#applyFoundBtn").onclick = () => { const l = picked(); if (!l.length) return toast("Select at least one job", true); startApply(l); };
 $("#saveFoundBtn").onclick = async () => { const l = picked(); if (!l.length) return toast("Select at least one job", true);

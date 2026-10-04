@@ -57,11 +57,11 @@ Read this first, then open only the file you need. Each Python module is small a
 | `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
 | `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |
-| `ui/js/apply.js` | 38 | Apply: the one job list (add links, apply to one/selected/all). |
+| `ui/js/apply.js` | 42 | Apply: the one job list (add links, filter, apply to one/selected/all). |
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
 | `ui/js/questions.js` | 59 | Question cards from Python: single questions and the all-at-once form (showForm). |
-| `ui/js/find.js` | 59 | Find jobs: resume tags, companies, results list, skip reasons, dismiss. |
-| `ui/js/jobs.js` | 87 | My jobs board (drag and drop), list, emails, accounts, found, job drawer. |
+| `ui/js/find.js` | 70 | Find jobs: resume tags, companies, results list with filters (text, posted, match, sort), skip reasons, dismiss. |
+| `ui/js/jobs.js` | 90 | My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
 | `ui/js/forms.js` | 137 | Profile and Settings forms, files, saved answers, themes, What's new, zip install. |
 | `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
 | `ui/js/events.js` | 68 | window.onPy event handling, filled-fields pop-up, update modal, startup sequence. |

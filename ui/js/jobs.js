@@ -8,6 +8,8 @@ async function loadJobs(filter){
 }
 $$("#jobsTabs button").forEach(b => b.onclick = () => { JVIEW = b.dataset.t; JFILTER = "all"; renderJobs(); });
 $("#jobSearch").oninput = () => renderJobs();
+$("#jobStage").onchange = e => { JFILTER = e.target.value; if (JFILTER !== "all" && JFILTER !== "replied") JVIEW = "board"; renderJobs(); };
+const hasQ = o => { const q = $("#jobSearch").value.trim().toLowerCase(); return !q || Object.values(o).join(" ").toLowerCase().includes(q); };
 $("#exportBtn").onclick = async () => { const m = {board:"applications", list:"applications", updates:"applications", accounts:"accounts", found:"found"};
   if (!await api_open(m[JVIEW])) toast("Nothing to export yet", true); };
 function filtered(){ const q = $("#jobSearch").value.toLowerCase();
@@ -15,7 +17,7 @@ function filtered(){ const q = $("#jobSearch").value.toLowerCase();
     (JFILTER === "all" || (JFILTER === "replied" ? ["Interview","Assessment","Offer","Rejected"].includes(j.stage) : j.stage === JFILTER || (JFILTER === "Interview" && j.stage === "Assessment")))); }
 function renderJobs(){
   $$("#jobsTabs button").forEach(b => b.classList.toggle("on", b.dataset.t === JVIEW));
-  const v = $("#jobsView");
+  const v = $("#jobsView"); $("#jobStage").value = JFILTER; $("#jobStage").hidden = JVIEW !== "board" && JVIEW !== "list";
   if (JVIEW === "board"){
     const list = filtered(); const extra = ["Skipped","Error"].filter(s => list.some(j => j.stage === s));
     v.innerHTML = (JFILTER !== "all" ? `<div class="row" style="margin-bottom:10px"><span class="tag">Showing: ${esc(JFILTER === "replied" ? "heard back" : COLNAME[JFILTER] || JFILTER)}</span><button class="btn sm ghost" id="clearFilter">Show all</button></div>` : "") +
@@ -35,12 +37,12 @@ function renderJobs(){
       : `<div class="panel">${emptyHTML("board", "Nothing here", "Try a different search.")}</div>`;
     $$("#jobsView tr[data-k]").forEach(tr => tr.onclick = () => openJob(tr.dataset.k));
   } else if (JVIEW === "updates"){
-    const u = JOBS.updates;
+    const u = JOBS.updates.filter(hasQ);
     v.innerHTML = u.length ? `<div class="panel">${u.map(x => itemHTML(x, false)).join("")}</div>` : `<div class="panel">${emptyHTML("inbox", "No job emails yet", "Connect your job Gmail in Settings.")}</div>`;
   } else {
     const rows = TABLES[JVIEW === "accounts" ? "accounts" : "found"] || [];
     if (rows.length < 2){ v.innerHTML = `<div class="panel">${emptyHTML(JVIEW === "accounts" ? "user" : "search", "Nothing here yet", JVIEW === "accounts" ? "Job-site logins appear here after the app signs you in." : "Jobs from Find jobs appear here.")}</div>`; return; }
-    const [head, ...body] = rows; const pw = head.indexOf("Password");
+    const q = $("#jobSearch").value.trim().toLowerCase(); const [head, ...all] = rows; const body = all.filter(r => !q || r.join(" ").toLowerCase().includes(q)); const pw = head.indexOf("Password");
     v.innerHTML = `<div class="tablewrap"><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>` +
       body.reverse().map(r => `<tr>${r.map((c, i) => i === pw ? `<td><button class="btn sm ghost reveal" data-p="${esc(c)}">Show</button></td>` :
         /^https?:\/\//.test(c) ? `<td><a href="${esc(c)}" target="_blank">Open</a></td>` : `<td>${esc(c)}</td>`).join("")}</tr>`).join("") + `</tbody></table></div>`;

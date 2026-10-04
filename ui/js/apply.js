@@ -9,19 +9,23 @@ $("#links").oninput = renderLinkChips;
 $("#links").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); $("#addLinksBtn").click(); } };
 function setSaved(list){ SAVED = list;
   $("#listCount").textContent = list.length;
-  $("#savedList").innerHTML = list.length ? list.map((u, i) => { const [s, who] = site(u);
+  const q = $("#savedQ").value.trim().toLowerCase(); $("#savedQ").hidden = list.length < 2;
+  const rows = list.map((u, i) => [u, i]).filter(([u]) => !q || u.toLowerCase().includes(q) || site(u).join(" ").toLowerCase().includes(q));
+  $("#savedList").innerHTML = rows.length ? rows.map(([u, i]) => { const [s, who] = site(u);
     return `<div class="linkchip"><input type="checkbox" class="sj" data-i="${i}" checked><span class="site">${s}</span>
       <span class="u" title="${esc(u)}">${esc(who || u)}</span><a class="btn sm ghost" href="${esc(u)}" target="_blank" title="Open">${icon("ext")}</a>
       <button class="btn sm" data-go1="${i}">Apply</button><button class="tag x" data-rm="${i}" title="Remove">×</button></div>`; }).join("")
+    : list.length ? emptyHTML("link", "No links match", "Clear the filter to see your list.")
     : emptyHTML("link", "Your list is empty", "Paste job links above. Collect them during the week, then apply in one go.");
   $$("#savedList [data-rm]").forEach(b => b.onclick = async () => saveList(SAVED.filter((_, i) => i !== +b.dataset.rm)));
   $$("#savedList [data-go1]").forEach(b => b.onclick = () => startApply([SAVED[+b.dataset.go1]]));
   $$("#savedList .sj").forEach(c => c.onchange = updateApplyBtn);
   updateApplyBtn(); setCount("#navSaved", list.length); }
+$("#savedQ").oninput = () => setSaved(SAVED);
 function pickedSaved(){ return $$("#savedList .sj:checked").map(c => SAVED[+c.dataset.i]); }
 function updateApplyBtn(){ const n = pickedSaved().length; $("#applyListBtn").disabled = !n;
   $("#applyListBtn").textContent = n === SAVED.length && n > 1 ? `Apply to all ${n}` : n > 1 ? `Apply to ${n} selected` : "Apply to selected";
-  $("#allSaved").checked = n === SAVED.length && n > 0; }
+  $("#allSaved").checked = n === $$("#savedList .sj").length && n > 0; }
 $("#allSaved").onchange = e => { $$("#savedList .sj").forEach(c => c.checked = e.target.checked); updateApplyBtn(); };
 async function saveList(list){ await api_save_list(list.join("\n")); setSaved(list); }
 $("#addLinksBtn").onclick = async () => { const l = links($("#links").value); if (!l.length) return toast("Paste a link that starts with http", true);

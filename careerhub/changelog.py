@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.13',
+CHANGELOG = [{'version': '2.6.14',
+  'title': 'Only jobs where you can work',
+  'new': [],
+  'fixed': ['Find jobs no longer shows "remote" jobs tied to other countries, such as Germany remote or Remote in the US. Remote jobs open to India or anywhere still show']},
+ {'version': '2.6.13',
   'title': 'Labelled and rejected mail read properly',
   'new': [],
   'fixed': ['Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once',

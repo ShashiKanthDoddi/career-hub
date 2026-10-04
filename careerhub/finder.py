@@ -98,7 +98,14 @@ def location_ok(loc, wanted):
     l = (loc or "").lower().strip()
     if not l or l in ("india", "multiple locations", "various locations", "various"):
         return True
-    return any(alias in l for w in wanted for alias in CITY_ALIASES.get(w, [w]))
+    for w in wanted:
+        if w == "remote":           # "Remote" alone or "Remote, India" counts; "Germany remote" or "Remote in the US" does not
+            rest = re.sub(r"remote|anywhere|work from home|wfh|worldwide|global|hybrid|[^a-z ]", " ", l).strip()
+            if not rest or "india" in rest:
+                return True
+        elif any(alias in l for alias in CITY_ALIASES.get(w, [w])):
+            return True
+    return False
 
 
 def relevant_title(title, prof):

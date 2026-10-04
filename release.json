@@ -1,8 +1,35 @@
 {
- "version": "2.6.10",
+ "version": "2.6.13",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.13",
+   "title": "Labelled and rejected mail read properly",
+   "new": [],
+   "fixed": [
+    "Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once",
+    "An interview card shows the company (for example Accenture) instead of the name of the recruiter"
+   ]
+  },
+  {
+   "version": "2.6.12",
+   "title": "Select all and Unselect all",
+   "new": [
+    "Find jobs has Select all and Unselect all buttons. They work on the jobs you can see after filtering"
+   ],
+   "fixed": [
+    "Changing a filter no longer ticks every job again; the ones you unticked stay unticked"
+   ]
+  },
+  {
+   "version": "2.6.11",
+   "title": "Tidier job filters",
+   "new": [],
+   "fixed": [
+    "The filters above the Find jobs results now sit in one neat row instead of four long boxes"
+   ]
+  },
   {
    "version": "2.6.10",
    "title": "Your Gmail labels are used",
@@ -49,30 +76,6 @@
     "Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",
     "More ways of asking when you joined your current company are understood, and dates like June 2023 work"
    ]
-  },
-  {
-   "version": "2.6.5",
-   "title": "Updates install again",
-   "new": [],
-   "fixed": [
-    "Updating failed with a 'didn't download correctly' message. Updates now install normally"
-   ]
-  },
-  {
-   "version": "2.6.4",
-   "title": "Links open in your own browser",
-   "new": [],
-   "fixed": [
-    "Links to Gmail, job pages and other websites now open in your normal browser instead of a new tab inside the app window"
-   ]
-  },
-  {
-   "version": "2.6.3",
-   "title": "Calmer email check",
-   "new": [],
-   "fixed": [
-    "The spinning circle for Check email now shows inside the Inbox box instead of over the whole page"
-   ]
   }
  ],
  "files": [
@@ -110,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "e2132748bfd887ae330c2773a3ddf7e8f0e5beff0d1104f6b6b058c1e77113d2"
+   "sha256": "139d6a03ca442e83fdd32a8b5408aaee85f9135084be32bd5bd970c4b2631495"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "2659365ccfcdc78e24c4853db9aab86131b157157913c13afa708e60c09bea07"
+   "sha256": "4aa58a20d9e31b6f4fc75148a9d5c0b95f49a97a0bd59a57c9a5c7baa8866f30"
   },
   {
    "path": "careerhub/filler.py",
@@ -126,7 +129,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "ced5a5557a0ecf53b687e6fde87baaa700fee6c7ae4448260595588b76b5a495"
+   "sha256": "52415fd1adc4d86c3026c53cd053a428e75575cd41cfba4bc95ed377a8580298"
   },
   {
    "path": "careerhub/history.py",
@@ -198,11 +201,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "51fff1f79d57527f1b245407824f0779b02bb44587a1c4b09955bd1ffeb3c9f3"
+   "sha256": "d5d8537d368a416f01a35d199ff26d5f358e9321207bf4e5f9259a37a9de5776"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "99ff22ad1c5e496db0a4dff10f07e1fea5e65ad59f47428adc1634aa4d54c00a"
+   "sha256": "3a3dd7ce573af51f8839bdf3c8b3a4ef6b50670a45c999059aad28fd59211317"
   },
   {
    "path": "ui/js/apply.js",
@@ -218,7 +221,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "14fc3bcfbd88bf9b6879bc0ebac9336497e233058005c0485029ec510a15bcc2"
+   "sha256": "082220bf7fbe1e6174036ad3d8364042124eb44509c0f8855139a7d5ca7118b0"
   },
   {
    "path": "ui/js/forms.js",
@@ -270,11 +273,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "994c67457338a0a25df20affc7df1b34228d0e3c412378ce872b41f61c84aeb4"
+   "sha256": "a91915b18733fda5a27398c1a19b643c43137aa8ec34cc3a77616ea2d478a5ef"
   },
   {
    "path": "MAP.md",
-   "sha256": "42a45d1a201ccdc113eb52b57538792bd78c3be19a4f8453dc96c8cf53033c85"
+   "sha256": "9711b44c1db521a94498be9b909b95fe3d67d0d93496ee2218a7f688db5e5fb0"
   },
   {
    "path": "Setup (Mac).command",

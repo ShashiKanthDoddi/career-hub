@@ -52,12 +52,12 @@ ATS_SENDERS = ("myworkday", "greenhouse", "lever.co", "ashbyhq", "smartrecruiter
 
 MAIL_LABELS = {}          # gmail id -> her Gmail labels (filled by imap_fetch)
 LABEL_KINDS = [("interview", "interview"), ("assessment", "assessment"), ("reject", "rejection"), ("declin", "rejection"),
-               ("offer", "offer")]
+               ("not selected", "rejection"), ("unsuccessful", "rejection"), ("offer", "offer")]
 
 
 def label_kind(labels):
     """Her own Gmail labels (e.g. Applied/Interviews, Rejected) decide the type; 'Job boards' mail is ignored."""
-    names = [norm(l.split("/")[-1]) for l in labels]
+    names = [norm(l) for l in labels]                  # whole path, so Applied/Rejected and Rejected/Naukri both count
     for key, kind in LABEL_KINDS:
         if any(key in n for n in names):
             return kind
@@ -115,17 +115,21 @@ def mail_body(msg):
     return re.sub(r"\s+", " ", plain or htm).strip()
 
 
+COMPANY_WORDS = re.compile(r"(?i)(inc|ltd|llc|llp|pvt|corp|co|services|technologies|solutions|consulting|group|systems|labs|bank|"
+                           r"software|global|india|limited)")
+
+
 def company_from_sender(name, addr):
-    n = re.sub(r"(?i)\b(recruiting|recruitment|careers?|talent( acquisition)?|hiring( team)?|team|hr|jobs|people|"
-               r"no.?reply|notifications?|via \w+|workday)\b", " ", name or "")
+    n = re.sub(r"(?i)(recruiting|recruitment|careers?|talent( acquisition)?|hiring( team)?|team|hr|jobs|people|"
+               r"no.?reply|notifications?|via \w+|workday)", " ", name or "")
     n = re.sub(r"[^\w&.' -]", " ", n).strip(" -.")
-    if len(n) >= 2:
-        return re.sub(r"\s+", " ", n).strip()
+    n = re.sub(r"\s+", " ", n).strip()
     dom = (addr or "").split("@")[-1].lower()
     parts = [p for p in dom.split(".") if p not in ("com", "co", "in", "io", "net", "org", "mail", "email", "jobs")]
-    if parts and not any(a in dom for a in ATS_SENDERS) and parts[-1] not in ("gmail", "outlook", "yahoo"):
-        return parts[-1].title()
-    return ""
+    slug = parts[-1] if parts and not any(a in dom for a in ATS_SENDERS) and parts[-1] not in ("gmail", "outlook", "yahoo", "hotmail") else ""
+    if len(n) >= 2 and (not slug or COMPANY_WORDS.search(n) or slug in re.sub(r"\W", "", n.lower())):
+        return n                                        # "Choragudi, Kamala A." is a person: use the mail domain instead
+    return slug.title() if slug else (n if len(n) >= 2 else "")
 
 
 def match_application(text, from_addr, rows):
@@ -148,7 +152,8 @@ def process_mail(items, rows, known_ids):
     """items: [(gmail_id, raw_bytes)]. Returns new update records."""
     out = []
     for gid, raw in items:
-        if gid in known_ids:
+        lk = label_kind(MAIL_LABELS.get(gid, []))
+        if gid in known_ids and (lk in (None, "skip") or known_ids[gid] == lk):
             continue
         msg = email.message_from_bytes(raw)
         subject = dec(msg.get("Subject"))
@@ -156,7 +161,6 @@ def process_mail(items, rows, known_ids):
         if any(a in from_addr.lower() for a in ALERT_SENDERS) and re.search(r"(?i)alert|jobs? for you|new jobs|recommended|recommendation", subject):
             continue                                    # job-alert emails are handled by alert_links()
         body = mail_body(msg)
-        lk = label_kind(MAIL_LABELS.get(gid, []))
         if lk == "skip":
             continue
         if lk:
@@ -206,7 +210,7 @@ def alert_links(items):
     return out
 
 
-def imap_fetch(addr, pw, since, known_ids, company_names, limit=400):
+def imap_fetch(addr, pw, since, known_ids, company_names, limit=1500):
     """Reads (never changes) the job inbox. Returns [(gmail_id, raw_bytes)] for likely job emails."""
     M = imaplib.IMAP4_SSL("imap.gmail.com", 993, timeout=30)
     try:
@@ -219,19 +223,21 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=400):
         names = [c.lower() for c in company_names if len(c) >= 3]
         for i in range(0, len(ids), 100):
             typ, resp = M.fetch(b",".join(ids[i:i + 100]), "(X-GM-MSGID X-GM-LABELS BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
-            for part in resp:
+            for k, part in enumerate(resp):
                 if not isinstance(part, tuple):
                     continue
                 meta = part[0].decode(errors="replace")
+                if k + 1 < len(resp) and isinstance(resp[k + 1], bytes):
+                    meta += " " + resp[k + 1].decode(errors="replace")      # Gmail may send the labels after the header text
                 m = re.search(r"X-GM-MSGID (\d+)", meta)
                 gid = format(int(m.group(1)), "x") if m else meta.split()[0]
-                if gid in known_ids:
-                    continue
                 lm = re.search(r"X-GM-LABELS \((.*?)\)\s", meta + " ")
                 labs = [a or b for a, b in re.findall(r'"([^"]*)"|([^\s"]+)', lm.group(1))] if lm else []
                 if {"\\Sent", "\\Draft", "\\Spam", "\\Trash"} & set(labs):
                     continue
                 MAIL_LABELS[gid] = [l for l in labs if not l.startswith("\\")]
+                if gid in known_ids and label_kind(MAIL_LABELS[gid]) in (None, "skip", known_ids[gid]):
+                    continue
                 hdr = email.message_from_bytes(part[1])
                 head = f"{dec(hdr.get('From'))} {dec(hdr.get('Subject'))}".lower()
                 if (label_kind(MAIL_LABELS[gid]) not in (None, "skip") or any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
@@ -290,16 +296,27 @@ async def check_mail(manual=False):
         updates[:] = [u for u in updates                # drop "you applied for 5 jobs" digests from job boards
                       if not (any(b.split(".")[0] in (u.get("from") or "").lower() for b in BOARD_SENDERS)
                               and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"))]
-        known = {u["id"] for u in updates}
+        old_unmatched = {}
+        if st.get("label_scan") != 3:                   # re-read cards that got a person's name as the company
+            old_unmatched = {u["id"]: u for u in updates if not u.get("link")}
+            updates[:] = [u for u in updates if u["id"] not in old_unmatched]
+        known = {u["id"]: u.get("type") for u in updates}
         try:
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)
         except Exception:
             last = datetime.datetime.now() - datetime.timedelta(days=60)
+        if st.get("label_scan") != 3:                   # one wider pass so labelled mail from before label reading is sorted
+            last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
         rows = list(reversed(tracker_rows()))
         log("📬 Checking the job inbox for updates…")
         items = await asyncio.to_thread(imap_fetch, ms["addr"], ms["pw"], last.date(), known,
                                         [r.get("Company", "") for r in rows])
         new = process_mail(items, rows, known)
+        for u in new:
+            if u["id"] in old_unmatched:
+                u["done"] = old_unmatched[u["id"]].get("done", u["done"])
+        replaced = {u["id"] for u in new}
+        updates[:] = [u for u in updates if u["id"] not in replaced]   # a re-sorted mail replaces its old card
         have, found = seen_links(), []
         for link, title, site in alert_links(items):
             if norm_link(link) not in have:
@@ -319,7 +336,8 @@ async def check_mail(manual=False):
             save_data()
         if booked:
             log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
-        save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="")
+        save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="",
+                       label_scan=3)
         counts = {}
         for u in new:
             counts[u["type"]] = counts.get(u["type"], 0) + 1

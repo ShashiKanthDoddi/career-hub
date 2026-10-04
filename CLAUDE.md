@@ -63,7 +63,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Not done yet / known limits
 
-- Mail is read on start and hourly (`main.mail_loop`). Interview dates are read by regex (`meetings.py`): other time zones are not converted and a reschedule email adds a second entry.
+- Mail is read on start and hourly (`main.mail_loop`). A manual Check email shows scanned / read counts (`mail_progress` event from `imap_fetch`, sent thread-safely via `loop.call_soon_threadsafe`); bodies are fetched 25 at a time. Interview dates are read by regex (`meetings.py`): other time zones are not converted and a reschedule email adds a second entry.
 - Up to three job inboxes are read (settings `gmail_address`, `_2`, `_3`, each with its own app password); the first must work, extra ones are skipped with a log line if they fail.
 - Company and title of job-board mails like LinkedIn "Your application to X at Y" come from the subject (`job_from_subject`); other subject wordings still fall back to the sender (e.g. "LinkedIn").
 - Mail from job boards (`BOARD_SENDERS` in `gmail.py`: Naukri, AmbitionBox, LinkedIn…) is judged by subject only; digests never become interview cards.

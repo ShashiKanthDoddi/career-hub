@@ -58,3 +58,7 @@ function confetti(){
     ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += .1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); x.restore(); });
     if (++f < 110) requestAnimationFrame(tick); else x.clearRect(0, 0, c.width, c.height); })();
 }
+
+/* Web links open in her normal browser, not inside this window */
+document.addEventListener("click", e => { const a = e.target.closest && e.target.closest('a[href^="http"]');
+  if (a){ e.preventDefault(); api_open_url(a.href); } });

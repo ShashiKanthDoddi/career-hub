@@ -53,7 +53,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | --- | --- | --- |
 | `ui/index.html` | 226 | All page markup (sidebar, Home, Apply, Find jobs, My jobs, Profile, Settings) + SVG icons. |
 | `ui/styles.css` | 285 | Design tokens, 5 colour themes (data-theme / data-mode), components, layout. |
-| `ui/js/core.js` | 60 | Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
+| `ui/js/core.js` | 65 | Web links open in the default browser (`api_open_url`). Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
 | `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
 | `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |

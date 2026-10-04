@@ -445,6 +445,14 @@ async def api_seen_version():
     return True
 
 
+async def api_open_url(url):
+    """Opens a web link in her normal browser, not inside the app window."""
+    import webbrowser
+    if not re.match(r"https?://", str(url or ""), re.I):
+        return False
+    return bool(webbrowser.open(str(url)))
+
+
 async def api_open(name):
     rows = {"applications": "applications", "accounts": "accounts", "found": "found_jobs"}
     if name in rows:

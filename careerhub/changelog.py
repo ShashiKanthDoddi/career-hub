@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.3',
+CHANGELOG = [{'version': '2.6.4',
+  'title': 'Links open in your own browser',
+  'new': [],
+  'fixed': ['Links to Gmail, job pages and other websites now open in your normal browser instead of a new tab inside the app window']},
+ {'version': '2.6.3',
   'title': 'Calmer email check',
   'new': [],
   'fixed': ['The spinning circle for Check email now shows inside the Inbox box instead of over the whole page']},

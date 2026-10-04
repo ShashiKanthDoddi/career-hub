@@ -155,6 +155,14 @@
       <nav class="secnav" id="profileNav"></nav>
       <div>
         <div id="profileForm"></div>
+        <div class="panel sec" id="sec-history">
+          <div class="panel-head"><h2 class="grow">Work and education</h2><button class="btn sm" id="histRead">Read from my resume</button></div>
+          <p class="muted small" style="margin-top:-6px">Used on sites like Workday that ask for each job and each degree. Check every box before you save: the app only guesses from your resume.</p>
+          <div id="histWork"></div><button class="btn sm ghost" id="histAddWork">+ Add a job</button>
+          <h3 style="margin:18px 0 8px">Education</h3>
+          <div id="histEdu"></div><button class="btn sm ghost" id="histAddEdu">+ Add education</button>
+          <div class="row" style="margin-top:16px"><button class="btn primary" id="histSave">Save work and education</button><span class="muted small" id="histState"></span></div>
+        </div>
         <div class="panel sec" id="sec-files">
           <div class="panel-head"><h2 class="grow">Your files</h2></div>
           <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
@@ -244,6 +252,7 @@
 <script src="js/core.js"></script>
 <script src="js/home.js"></script>
 <script src="js/planner.js"></script>
+<script src="js/history.js"></script>
 <script src="js/apply.js"></script>
 <script src="js/run.js"></script>
 <script src="js/questions.js"></script>

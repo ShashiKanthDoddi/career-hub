@@ -33,7 +33,7 @@ function renderForms(){
       <div class="formgrid">${items.map(([f, i]) => fieldHTML(f, i)).join("")}</div></div>`;
     if (id){ sHTML += block; sNav.push([id, SETTINGS_TITLES[sec]]); } else { pHTML += block; pNav.push(["sec-" + sec.replace(/\W+/g, "-").toLowerCase(), sec]); }
   }
-  pNav.push(["sec-files","Your files"],["sec-answers","Saved answers"]); sNav.push(["set-help","Help"],["set-updates","Updates"],["set-news","What's new"]);
+  pNav.push(["sec-history","Work and education"],["sec-files","Your files"],["sec-answers","Saved answers"]); sNav.push(["set-help","Help"],["set-updates","Updates"],["set-news","What's new"]);
   $("#profileForm").innerHTML = pHTML; $("#settingsForm").innerHTML = sHTML;
   $("#profileNav").innerHTML = pNav.map(([id, t]) => `<a href="#${id}" data-sec="${id}">${esc(t)}</a>`).join("");
   $("#settingsNav").innerHTML = sNav.map(([id, t]) => `<a href="#${id}" data-sec="${id}">${esc(t)}</a>`).join("");

@@ -59,7 +59,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Cards from emails with no tracker row are made in `overview.py` (key `mail:<company>`); a stage she set by hand holds only until the auto stage changes.
 - Captchas are never solved: if one is empty, the app asks her to type it in Chrome before it clicks Submit.
 - Calendar pop-up date boxes are set by script (jQuery datepicker if present, else dd/mm/yyyy); other picker libraries are untested.
-- Workday work-history and education sections are not filled from the resume.
+- Interview emails: time zones in `meetings.py` ZONES (CST left out as ambiguous). Reschedule / cancel match by company name only.
+- Workday work history and education (2.6) come from Profile, Work and education (`history.py`, `workday.py`), but the selectors were only tested on a mock page, not a live Workday. Resume reading is a draft she must check.
 - Windows is untested on real hardware. LinkedIn/Indeed/Naukri: pasted links work with a daily limit (default 10 per site),
   pacing and rest-on-robot-check (`careerhub/jobsites.py`), alert-email links feed Find jobs; none of it is tested on a real login.
 - Web search for companies: DuckDuckGo and Bing block automatic requests, so `discover()` relies on `DEFAULT_BOARDS`

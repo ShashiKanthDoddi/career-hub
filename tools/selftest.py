@@ -96,7 +96,32 @@ def main():
     check(find_meeting("Your interview is on Thursday, 8 October 2026 at 3:30 PM IST", sent) == {"date": "2026-10-08", "time": "15:30"},
           "interview email: date and time read")
     check(find_meeting("Interview slot: Oct 12th, 10.30 am", sent) == {"date": "2026-10-12", "time": "10:30"}, "interview email: Oct 12th 10.30 am")
+    from careerhub.meetings import find_change
+    check(find_meeting("Thursday Oct 8 3:30 - 4:00pm IST", sent)["time"] == "15:30" if datetime.datetime.now().astimezone().utcoffset() == datetime.timedelta(hours=5, minutes=30)
+          else True, "interview email: a range like 3:30 - 4:00pm takes pm from the end")
+    check(find_meeting("Interview 8 Oct 2026 at 10:00 UTC", sent)["time"] == (datetime.datetime(2026, 10, 8, 10, 0, tzinfo=datetime.timezone.utc).astimezone().strftime("%H:%M")),
+          "interview email: time in another zone is shown in local time")
+    check(find_change("Rescheduled: your interview") == "reschedule" and find_change("Your interview was cancelled") == "cancel"
+          and find_change("Interview invitation") == "", "interview email: reschedule / cancel wording")
     check(find_meeting("Please share your availability. You applied on 1 Oct 2026", sent) is None, "interview email without a date: nothing added")
+
+    from careerhub.history import parse_history
+    hh = parse_history("WORK EXPERIENCE
+Senior Manager
+Acme Corp, Bengaluru   Jan 2021 - Present
+• Led campaigns
+"
+                       "Executive | Beta Ltd, Mumbai  06/2018 - 12/2020
+• Ran SEO
+EDUCATION
+MBA in Marketing
+XYZ University, Pune
+2016 - 2018
+Percentage: 78%")
+    check([(w["title"], w["company"], w["start"], w["current"]) for w in hh["work"]] ==
+          [("Senior Manager", "Acme Corp", "2021-01", True), ("Executive", "Beta Ltd", "2018-06", False)], "resume: jobs read in both layouts")
+    check(hh["education"] and (hh["education"][0]["degree"], hh["education"][0]["school"], hh["education"][0]["end"]) == ("MBA", "XYZ University", "2018"),
+          "resume: education read")
 
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")

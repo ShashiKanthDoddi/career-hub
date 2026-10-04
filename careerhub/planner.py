@@ -68,24 +68,37 @@ def clear_done_todos():
 
 
 def events_from_mail(updates):
-    """Puts interviews found in emails on the calendar (each email once). Returns how many were added."""
-    from .meetings import find_meeting
-    added = 0
-    for u in updates:
+    """Puts interviews found in emails on the calendar (each email once). A reschedule email moves that company's
+    earlier email entry; a cancellation removes it. Returns how many calendar entries changed."""
+    from .meetings import find_change, find_meeting
+    changed = 0
+    for u in sorted(updates, key=lambda x: x.get("date", "")):          # oldest first, so the newest email wins
         if u.get("type") != "interview" or u.get("cal_done"):
             continue
         u["cal_done"] = True
+        try:
+            sent = datetime.datetime.fromisoformat(u["date"]).date()
+        except (KeyError, ValueError):
+            continue
+        text = f"{u.get('subject', '')} {u.get('snippet', '')}"
+        change = u["change"] if "change" in u else find_change(text)
         m = u.get("meeting")
-        if m is None:                                  # emails saved before 2.5: only the subject and first lines are known
-            try:
-                sent = datetime.datetime.fromisoformat(u["date"]).date()
-            except (KeyError, ValueError):
-                continue
-            m = find_meeting(f"{u.get('subject', '')} {u.get('snippet', '')}", sent)
-        if m and add_event("Interview" + (f", {u['title']}" if u.get("title") else ""), m["date"], m.get("time", ""),
-                           u.get("company", ""), "", u["id"]):
-            added += 1
-    return added
+        if m is None and "meeting" not in u:                  # emails saved before 2.5 only kept the subject and first lines
+            m = find_meeting(text, sent)
+        company = (u.get("company") or "").strip().lower()
+        old = next((e for e in reversed(data()["events"]) if company and e.get("mail_id")
+                    and (e.get("company") or "").strip().lower() == company), None)
+        if change == "cancel" and old:
+            data()["events"].remove(old)
+            changed += 1
+        elif m and change == "reschedule" and old:
+            old.update(date=m["date"], time=m.get("time", ""), mail_id=u["id"])
+            changed += 1
+        elif m and add_event("Interview" + (f", {u['title']}" if u.get("title") else ""), m["date"], m.get("time", ""),
+                             u.get("company", ""), "", u["id"]):
+            changed += 1
+    return changed
+
 
 
 def set_job_event(key, stage, company, title, date, time=""):

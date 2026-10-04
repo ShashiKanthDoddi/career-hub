@@ -32,23 +32,25 @@ function formField(x){
   const id = `fq${x.qid}`, req = x.required ? ` <span style="color:var(--rose)">*</span>` : "";
   let input;
   if (x.kind === "choice" || x.kind === "file"){
-    const opts = x.options.map(o => `<option>${esc(o)}</option>`).join("");
+    const opts = x.options.map(o => `<option${o === x.value ? " selected" : ""}>${esc(o)}</option>`).join("");
     input = `<select id="${id}"><option value="">${x.kind === "file" ? "Choose a file" : "Choose"}</option>${opts}</select>`;
+  } else if (x.kind === "fixed"){
+    input = `<div class="fixedval">${esc(x.value)}</div>`;
   } else if (x.kind === "textarea"){
     input = `<textarea id="${id}" rows="3">${esc(x.value || "")}</textarea>`;
   } else input = `<input type="text" id="${id}" value="${esc(x.value || "")}" placeholder="${x.kind === "date" ? "e.g. 15/11/2026 or Immediately" : ""}">`;
   return `<div class="field qf" data-q="${x.qid}"><label for="${id}">${esc(x.label)}${req}</label>${input}
     ${x.note ? `<div class="hint">${esc(x.note)}</div>` : ""}
     <div class="row" style="margin-top:6px;gap:8px">${x.ai ? `<button class="btn sm ghost" data-ai="${x.qid}">${icon("sparkle")}Draft with AI</button>` : ""}
-    <label class="switch small muted"><input type="checkbox" class="never"> Never ask this</label></div></div>`;
+    <label class="switch small muted"><input type="checkbox" class="never"> ${x.review ? "Leave empty" : "Never ask this"}</label></div></div>`;
 }
 function showForm(q){
   ASK = q;
   const files = q.questions.some(x => x.kind === "file") ? `<p class="hint">New file? Add it on the Resume page, in Your files, then come back.</p>` : "";
   $("#layer").innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="sheet" style="--k:var(--violet);width:min(720px,100%)">
-     <div class="sh"><div class="kind">New questions</div><h2>${esc(q.title)}</h2><p class="msg">${esc(q.message || "")}</p></div>
+     <div class="sh"><div class="kind">${q.questions.some(x => x.review) ? "Check before filling" : "New questions"}</div><h2>${esc(q.title)}</h2><p class="msg">${esc(q.message || "")}</p></div>
      <div class="sb"><div style="display:grid;gap:16px">${q.questions.map(formField).join("")}</div>${files}
-     <div class="row" style="margin-top:18px"><button class="btn primary" id="formSave">Fill these in</button><button class="btn ghost" id="formSkip">Skip all</button>
+     <div class="row" style="margin-top:18px"><button class="btn primary" id="formSave">${esc((q.choices[0] || [])[0] || "Fill these in")}</button><button class="btn ghost" id="formSkip">${esc((q.choices[1] || [])[0] || "Skip all")}</button>
      <span class="kbdhint grow" style="text-align:right"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> to fill</span></div></div></div></div>`;
   const collect = () => { const out = {}; $$("#layer .qf").forEach(el => { const i = el.dataset.q;
     out[i] = {value: (el.querySelector("select, textarea, input[type=text]") || {}).value || "", never: el.querySelector(".never").checked}; }); return out; };

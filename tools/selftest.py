@@ -112,6 +112,22 @@ def main():
           and not location_ok("Munich, Germany remote", ["bengaluru", "remote"]) and not location_ok("Remote in the US", ["remote"]),
           "remote jobs tied to another country are not shown")
     check(__import__("careerhub.gmail", fromlist=["x"]).company_from_sender("Choragudi, Kamala A.", "k@accenture.com") == "Accenture", "a recruiter's name is not used as the company")
+    from careerhub import filler
+    _fs = [({"label": "Notice period", "kind": "text", "nm": "np"}, {"action": "fill", "value": "30 days", "src": "profile"}),
+           ({"label": "Gender", "kind": "select", "nm": "g"}, {"action": "fill", "value": "Female", "src": "profile", "options": ["Female", "Male"]}),
+           ({"label": "Resume", "kind": "file", "nm": "r"}, {"action": "fill", "value": "C:/x/Resume.pdf", "src": "profile"}),
+           ({"label": "Why us", "kind": "text", "nm": "w"}, {"action": "fill", "value": "typed", "src": "you"}),
+           ({"label": "Phone", "kind": "text", "nm": "p"}, {"action": "skip"})]
+    _qs = filler.review_questions(_fs)
+    check([q["kind"] for _, _, q in _qs] == ["text", "choice", "fixed"] and _qs[1][2]["options"] == ["Female", "Male"]
+          and _qs[2][2]["value"] == "Resume.pdf", "check-before-filling card lists profile answers, not ones she just typed")
+    class _FakeUI:
+        async def ask(self, **kw): return {"0": {"value": "15 days"}, "1": {"value": "Female", "never": True}, "2": {"value": ""}}
+    _real, filler.UI = filler.UI, _FakeUI()
+    asyncio.run(filler.review_before_fill(db, _fs))
+    filler.UI = _real
+    check(_fs[0][1]["value"] == "15 days" and _fs[0][1]["src"] == "you" and _fs[1][1]["action"] == "skip" and _fs[2][1]["action"] == "fill"
+          and db.memory.get(textutil.norm("Notice period np")) == "15 days", "a fixed answer is used and remembered; 'leave empty' skips")
     import email.message
     from careerhub import gmail
     def _mail(frm, subj, body):

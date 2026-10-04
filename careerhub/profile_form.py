@@ -59,6 +59,7 @@ PROFILE_FORM = [
     ("Files", "…use it for job titles containing", "settings", "resume_3_keywords", "text"),
     ("Job-site accounts", "Password for new job-site accounts", "settings", "job_site_password", "secret"),
     ("Applying", "Pause after every page so I can check it", "settings", "pause_after_each_page", "switch"),
+    ("Applying", "Show my answers before filling each page, so I can fix them", "settings", "review_before_fill", "switch"),
     ("Applying", "Most applications per day on LinkedIn, Indeed or Naukri (keeps accounts safe)", "settings",
      "jobsite_daily_limit", "range"),
     ("Finding jobs", "Cities (comma separated, add Remote if you like)", "settings", "job_locations", "text"),

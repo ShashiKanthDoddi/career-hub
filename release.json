@@ -1,8 +1,17 @@
 {
- "version": "3.2",
+ "version": "3.3",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.3",
+   "title": "Check your answers before they are filled in",
+   "new": [
+    "Before each page is filled, a card lists every answer the app is about to type. Change anything that is wrong (it is remembered), or tick Leave empty to skip one",
+    "You can turn this off in Settings, Applying"
+   ],
+   "fixed": []
+  },
   {
    "version": "3.2",
    "title": "Resume page: files first, skills for each job",
@@ -95,16 +104,6 @@
     "Older cards are sorted again once with the new rules, and wrong ones are removed",
     "Pasting a screenshot into Report a problem adds it only once"
    ]
-  },
-  {
-   "version": "2.8.1",
-   "title": "Check email shows its progress",
-   "new": [
-    "While Check email runs, Home shows how many emails it has scanned and read, for example \"Reading emails: 25 of 40\""
-   ],
-   "fixed": [
-    "The first email check is much quicker: job emails are downloaded in groups instead of one by one"
-   ]
   }
  ],
  "files": [
@@ -142,15 +141,15 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "3f7c0e86ab6d90fde468f6f95e94cf380a17ee51bc537ac486dda640724d794d"
+   "sha256": "ce2cc5d7d0aef656e8388924da79f361dc1de7751fd8e5a3c1cee0abe592099d"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "adb57f0f114da6c6df53938889e9e3375c13ce542b5445f24d17d6128db911d0"
+   "sha256": "a6db9703dfe70da6f7f4cbde770c755400a5fd711c816d5354e7b32c5beb649e"
   },
   {
    "path": "careerhub/filler.py",
-   "sha256": "7d1e9252f7a89ce517428e01ba1dcdb864cb09d7382bbdb2d2914fa867e98f18"
+   "sha256": "fe68b6cc37439257eac5379c1767b79e3a87f8698957cf7272fed6b03f7b78b5"
   },
   {
    "path": "careerhub/finder.py",
@@ -194,7 +193,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "fac2500b433e4fc08c57c81c6f8383def323d2d9759420b4b8dba11551eeb0e1"
+   "sha256": "f226ebdf00a51a28ecab0a27c327b8aeddc0a788fb5b769dd53d26934233125f"
   },
   {
    "path": "careerhub/records.py",
@@ -226,7 +225,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "fb2d3f8c7b3d1ec1875b0e32d4e00c46cefe254bcfa31e9c3f77ebf58f5cd63f"
+   "sha256": "1625c0da7a6becf50f473b0fe21e45f7d6577e151dda109554da28309b49f734"
   },
   {
    "path": "careerhub/textutil.py",
@@ -246,7 +245,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "c84e0404cfe14fa3e6f006d21142fa68bf874ac0bdf3cac465e40f85b332abdb"
+   "sha256": "9ac622343763168ebc250c6fd16171189ee89a53397238c1ce4d3eff27f0257b"
   },
   {
    "path": "ui/js/apply.js",
@@ -266,7 +265,7 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "3b1f67de847355cf060f3668349de092da07298112e5b223b31142ca884db91f"
+   "sha256": "ffaf91304fa19bb6935b1a198596bd1eb5f609baacc370b2abe94eb429da11d4"
   },
   {
    "path": "ui/js/history.js",
@@ -290,7 +289,7 @@
   },
   {
    "path": "ui/js/questions.js",
-   "sha256": "d56fa2f3961da2adf9c976bfa1c279acf314e2bd0ea51722cd750bceacf9267f"
+   "sha256": "3c5994ae51714f686c5a57b455e8610490b5a455bb07fd00fe8cf720eb0f4e4e"
   },
   {
    "path": "ui/js/resume.js",
@@ -318,15 +317,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "b3a34b25156309b68de5230bc3ea910672a25206f99c5aaa443ac0d7ff55af6e"
+   "sha256": "92042bb585f89f5030690348d732733b8d26bac92b879611a248cd9b8ef40a28"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "3ab7b9c61279da252d3ca1d4576f53e65285345c3e3186c9ad6506abb7bc435f"
+   "sha256": "45815f20be7b8f6b1e816885c39f44efa35dd6500583ddde55fa3facb00b72f6"
   },
   {
    "path": "MAP.md",
-   "sha256": "dc31ebd85c3d8e1675d9c01d37954ffc459421b49e695bd01d7dbb1a3f9d1014"
+   "sha256": "25c774b24304b3e840731d529702fa02546dc487da3fc1723db3b304a598aa25"
   },
   {
    "path": "Setup (Mac).command",
@@ -345,5 +344,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "A3DR2eapsYNrzlOvgbBNQVxZ1vtw4gx28/hWSM1sIuVtfXjgTYwyy7Rq/Kwo3pYvH9KuYbpFgTLaJMerLqQCDg=="
+ "signature": "PBcZ3eeWpYHlzC+xO8N6jjj5kLAgHZl30Tlzaz4jS8teXRXc8XdvOgfL6ZJlJ/+mvWUzh01VJn80T2rb6rClDQ=="
 }

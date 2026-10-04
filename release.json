@@ -1,8 +1,19 @@
 {
- "version": "2.6.17",
+ "version": "2.6.18",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.18",
+   "title": "A sweeter hello",
+   "new": [
+    "The Home greeting uses a different pet name each hour",
+    "A \"Suggest a feature\" button (side bar and Settings, Help) sends your idea to the person who looks after the app"
+   ],
+   "fixed": [
+    "Find jobs no longer shows older saved jobs that are outside the locations you want"
+   ]
+  },
   {
    "version": "2.6.17",
    "title": "Rejection emails show again",
@@ -65,16 +76,6 @@
    "fixed": [
     "The filters above the Find jobs results now sit in one neat row instead of four long boxes"
    ]
-  },
-  {
-   "version": "2.6.10",
-   "title": "Your Gmail labels are used",
-   "new": [
-    "The app reads your Gmail labels: mail labelled Interviews, Rejected or Offer is sorted that way, and mail labelled Job boards is ignored"
-   ],
-   "fixed": [
-    "\"You applied for 5 jobs\" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed"
-   ]
   }
  ],
  "files": [
@@ -96,7 +97,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "49c6608f9c09d449460e46fb797527824ae59f3760533fb0fca21132901d3af7"
+   "sha256": "5c8f0bbc9007b182f8cc872e29ae069684abc3fcdef51fa3d6a7a5cf0803d7bf"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -112,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "186a9c981662df84cd56060e152361706dee0fd9d5cf73b508d4a89656e0485d"
+   "sha256": "169945f4803cf64fc16f2dc2fb6f7a8737a21212c254ed216467f2c1b8cd0e27"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "484a6dae22255a4c0c5a2a742e8d9a3c0cb5095f65ebc81688cf4b792285537b"
+   "sha256": "6ec45e6cb418efa7149e0fc36fc7c046c28ae690f7912f77d53e1a9e815f9fe5"
   },
   {
    "path": "careerhub/filler.py",
@@ -164,7 +165,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "fbca6c0db28f3048d026d0f59f7075c857156b6d51e5d54a228cf99d17e377ad"
+   "sha256": "fac2500b433e4fc08c57c81c6f8383def323d2d9759420b4b8dba11551eeb0e1"
   },
   {
    "path": "careerhub/records.py",
@@ -172,7 +173,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "33aa79595a01da016bac519013ff95a7149764e29a6f729618e3b4b30b97c245"
+   "sha256": "9dcde07cb51ec4818d69f1f8ffc0fe3efd3ac1c5a9e2534c6c4b2c68180844d8"
   },
   {
    "path": "careerhub/resume.py",
@@ -200,7 +201,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "7b337a771b952045246a6b3103ad6a2f6cdd8b9d09c9dda515850b6290265c08"
+   "sha256": "753662d4f6a1f69c133e3ed3c3dad4596cc6639124bd6a0e86df6260a4d3336a"
   },
   {
    "path": "ui/styles.css",
@@ -232,7 +233,7 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "286bf56ba903775c965dc7edc32658062af74399ee54e75a3c592e5f9b33d614"
+   "sha256": "31805cfe9b7c58a5a4bf932929cfd3f0af5d276fc89652f0f7ae178b88238186"
   },
   {
    "path": "ui/js/jobs.js",
@@ -240,7 +241,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "f6b534b138a385482b03c79a1168cc4698a7f1406be86d68a6f747a93f8bd6b6"
+   "sha256": "aeb9ac6a2ffe224ab95170f7a10c8cf3a99ca0cfa4461055a22a1c11780d77ba"
   },
   {
    "path": "ui/js/planner.js",
@@ -272,11 +273,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "5860e88fa7a876c13263fb0952ec5ffca7d1a1ef2df671ddb11c4cc9d26dabc6"
+   "sha256": "8d1c9d6aacd84b3203f25bf4577441d8444571f8004cb80e667f0f382e457a78"
   },
   {
    "path": "MAP.md",
-   "sha256": "1f1cda63750dac7599cdd3eb7b284083eb2439eec7fd6ea41ea81c35d165c889"
+   "sha256": "354845dac049821ac5faf687f39cf90c49bc4757b17feaea7fc82ad70d35545a"
   },
   {
    "path": "Setup (Mac).command",

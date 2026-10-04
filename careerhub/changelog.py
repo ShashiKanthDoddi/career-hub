@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.17',
+CHANGELOG = [{'version': '2.6.18',
+  'title': 'A sweeter hello',
+  'new': ['The Home greeting uses a different pet name each hour',
+          'A "Suggest a feature" button (side bar and Settings, Help) sends your idea to the person who looks after the app'],
+  'fixed': ['Find jobs no longer shows older saved jobs that are outside the locations you want']},
+ {'version': '2.6.17',
   'title': 'Rejection emails show again',
   'new': [],
   'fixed': ['Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card']},

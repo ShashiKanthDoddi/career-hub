@@ -1,5 +1,7 @@
 """reports module of Career Hub. See MAP.md for what lives where."""
 from urllib.parse import quote
+import urllib.request
+import re
 import asyncio
 import datetime
 import email.utils
@@ -12,7 +14,7 @@ import sys
 import webbrowser
 import zipfile
 from .bridge import LOG, UI, log, os_open
-from .config import APP_NAME, APP_VERSION, DRAFT_DIR, OWNER, REPORT_DIR
+from .config import APP_NAME, APP_VERSION, DRAFT_DIR, OWNER, REPORT_DIR, UPDATE_SOURCE
 from .gmail import mail_settings
 from .records import tracker_rows
 from .state import JOB
@@ -69,6 +71,51 @@ def smtp_send(addr, pw, to, subject, body, attachment):
         s.send_message(msg)
 
 
+def issue_repo():
+    m = re.match(r"(?:https://github\.com/)?([\w.-]+/[\w.-]+?)(?:@.*|\.git)?/?$", str(UPDATE_SOURCE or "").strip())
+    return m.group(1) if m else ""
+
+
+def github_issue(repo, token, title, body, label):
+    """Create an issue on GitHub. Returns its web link."""
+    req = urllib.request.Request(
+        f"https://api.github.com/repos/{repo}/issues", method="POST",
+        data=json.dumps({"title": title[:200], "body": body[:60000], "labels": [label]}).encode("utf-8"),
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                 "Content-Type": "application/json", "User-Agent": "CareerHub"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r).get("html_url", "")
+
+
+async def file_issue(kind, title, body, open_page=True):
+    """kind: 'bug' or 'enhancement'. With a GitHub token in Settings the issue is created directly;
+    without one, GitHub's new-issue page opens with everything filled in."""
+    repo = issue_repo()
+    if not repo:
+        return {"ok": False, "error": "No GitHub repository is set up."}
+    token = str((load_profile().get("settings") or {}).get("github_token") or "").strip()
+    if token:
+        try:
+            url = await asyncio.to_thread(github_issue, repo, token, title, body, kind)
+            log(f"📨 GitHub issue created ({kind}): {url}")
+            return {"ok": True, "created": True, "url": url}
+        except Exception as e:
+            log(f"⚠  Couldn't create the GitHub issue ({str(e)[:120]}).")
+    if not open_page:
+        return {"ok": True, "created": False}
+    webbrowser.open(f"https://github.com/{repo}/issues/new?labels={kind}&title={quote(title[:200])}&body={quote(body[:3000])}")
+    return {"ok": True, "created": False}
+
+
+async def send_suggestion(text):
+    text = str(text or "").strip()
+    if not text:
+        return {"ok": False, "error": "Please write your idea first."}
+    title = text.splitlines()[0][:70]
+    return await file_issue("enhancement", f"Suggestion: {title}",
+                            f"{text}\n\n---\nFrom {OWNER} · {APP_NAME} {APP_VERSION}")
+
+
 async def send_report(note):
     zpath = await make_report(note)
     ms = mail_settings()
@@ -77,6 +124,11 @@ async def send_report(note):
         tail = "\n".join(LOG["file"].read_text(encoding="utf-8").splitlines()[-60:])
     subject = f"Career Hub problem report from {OWNER} ({APP_VERSION})"
     body = f"{note or '(no description)'}\n\n--- last activity ---\n{tail}"
+    first = (note or "Problem report").strip().splitlines()[0][:70]
+    r = await file_issue("bug", f"Bug: {first}", f"{note or '(no description)'}\n\n{APP_NAME} {APP_VERSION} · "
+                         f"{platform.platform()}\n\n<details><summary>Last activity</summary>\n\n```\n{tail[-2500:]}\n```\n</details>", open_page=False)
+    if r.get("created"):
+        return {**r, "sent": False, "issue": True, "path": str(zpath)}
     if ms["addr"] and ms["pw"] and ms["helper"]:
         try:
             await asyncio.to_thread(smtp_send, ms["addr"], ms["pw"], ms["helper"], subject, body, zpath)

@@ -27,6 +27,7 @@
     <button class="nav" id="paletteBtn"><svg class="i"><use href="#i-command"/></svg><span>Quick actions</span><kbd>⌘K</kbd></button>
     <button class="nav" id="activityBtn"><svg class="i"><use href="#i-activity"/></svg><span>Activity</span></button>
     <button class="nav" id="reportBtn"><svg class="i"><use href="#i-help"/></svg><span>Report a problem</span></button>
+    <button class="nav" id="suggestBtn"><svg class="i"><use href="#i-sparkle"/></svg><span>Suggest a feature</span></button>
   </div>
   <button class="nav" id="sideUpd" title="Check for a new version"><svg class="i"><use href="#i-download"/></svg><span>Updates</span><span class="count" id="navUpd" hidden>new</span></button>
   <div class="side-status"><i class="dot" id="statusDot"></i><span id="statusText">Ready</span></div>
@@ -205,7 +206,7 @@
           <div class="panel-head"><h2 class="grow">Help</h2></div>
           <p class="muted" style="margin-top:-6px">Something odd? Send a report: it includes the activity log and screenshots, never passwords.</p>
           <div class="formgrid" id="helpFields" style="margin-bottom:14px"></div>
-          <div class="row"><button class="btn primary" id="reportBtn2">Report a problem</button><button class="btn" data-open="logs">Open logs</button></div>
+          <div class="row"><button class="btn primary" id="reportBtn2">Report a problem</button><button class="btn" id="suggestBtn2">Suggest a feature</button><button class="btn" data-open="logs">Open logs</button></div>
           <p class="kbdhint" style="margin-top:14px">Shortcuts: <kbd>⌘K</kbd> quick actions, <kbd>1</kbd>–<kbd>6</kbd> switch pages, <kbd>Esc</kbd> close.</p>
         </div>
         <div class="panel sec" id="set-updates">

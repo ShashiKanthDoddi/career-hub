@@ -36,7 +36,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `finder.py` | 363 | Find jobs: hiring-system APIs (Workday, Greenhouse, Lever, Ashby, SmartRecruiters), web discovery plus `DEFAULT_BOARDS` (verified built-in boards, used when search engines refuse us), title-only search without a resume, filters, scoring, diagnostics. | `boards_in`, `board_label`, `seniority_excludes`, `location_ok` (remote only if not tied to another country), `relevant_title`, `match_score`, `get_json`, `fetch_board`, `web_search`, `UA`, `STRONG_TITLE_WORDS`, `TECH_WORDS`, `CITY_ALIASES` … |
 | `jobsites.py` | 100 | LinkedIn / Indeed / Naukri safety: daily limit, pacing between jobs, robot-check detection, rest-for-the-day, job links from alert emails. | `site_of`, `allowed`, `pace`, `challenged`, `alert_jobs`, `clean_job_link` |
 | `gmail.py` | 258 | Reads the job Gmail (IMAP, read-only; up to 3 inboxes via `mail_settings()['boxes']`), classifies replies, `job_from_subject` reads company and title from LinkedIn-style subjects, friendly errors. | `mail_settings`, `classify_mail`, `dec`, `mail_body`, `company_from_sender`, `match_application`, `process_mail`, `imap_fetch`, `gmail_link`, `MONTHS`, `MAIL_TYPES`, `MAIL_SKIP`, `JOB_WORDS`, `BOARD_SENDERS`, `MAIL_LABELS`, `label_kind`, `COMPANY_WORDS` … |
-| `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. | `make_report`, `smtp_send`, `send_report` |
+| `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. With a `github_token` setting, reports and feature ideas (`send_suggestion`) are created as GitHub issues (labels bug / enhancement) in the `UPDATE_SOURCE` repo; ideas without a token open GitHub's prefilled new-issue page. | `make_report`, `smtp_send`, `send_report`, `send_suggestion`, `file_issue` |
 | `planner.py` | 75 | Home calendar events and to-do list (data keys `events`, `todos`); events from interview emails and from cards moved to Interview/Test. | `add_event`, `set_job_event`, `events_from_mail`, `add_todo` |
 | `meetings.py` | 85 | Reads an interview date and time out of an email (`find_meeting`). Add a selftest case for every wording it misses. | `find_meeting` |
 | `history.py` | 190 | Work history and education: `parse_history` (resume text -> draft), saved under data key `history`. | `parse_history`, `get_history`, `save_history` |
@@ -54,7 +54,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `ui/index.html` | 226 | All page markup (sidebar, Home, Apply, Find jobs, My jobs, Profile, Settings) + SVG icons. |
 | `ui/styles.css` | 285 | Design tokens, 5 colour themes (data-theme / data-mode), components, layout. |
 | `ui/js/core.js` | 65 | Web links open in the default browser (`api_open_url`). Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
-| `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
+| `ui/js/home.js` | 51 | Home: greeting (pet name that changes hourly, `nickname()`), funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
 | `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |
 | `ui/js/apply.js` | 42 | Apply: the one job list (add links, filter, apply to one/selected/all). |

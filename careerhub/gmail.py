@@ -50,6 +50,22 @@ ATS_SENDERS = ("myworkday", "greenhouse", "lever.co", "ashbyhq", "smartrecruiter
                "successfactors", "bamboohr", "jobvite", "recruitee")
 
 
+MAIL_LABELS = {}          # gmail id -> her Gmail labels (filled by imap_fetch)
+LABEL_KINDS = [("interview", "interview"), ("assessment", "assessment"), ("reject", "rejection"), ("declin", "rejection"),
+               ("offer", "offer")]
+
+
+def label_kind(labels):
+    """Her own Gmail labels (e.g. Applied/Interviews, Rejected) decide the type; 'Job boards' mail is ignored."""
+    names = [norm(l.split("/")[-1]) for l in labels]
+    for key, kind in LABEL_KINDS:
+        if any(key in n for n in names):
+            return kind
+    if any("job board" in n for n in names):
+        return "skip"
+    return None
+
+
 TYPE_LABELS = {"offer": "Offer", "rejection": "Rejected", "interview": "Interview", "assessment": "Assessment",
                "received": "Application received", "other": "Update"}
 
@@ -140,7 +156,12 @@ def process_mail(items, rows, known_ids):
         if any(a in from_addr.lower() for a in ALERT_SENDERS) and re.search(r"(?i)alert|jobs? for you|new jobs|recommended|recommendation", subject):
             continue                                    # job-alert emails are handled by alert_links()
         body = mail_body(msg)
-        if any(a in from_addr.lower() for a in BOARD_SENDERS):
+        lk = label_kind(MAIL_LABELS.get(gid, []))
+        if lk == "skip":
+            continue
+        if lk:
+            kind = lk
+        elif any(a in from_addr.lower() for a in BOARD_SENDERS):
             kind = classify_mail(subject, "")           # job-board mails are digests: judge by the subject only
             if kind not in ("interview", "assessment", "offer"):
                 continue
@@ -151,7 +172,7 @@ def process_mail(items, rows, known_ids):
         app = match_application(f"{from_name} {subject} {body[:4000]}", from_addr, rows)
         if kind == "other" and not app:
             continue
-        if not app and not (JOB_WORDS.search(subject) or any(a in from_addr.lower() for a in ATS_SENDERS)):
+        if not app and not lk and not (JOB_WORDS.search(subject) or any(a in from_addr.lower() for a in ATS_SENDERS)):
             continue
         try:
             when = email.utils.parsedate_to_datetime(msg.get("Date")).astimezone().isoformat(timespec="minutes")
@@ -190,13 +211,14 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=400):
     M = imaplib.IMAP4_SSL("imap.gmail.com", 993, timeout=30)
     try:
         M.login(addr, pw)
-        M.select("INBOX", readonly=True)
+        if M.select('"[Gmail]/All Mail"', readonly=True)[0] != "OK":     # all mail: labelled mail moved out of the inbox too
+            M.select("INBOX", readonly=True)
         typ, data = M.search(None, "SINCE", f"{since.day:02d}-{MONTHS[since.month - 1]}-{since.year}")
         ids = (data[0] or b"").split()[-limit:]
         wanted = []
         names = [c.lower() for c in company_names if len(c) >= 3]
         for i in range(0, len(ids), 100):
-            typ, resp = M.fetch(b",".join(ids[i:i + 100]), "(X-GM-MSGID BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
+            typ, resp = M.fetch(b",".join(ids[i:i + 100]), "(X-GM-MSGID X-GM-LABELS BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
             for part in resp:
                 if not isinstance(part, tuple):
                     continue
@@ -205,9 +227,14 @@ def imap_fetch(addr, pw, since, known_ids, company_names, limit=400):
                 gid = format(int(m.group(1)), "x") if m else meta.split()[0]
                 if gid in known_ids:
                     continue
+                lm = re.search(r"X-GM-LABELS \((.*?)\)\s", meta + " ")
+                labs = [a or b for a, b in re.findall(r'"([^"]*)"|([^\s"]+)', lm.group(1))] if lm else []
+                if {"\\Sent", "\\Draft", "\\Spam", "\\Trash"} & set(labs):
+                    continue
+                MAIL_LABELS[gid] = [l for l in labs if not l.startswith("\\")]
                 hdr = email.message_from_bytes(part[1])
                 head = f"{dec(hdr.get('From'))} {dec(hdr.get('Subject'))}".lower()
-                if (any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
+                if (label_kind(MAIL_LABELS[gid]) not in (None, "skip") or any(a in head for a in ALERT_SENDERS) or JOB_WORDS.search(head) or any(a in head for a in ATS_SENDERS)
                         or any(re.search(rf"\b{re.escape(c)}\b", head) for c in names)):
                     wanted.append((meta.split()[0].encode(), gid))
         out = []
@@ -260,11 +287,9 @@ async def check_mail(manual=False):
                                "myaccount.google.com/apppasswords (it needs 2-Step Verification on).")
         st = app_state()
         updates = data()["email_updates"]
-        for u in list(updates):                         # clear digest mails from job boards wrongly kept as interviews
-            frm = (u.get("from") or "").lower()
-            if u.get("type") in ("interview", "assessment", "offer") and any(b.split(".")[0] in frm for b in BOARD_SENDERS) \
-                    and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"):
-                u["type"], u["done"], u["meeting"] = "other", True, None
+        updates[:] = [u for u in updates                # drop "you applied for 5 jobs" digests from job boards
+                      if not (any(b.split(".")[0] in (u.get("from") or "").lower() for b in BOARD_SENDERS)
+                              and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"))]
         known = {u["id"] for u in updates}
         try:
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)

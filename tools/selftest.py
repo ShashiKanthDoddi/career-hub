@@ -96,6 +96,11 @@ def main():
           "job-board digest mails are not marked as interviews")
     check(gmail.process_mail(_mail("Naukri <info@naukri.com>", "Interview invitation from Acme", "hello"), [], set())[0]["type"] == "interview",
           "job-board mail with interview in the subject still counts")
+    gmail.MAIL_LABELS["xRej"] = ["Applied", "Rejected"]; gmail.MAIL_LABELS["xJb"] = ["Job boards"]; gmail.MAIL_LABELS["xInt"] = ["Applied/Interviews"]
+    check(gmail.process_mail([("xRej", _mail("Acme HR <hr@acme.com>", "Your application", "Thanks for your time")[0][1])], [], set())[0]["type"] == "rejection"
+          and gmail.process_mail([("xInt", _mail("Acme HR <hr@acme.com>", "Next steps", "see you")[0][1])], [], set())[0]["type"] == "interview"
+          and not gmail.process_mail([("xJb", _mail("Foo <a@foo.com>", "Application update", "applied")[0][1])], [], set()),
+          "Gmail labels (Interviews, Rejected, Job boards) decide the type")
     check(jobsites.CHALLENGE_RE.search("Let's do a quick security check") and not jobsites.CHALLENGE_RE.search("Marketing Manager"),
           "robot-check wording detected")
     check(jobsites.allowed("LinkedIn")[0], "daily limit allows the first application")

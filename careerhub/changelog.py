@@ -1,6 +1,12 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.8.3',
+CHANGELOG = [{'version': '2.8.4',
+  'title': 'Rejections and outside applications found',
+  'new': ['Jobs you applied for outside the app (on LinkedIn or a company site) now get a card in My jobs from their "application received" email'],
+  'fixed': ['Rejection emails sent through LinkedIn, Naukri or a company mailing system are now read, and no longer disappear after the next email check',
+            'Bank, loan and shopping emails (for example "thank you for applying" for a credit card) are not taken as jobs',
+            'Your older emails from the last 6 months are sorted again once, so missed rejections and jobs show up']},
+ {'version': '2.8.3',
   'title': 'Updates found right away',
   'new': [],
   'fixed': ['Check for updates now finds a new version as soon as it is published (before, it could say "no new updates" for a few minutes)']},

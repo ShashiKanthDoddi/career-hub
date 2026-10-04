@@ -124,6 +124,21 @@ def main():
     check(not gmail.process_mail(_mail("CodeChef <contests@codechef.com>", "Interview invitation", "x"), [], set()),
           "a sender marked 'Not a job email' is ignored")
     gmail.BLOCKED.clear()
+    _first = lambda items: (gmail.process_mail(items, [], set()) or [{}])[0]
+    li = _first(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Harshitha, your application was sent to Acme Foods", "Marketing Executive, Acme Foods. Applied on 1 Oct"))
+    li2 = _first(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Your application to Marketing Manager at Acme", "Your application was sent to Acme."))
+    check(li.get("type") == "received" and li.get("company") == "Acme Foods" and li2.get("type") == "received" and li2.get("company") == "Acme"
+          and _first(_bulk("Acme Careers <careers@acme.com>", "Thank you for applying to Acme", "We have received your application.")).get("type") == "received"
+          and _first(_mail("Priya (Acme HR) <priya@acmefoods.in>", "Shortlisted for Marketing Executive", "You have been shortlisted. Please share your availability.")).get("type") == "interview"
+          and not gmail.process_mail(_mail("LinkedIn <jobs-noreply@linkedin.com>", "Shashi, view your application updates from this week", "Your application was viewed"), [], set())
+          and not gmail.process_mail(_mail("Reddit <noreply@redditmail.com>", "Is this actually normal in an interview for a developer", "interview offer"), [], set()),
+          "jobs applied outside the app are found from their emails (LinkedIn, company mailers, recruiters); digests are not")
+    _learned = [{"Company": "Swiggy", "Job title": "", "Link": "", "learned": True}]
+    check(not gmail.process_mail(_mail("HDFC Bank <alerts@hdfcbank.net>", "Your credit card application", "Thank you for applying for the HDFC credit card. We have received your application."), [], set())
+          and not gmail.process_mail(_mail("Swiggy <noreply@swiggy.in>", "Your order is on the way", "Your Swiggy order will arrive soon"), _learned, set())
+          and not gmail.process_mail(_mail("Swiggy <noreply@swiggy.in>", "Order cancelled", "Unfortunately your Swiggy order was cancelled"), _learned, set())
+          and (gmail.process_mail(_mail("Swiggy Talent <talent@swiggy.in>", "Next steps", "Unfortunately we will not move forward with your candidature for the role"), _learned, set()) or [{}])[0].get("type") == "rejection",
+          "bank 'thank you for applying' mails and a learned company's orders are not jobs; its real rejection still is")
     gmail.MAIL_LABELS["xRej"] = ["Applied", "Rejected"]; gmail.MAIL_LABELS["xJb"] = ["Job boards"]; gmail.MAIL_LABELS["xInt"] = ["Applied/Interviews"]
     check(gmail.process_mail([("xRej", _mail("Acme HR <hr@acme.com>", "Your application", "Thanks for your time")[0][1])], [], set())[0]["type"] == "rejection"
           and gmail.process_mail([("xInt", _mail("Acme HR <hr@acme.com>", "Next steps", "see you")[0][1])], [], set())[0]["type"] == "interview"

@@ -52,7 +52,7 @@ function val(key){ const f = STATE.profile.find(f => f.key === key); return f ? 
 /* ===== confetti (only after a sent application or an offer) ===== */
 function confetti(){
   if (reduce) return; const c = $("#confetti"), x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
-  const colors = ["#FFD84D","#6B4FD8","#1A8F86","#D9506A","#2E8B4E"];
+  const colors = ["#FFD84D","#C0532B","#1A8F86","#D9506A","#2E8B4E"];
   const ps = Array.from({length:140}, () => ({x:innerWidth / 2, y:innerHeight * .35, vx:(Math.random() - .5) * 14, vy:-Math.random() * 12 - 4, r:Math.random() * 6 + 3, c:colors[Math.random() * 5 | 0], a:Math.random() * 6}));
   let f = 0; (function tick(){ x.clearRect(0, 0, c.width, c.height);
     ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += .1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); x.restore(); });

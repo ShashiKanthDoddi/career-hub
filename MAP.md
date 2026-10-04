@@ -10,6 +10,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `Open Career Hub (Mac).command` / `(Windows).bat` | Launchers. Loop while the app exits with 42 (restart after update). The .bat must not use brackets inside IF blocks. |
 | `Setup (Mac).command` / `(Windows).bat` | One-time install of Python packages and Chromium. |
 | `tools/selftest.py` | Run before every release. Add a CASES line for every label a real site answered wrongly. |
+| `tools/make_guide.py` | Turns `docs/Career_Hub_Guide.docx` (the guide's source, edit this) into `Career_Hub_Guide.pdf`. Needs Word or LibreOffice. Refuses if the docx header version differs from APP_VERSION. |
 | `tools/make_release.py` | Writes `release.json` (version, changelog, SHA-256 of every file) for auto-updates. |
 
 ## Python package `careerhub/`

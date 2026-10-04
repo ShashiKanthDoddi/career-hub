@@ -319,16 +319,16 @@ async def api_test_mail():
         return {"ok": False, "error": m[:200]}
 
 
-async def api_report(note):
+async def api_report(note, images=None):
     try:
-        return await send_report(note)
+        return await send_report(note, images)
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 
 
-async def api_suggest(text):
+async def api_suggest(text, images=None):
     try:
-        return await send_suggestion(text)
+        return await send_suggestion(text, images)
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 

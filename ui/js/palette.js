@@ -11,14 +11,30 @@ function openActivity(){
   $("#copyLog").onclick = async () => { try { await navigator.clipboard.writeText(LOGTEXT); } catch(e){ const ta = document.createElement("textarea"); ta.value = LOGTEXT; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); } toast("Activity copied"); };
 }
 $("#activityBtn").onclick = openActivity;
+/* Pictures for a report or idea: pick files or paste a screenshot (Ctrl+V anywhere in the box). Up to 5, each under 5 MB. */
+let PICS = [];
+const picsHtml = () => `<div class="row" style="margin-top:10px"><label class="btn" style="cursor:pointer">Add a picture<input type="file" id="picIn" accept="image/*" multiple hidden></label><span class="muted">or press Ctrl+V to paste a screenshot</span></div><div class="row" id="picList" style="margin-top:8px;gap:8px"></div>`;
+function picsInit(){
+  PICS = [];
+  const draw = () => { $("#picList").innerHTML = PICS.map((p, i) => `<span style="position:relative"><img src="data:image/png;base64,${p.data}" style="height:56px;border-radius:8px;border:1px solid var(--line,#ddd)"><button class="btn ghost" data-rm="${i}" title="Remove" style="position:absolute;top:-8px;right:-8px;padding:0 6px;min-height:0">×</button></span>`).join("");
+    $("#picList").querySelectorAll("[data-rm]").forEach(b => b.onclick = () => { PICS.splice(+b.dataset.rm, 1); draw(); }); };
+  const add = files => [...files].filter(f => f.type.startsWith("image/")).forEach(f => {
+    if (PICS.length >= 5) return toast("Up to 5 pictures", true);
+    if (f.size > 5e6) return toast("That picture is too big (over 5 MB)", true);
+    const r = new FileReader(); r.onload = () => { PICS.push({ name: f.name || "screenshot.png", data: String(r.result).split(",")[1] }); draw(); }; r.readAsDataURL(f); });
+  $("#picIn").onchange = e => { add(e.target.files); e.target.value = ""; };
+  const onPaste = e => { if (!$("#picList")) return document.removeEventListener("paste", onPaste);
+    const fs = [...(e.clipboardData?.files || [])]; if (fs.length) { e.preventDefault(); add(fs); } };
+  document.addEventListener("paste", onPaste);
+}
 function openReport(){
   $("#layer").innerHTML = `<div class="modal"><div class="sheet" style="--k:var(--rose)"><div class="sh"><div class="kind">Report a problem</div><h2>What went wrong?</h2>
-    <p class="msg">A short note helps, like "Swiggy job stopped on the second page". The activity log and screenshots are attached. Passwords never are.</p></div>
-    <div class="sb"><textarea id="reportText" rows="4" placeholder="Describe what happened (optional)"></textarea>
+    <p class="msg">A short note helps, like "Swiggy job stopped on the second page". The activity log and screenshots are attached, and you can add your own pictures. Passwords never are.</p></div>
+    <div class="sb"><textarea id="reportText" rows="4" placeholder="Describe what happened (optional)"></textarea>${picsHtml()}
     <div class="row" style="margin-top:14px"><button class="btn primary" id="reportSend">Send report</button><button class="btn ghost" id="reportCancel">Cancel</button></div></div></div></div>`;
-  setTimeout(() => $("#reportText").focus(), 30);
+  setTimeout(() => $("#reportText").focus(), 30); picsInit();
   $("#reportCancel").onclick = () => $("#layer").innerHTML = "";
-  $("#reportSend").onclick = async () => { const b = $("#reportSend"); b.disabled = true; b.textContent = "Sending"; const r = await api_report($("#reportText").value); $("#layer").innerHTML = ""; reportResult(r); };
+  $("#reportSend").onclick = async () => { const b = $("#reportSend"); b.disabled = true; b.textContent = "Sending"; const r = await api_report($("#reportText").value, PICS); $("#layer").innerHTML = ""; reportResult(r); };
 }
 function reportResult(r){
   if (!r.ok) return toast("Couldn't make the report: " + r.error, true);
@@ -30,14 +46,14 @@ $("#reportBtn").onclick = openReport; $("#reportBtn2").onclick = openReport;
 function openSuggest(){
   $("#layer").innerHTML = `<div class="modal"><div class="sheet" style="--k:var(--rose)"><div class="sh"><div class="kind">Suggest a feature</div><h2>What would help you?</h2>
     <p class="msg">Describe what you wish the app could do. It goes straight to the person who looks after it.</p></div>
-    <div class="sb"><textarea id="suggestText" rows="4" placeholder="For example: remind me to follow up after a week"></textarea>
+    <div class="sb"><textarea id="suggestText" rows="4" placeholder="For example: remind me to follow up after a week"></textarea>${picsHtml()}
     <div class="row" style="margin-top:14px"><button class="btn primary" id="suggestSend">Send idea</button><button class="btn ghost" id="suggestCancel">Cancel</button></div></div></div></div>`;
-  setTimeout(() => $("#suggestText").focus(), 30);
+  setTimeout(() => $("#suggestText").focus(), 30); picsInit();
   $("#suggestCancel").onclick = () => $("#layer").innerHTML = "";
   $("#suggestSend").onclick = async () => { const t = $("#suggestText").value.trim(); if (!t) return toast("Please write your idea first", true);
-    const b = $("#suggestSend"); b.disabled = true; b.textContent = "Sending"; const r = await api_suggest(t); $("#layer").innerHTML = "";
+    const b = $("#suggestSend"); b.disabled = true; b.textContent = "Sending"; const r = await api_suggest(t, PICS); $("#layer").innerHTML = "";
     if (!r.ok) return toast("Couldn't send the idea: " + r.error, true);
-    toast(r.created ? "Thanks, your idea was sent to GitHub" : "A GitHub page opened: press Submit new issue there to send your idea"); };
+    toast("Thanks, your idea was sent"); };
 }
 $("#suggestBtn").onclick = openSuggest; $("#suggestBtn2").onclick = openSuggest;
 

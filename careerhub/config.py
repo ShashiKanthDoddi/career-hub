@@ -9,7 +9,7 @@ APP_NAME = "Harshitha's Career Hub"
 OWNER = "Harshitha"
 
 
-APP_VERSION = "2.6.18"
+APP_VERSION = "2.6.19"
 
 
 BASE = Path(__file__).resolve().parent.parent      # the "Career Hub" folder
@@ -89,4 +89,6 @@ NEXT_AUTOMATION_IDS = ["bottom-navigation-next-button", "pageFooterNextButton"] 
 # GitHub repository the app updates from, as "owner/repo" or "owner/repo@branch".
 # The helper sets this once; it can also be changed in Settings -> Updates.
 UPDATE_SOURCE = "ShashiKanthDoddi/career-hub"
+# Private repository where problem reports and ideas become issues (needs github_token in Settings).
+ISSUES_SOURCE = "ShashiKanthDoddi/career-hub-reports"
 RESTART_CODE = 42          # main() returns this to ask the launcher to restart the app

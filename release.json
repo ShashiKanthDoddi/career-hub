@@ -1,8 +1,16 @@
 {
- "version": "2.6.18",
+ "version": "2.6.19",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.19",
+   "title": "Pictures in reports and ideas",
+   "new": [
+    "Report a problem and Suggest a feature let you add pictures: pick them or paste a screenshot with Ctrl+V"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.6.18",
    "title": "A sweeter hello",
@@ -68,14 +76,6 @@
    "fixed": [
     "Changing a filter no longer ticks every job again; the ones you unticked stay unticked"
    ]
-  },
-  {
-   "version": "2.6.11",
-   "title": "Tidier job filters",
-   "new": [],
-   "fixed": [
-    "The filters above the Find jobs results now sit in one neat row instead of four long boxes"
-   ]
   }
  ],
  "files": [
@@ -97,7 +97,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "5c8f0bbc9007b182f8cc872e29ae069684abc3fcdef51fa3d6a7a5cf0803d7bf"
+   "sha256": "06adfa7f60083c6068c9aea7cd30ef7224d18cf6feb17ae4672bb6e5c287572f"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -113,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "169945f4803cf64fc16f2dc2fb6f7a8737a21212c254ed216467f2c1b8cd0e27"
+   "sha256": "42a35fa42bfa11206ece211aaba2e745fd7acfd4ab77300ed4cff5145e4ccadb"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "6ec45e6cb418efa7149e0fc36fc7c046c28ae690f7912f77d53e1a9e815f9fe5"
+   "sha256": "5f6808ba7c0f30483ebe5b5c0857c4f41b7e5cec5374273f5eb71dde7e10b205"
   },
   {
    "path": "careerhub/filler.py",
@@ -173,7 +173,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "9dcde07cb51ec4818d69f1f8ffc0fe3efd3ac1c5a9e2534c6c4b2c68180844d8"
+   "sha256": "8d335ba6fa59dad07209523f72e077e4a3dc917431bc246ddc95c8f26ce8ef8a"
   },
   {
    "path": "careerhub/resume.py",
@@ -241,7 +241,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "aeb9ac6a2ffe224ab95170f7a10c8cf3a99ca0cfa4461055a22a1c11780d77ba"
+   "sha256": "6e92abb6070251f7b5ef2d1000c47d979ded04e43957e0a6fb8a1e1a1dd812f5"
   },
   {
    "path": "ui/js/planner.js",
@@ -273,11 +273,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "8d1c9d6aacd84b3203f25bf4577441d8444571f8004cb80e667f0f382e457a78"
+   "sha256": "9e00bfb32d0e2fe24a5af65b1f9785361cc601ccb66e0640ad9bfe65b91a3bbf"
   },
   {
    "path": "MAP.md",
-   "sha256": "354845dac049821ac5faf687f39cf90c49bc4757b17feaea7fc82ad70d35545a"
+   "sha256": "93a75fc57a6f42a77120e2762d0ecb4efda44650a1b10cd133c43922a3c84c87"
   },
   {
    "path": "Setup (Mac).command",

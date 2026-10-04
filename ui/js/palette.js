@@ -22,17 +22,31 @@ function openReport(){
 }
 function reportResult(r){
   if (!r.ok) return toast("Couldn't make the report: " + r.error, true);
+  if (r.created) return toast("Thanks, your report was sent to GitHub");
   if (r.sent) return toast("Report sent to " + r.to);
   toast(r.helper ? "Report saved. Attach the highlighted zip to the Gmail draft that opened." : "Report saved in the Reports folder. Send that zip to your helper.");
 }
 $("#reportBtn").onclick = openReport; $("#reportBtn2").onclick = openReport;
+function openSuggest(){
+  $("#layer").innerHTML = `<div class="modal"><div class="sheet" style="--k:var(--rose)"><div class="sh"><div class="kind">Suggest a feature</div><h2>What would help you?</h2>
+    <p class="msg">Describe what you wish the app could do. It goes straight to the person who looks after it.</p></div>
+    <div class="sb"><textarea id="suggestText" rows="4" placeholder="For example: remind me to follow up after a week"></textarea>
+    <div class="row" style="margin-top:14px"><button class="btn primary" id="suggestSend">Send idea</button><button class="btn ghost" id="suggestCancel">Cancel</button></div></div></div></div>`;
+  setTimeout(() => $("#suggestText").focus(), 30);
+  $("#suggestCancel").onclick = () => $("#layer").innerHTML = "";
+  $("#suggestSend").onclick = async () => { const t = $("#suggestText").value.trim(); if (!t) return toast("Please write your idea first", true);
+    const b = $("#suggestSend"); b.disabled = true; b.textContent = "Sending"; const r = await api_suggest(t); $("#layer").innerHTML = "";
+    if (!r.ok) return toast("Couldn't send the idea: " + r.error, true);
+    toast(r.created ? "Thanks, your idea was sent to GitHub" : "A GitHub page opened: press Submit new issue there to send your idea"); };
+}
+$("#suggestBtn").onclick = openSuggest; $("#suggestBtn2").onclick = openSuggest;
 
 const ACTIONS = [
   ["Go to Home", () => go("home"), "1"], ["Apply to a job", () => { go("apply"); setTimeout(() => $("#links").focus(), 50); }, "2"],
   ["Find new jobs", () => go("find"), "3"], ["Open My jobs", () => go("jobs"), "4"], ["Edit Profile", () => go("profile"), "5"], ["Open Settings", () => go("settings"), "6"],
   ["Check email now", () => { go("home"); $("#checkMailBtn").click(); }], ["Apply to all saved jobs", () => startApply(SAVED)],
   ["Theme: Sand", () => setTheme("sand")], ["Theme: Emerald", () => setTheme("emerald")], ["Theme: Slate", () => setTheme("slate")], ["Theme: Clean white", () => setTheme("clean")], ["Theme: Mint", () => setTheme("mint")], ["Check for updates", () => checkUpdates(true)],
-  ["Show activity", openActivity], ["Report a problem", openReport], ["What's new", showNews], ["Add a resume or file", () => { go("profile"); setTimeout(() => $("#addFile").click(), 80); }]];
+  ["Show activity", openActivity], ["Report a problem", openReport], ["Suggest a feature", openSuggest],["What's new", showNews], ["Add a resume or file", () => { go("profile"); setTimeout(() => $("#addFile").click(), 80); }]];
 function openPalette(){
   $("#layer").innerHTML = `<div class="palette" id="pal"><div class="box"><input type="text" id="palIn" placeholder="Type a command, e.g. dark, email, apply"><div class="list" id="palList"></div></div></div>`;
   let sel = 0; const list = () => ACTIONS.filter(a => a[0].toLowerCase().includes($("#palIn").value.toLowerCase()));

@@ -48,6 +48,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Debugging her problems
 
+- **Suggest a feature** (and Report a problem, when the `github_token` setting is set) creates a GitHub issue in `UPDATE_SOURCE`; without a token an idea opens GitHub's prefilled new-issue page.
 - She sends **Report a problem**: a zip with `activity_log.txt`, `info.txt`, and screenshots of both windows.
 - Field answered wrongly? Find the label in the log. Then decide: is the label read wrongly (`page_js.py`), or is
   the wording missing (`answers.py` FIELD_ALIASES)? Then add a selftest case.

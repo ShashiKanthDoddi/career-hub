@@ -1,7 +1,14 @@
 /* ===== home ===== */
 function greeting(){ const h = new Date().getHours(); return h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"; }
+const NICKNAMES = ["Babe", "Bujjuku", "Bangaram", "Cutiepie", "Munchkin"];
+/* A different pet name each hour: random-looking, but steady while she reloads within the hour. */
+function nickname(){
+  const d = new Date(), seed = d.getFullYear() * 1e6 + (d.getMonth() + 1) * 1e4 + d.getDate() * 100 + d.getHours();
+  const x = Math.sin(seed) * 10000;
+  return NICKNAMES[Math.floor((x - Math.floor(x)) * NICKNAMES.length)];
+}
 async function loadHome(){
-  HOME = await api_home(); const s = HOME.stats, name = STATE.owner || "Harshitha";
+  HOME = await api_home(); const s = HOME.stats, name = nickname();
   $("#hello").textContent = `${greeting()}, ${name}`;
   const heard = s.interviews + s.offers + s.rejected;
   const lines = [];

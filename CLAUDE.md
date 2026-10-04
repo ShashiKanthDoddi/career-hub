@@ -76,4 +76,5 @@ maintains it and ships fixes through automatic updates from GitHub.
   (Nykaa, Swiggy, Zomato, Freshworks) can't be read: she can only add companies on the five supported systems.
 - Look (2.7): stat cards on Home are separate tiles coloured by `--c`; the jobs filter row uses `.row.fbar` so selects stay narrow. Themes: Clean white (default), Sand, Emerald, Slate, Mint. A saved theme that no longer exists falls back to Clean white.
 - "Continue with Google" on LinkedIn may still be refused by Google even with automation flags hidden (`launch.py`); she should sign in with her LinkedIn email and password.
+- Logins persist because `launch.py` re-saves session cookies (`.job_browser_cookies.json`, `.app_window_cookies.json` in her data folder, plain text) every minute; a login made in the last minute before closing may be lost.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

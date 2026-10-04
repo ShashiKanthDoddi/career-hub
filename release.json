@@ -1,14 +1,24 @@
 {
- "version": "2.7.1",
+ "version": "2.7.2",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
   {
-   "version": "2.7.1",
+   "version": "2.7.2",
    "title": "Reports reach GitHub on a Mac",
    "new": [],
    "fixed": [
     "Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly"
+   ]
+  },
+  {
+   "version": "2.7.1",
+   "title": "Stay signed in",
+   "new": [
+    "LinkedIn and other sites you sign in to in the job window stay signed in after you close and reopen the app"
+   ],
+   "fixed": [
+    "The Chrome bar about an \"unsupported command-line flag\" no longer shows"
    ]
   },
   {
@@ -63,15 +73,6 @@
    "fixed": [
     "Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card"
    ]
-  },
-  {
-   "version": "2.6.16",
-   "title": "Waiting for reply and No response",
-   "new": [
-    "My jobs has a \"Waiting for reply\" column: an interview card moves there by itself once the interview date has passed",
-    "My jobs has a \"No response\" column: jobs you applied to 30 or more days ago with no reply move there by itself"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -109,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "60e45b2db4c549b3565f55becac03d61e73c65103964be418cb3bba9d04b516a"
+   "sha256": "9c2779349ab4c3903a26de3d11f5483e49e648feaa1753c5164dcce42ed03320"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "52474906c73cb8f6d0340b7e37a7f07ac1a37f91a702106060ff9d65598d6ddf"
+   "sha256": "b76f7525dc3e1ede8b26beb38a5587060395c3b618dc938a3683901ca9d3ca05"
   },
   {
    "path": "careerhub/filler.py",
@@ -137,7 +138,7 @@
   },
   {
    "path": "careerhub/launch.py",
-   "sha256": "87174cc23f7ba622bf1be904d490871b88184e8b1883dbbcaf2f1fbf028e9d2d"
+   "sha256": "a041a96282326cf42503da95c64a2dfa725abc76037407ad1b3c1b0ed4895012"
   },
   {
    "path": "careerhub/main.py",
@@ -269,11 +270,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "e857583b03b53918d25a5fc49154a9fb99f1a1c5d250cb5b16f5a6239b8e5c77"
+   "sha256": "038b083f8fdd8062ff3aeb3ab03141e0d6e070a960dd315f497205a60ce02f47"
   },
   {
    "path": "MAP.md",
-   "sha256": "91a521c0c30c216eece2b8af05c32ce9ed76b7c3145048356efd8158c9694411"
+   "sha256": "bac82cb84edcbac1dc17def2e67fabc316a85207461f4a25cb70bc2844ebec17"
   },
   {
    "path": "Setup (Mac).command",

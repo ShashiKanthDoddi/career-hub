@@ -54,10 +54,10 @@ def safe_path(rel):
     return rel
 
 
-async def _get(url):
+async def _get(url, headers=None):
     req = await PW["p"].request.new_context()
     try:
-        r = await req.get(f"{url}?t={int(time.time())}", timeout=30000)    # skip GitHub's short cache
+        r = await req.get(f"{url}?t={int(time.time())}", headers=headers, timeout=30000)
         if not r.ok:
             raise RuntimeError(f"HTTP {r.status}")
         return await r.body()
@@ -65,8 +65,26 @@ async def _get(url):
         await req.dispose()
 
 
-async def check_for_update():
+async def pinned_base():
+    """The raw address at the branch's newest commit. GitHub caches branch files for about 5 minutes (a ?t= query
+    doesn't get past it), so a check right after a release saw the old version; a commit address is never stale.
+    Falls back to the branch address if the GitHub API can't be reached (it allows 60 checks an hour)."""
     base = source_base()
+    m = re.fullmatch(r"(https://raw\.githubusercontent\.com/([\w.-]+/[\w.-]+)/)([\w.-]+)/", base)
+    if not m or re.fullmatch(r"[0-9a-f]{40}", m.group(3)):
+        return base
+    try:
+        sha = (await _get(f"https://api.github.com/repos/{m.group(2)}/commits/{m.group(3)}",
+                          {"Accept": "application/vnd.github.sha"})).decode().strip()
+        if re.fullmatch(r"[0-9a-f]{40}", sha):
+            return f"{m.group(1)}{sha}/"
+    except Exception as e:
+        log(f"   (Couldn't ask GitHub for the newest version, using the branch address: {str(e)[:80]})")
+    return base
+
+
+async def check_for_update():
+    base = await pinned_base() if source_base() else ""
     save_app_state(last_update_check=datetime.datetime.now().isoformat(timespec="seconds"))
     if not base:
         return {"ok": False, "error": "No valid update source set. Your helper sets it in Settings, Updates (a GitHub repository)."}
@@ -80,7 +98,7 @@ async def check_for_update():
     newv = str(manifest.get("version", ""))
     if vt(newv) <= vt(APP_VERSION):
         return {"ok": True, "available": False, "version": APP_VERSION}
-    UPDATE["manifest"] = manifest
+    UPDATE["manifest"], UPDATE["base"] = manifest, base         # files come from the same commit as release.json
     notes = [c for c in manifest.get("changelog", []) if vt(c.get("version")) > vt(APP_VERSION)]
     log(f"⬆️  Version {newv} is available.")
     return {"ok": True, "available": True, "version": newv, "notes": notes, "urgent": bool(manifest.get("urgent"))}
@@ -126,7 +144,7 @@ async def download_files(m):
     cached = UPDATE.get("files")
     if cached and cached[0] == m["version"]:
         return cached[1]
-    base, files = source_base(), {}
+    base, files = UPDATE.get("base") or source_base(), {}
     for f in m.get("files", []):
         rel = safe_path(f["path"])
         blob = await _get(base + rel.replace(" ", "%20").replace("(", "%28").replace(")", "%29"))

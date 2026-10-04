@@ -37,7 +37,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 - **Releases are signed.** `make_release.py` signs `release.json` with the private key in `~/.careerhub_release_key` (only on the helper's computer, never in the repo; back it up: if it is lost, her app refuses all updates until a release signed by the old key ships a new `PUBLIC_KEY`). The app checks the signature against `PUBLIC_KEY` in `careerhub/sigcheck.py`; the zip fallback needs the signed `release.json` too.
 - `tools/make_key.py` makes a signing key (and a new one when rotating; see its header).
-- **Update source must be GitHub over https** (`updater.source_base`). Other addresses are refused.
+- **Update source must be GitHub over https** (`updater.source_base`). Other addresses are refused. `pinned_base` asks api.github.com for the branch's newest commit and reads every file from that commit (branch addresses are cached by GitHub for ~5 min); it falls back to the branch address if the API fails.
 - **`api_*` functions only answer the app's own window** (`main.guarded`: page and frame must be under `ui/`). Don't add `--allow-file-access-from-files` or load web pages in the app window.
 
 ## Release (automatic update to her laptop)

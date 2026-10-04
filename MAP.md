@@ -2,7 +2,7 @@
 
 Read this first, then open only the file you need. Each Python module is small and focused.
 
-Docs updated: 2026-10-04 (2.8.2)
+Docs updated: 2026-10-04 (2.8.3)
 
 ## Start and launchers
 
@@ -45,7 +45,7 @@ Docs updated: 2026-10-04 (2.8.2)
 | `workday.py` | 150 | Workday "My Experience" page: adds and fills one block per job and degree from `history`. Not yet tried on a live Workday. | `fill_history` |
 | `overview.py` | 85 | (Cached per data save and hour: `jobs_overview` -> `_build_overview`.) Combines applications + emails into stages for Home and My jobs. `_timed_stage` makes the date-based stages: Interview past its date -> Waiting, Applied 30+ days with no reply -> NoResponse (worked out on the fly, nothing stored). | `jobs_overview`, `STAGE_ORDER`, `_timed_stage`, `NO_REPLY_DAYS` |
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
-| `updater.py` | 177 | Automatic updates from GitHub: check, background download (cached in `UPDATE['files']`), verify SHA-256, install, rollback info. | `vt`, `source_base`, `safe_path`, `check_for_update`, `download_files`, `prefetch_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
+| `updater.py` | 177 | Automatic updates from GitHub: check (`pinned_base`: files read from the newest commit, not the cached branch), background download (cached in `UPDATE['files']`), verify SHA-256, install, rollback info. | `vt`, `source_base`, `pinned_base`, `safe_path`, `check_for_update`, `download_files`, `prefetch_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
 | `sigcheck.py` | 120 | Ed25519 check (pure Python) of the signed `release.json`; `PUBLIC_KEY` is the helper's key. | `manifest_ok`, `canonical`, `sign`, `verify`, `public_key`, `PUBLIC_KEY` |
 | `api.py` | 383 | Every api_* function the window calls (exposed automatically by main.py). | `start_task`, `api_state`, `api_save_profile`, `api_save_list`, `api_add_to_list`, `api_start_apply`, `api_resume`, `api_start_find`, `api_answers`, `THEMES` … |
 | `main.py` | 86 | Opens the app window (maximised) (ui/index.html), exposes api_*, hourly update check, returns restart code. | `open_app_window`, `update_loop`, `after_load`, `main`, `run`, `UI_INDEX` |

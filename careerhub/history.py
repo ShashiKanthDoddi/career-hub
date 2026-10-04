@@ -120,7 +120,7 @@ def _parse_edu(lines):
         for l in b:
             if DEGREE.search(l) and not BULLET.match(l):
                 m = RANGE.search(l)
-                t = (l[:m.start()] + l[m.end():]) if m else re.sub(r"(19|20)\d{2}", "", l)
+                t = (l[:m.start()] + l[m.end():]) if m else re.sub(r"\b(19|20)\d{2}\b", "", l)
                 t = re.sub(r"\([^)]*\)", "", t).strip(" |,-–—")
                 for sep in (r"\s*,\s*", r"\s+in\s+", r"\s+[-–—]\s+", r"\s*\|\s*"):
                     parts = re.split(sep, t, maxsplit=1)
@@ -148,7 +148,7 @@ def _parse_edu(lines):
                 e["end"] = _date(m.group(2))[0] if re.search(r"\d{4}", m.group(2)) else ""
                 break
         else:
-            yrs = re.findall(r"(?:19|20)\d{2}", " ".join(b))
+            yrs = re.findall(r"\b(?:19|20)\d{2}\b", " ".join(b))
             e["end"] = yrs[-1] if yrs else ""
         g = re.search(r"(?:cgpa|gpa|grade|percentage|marks)\s*:?\s*([\d.]+\s*(?:/\s*\d+|%)?)", " ".join(b), re.I)
         e["grade"] = re.sub(r"\s+", "", g.group(1)) if g else ""

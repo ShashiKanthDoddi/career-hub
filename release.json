@@ -1,8 +1,20 @@
 {
- "version": "2.8.3",
+ "version": "2.8.4",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.8.4",
+   "title": "Rejections and outside applications found",
+   "new": [
+    "Jobs you applied for outside the app (on LinkedIn or a company site) now get a card in My jobs from their \"application received\" email"
+   ],
+   "fixed": [
+    "Rejection emails sent through LinkedIn, Naukri or a company mailing system are now read, and no longer disappear after the next email check",
+    "Bank, loan and shopping emails (for example \"thank you for applying\" for a credit card) are not taken as jobs",
+    "Your older emails from the last 6 months are sorted again once, so missed rejections and jobs show up"
+   ]
+  },
   {
    "version": "2.8.3",
    "title": "Updates found right away",
@@ -75,14 +87,6 @@
    "fixed": [
     "The app window now only accepts commands from the app itself"
    ]
-  },
-  {
-   "version": "2.7.4",
-   "title": "See what happened to your reports",
-   "new": [
-    "Settings has a new section, Your reports and ideas: everything you sent, with Open, Done or Not planned, and a link to read it"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -100,7 +104,7 @@
   },
   {
    "path": "careerhub/answers.py",
-   "sha256": "275282cfdb472e0e7a3be00027965f6459ab262998c649c59da7cdeccac94679"
+   "sha256": "0fce20026902984d7310dc381e3597b0531167f17c85b4b8d0b4e2dc4347b01c"
   },
   {
    "path": "careerhub/api.py",
@@ -120,11 +124,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "d106f61f09b31bfaf062cc78d917d3078af1a957aabea97a681ed142b9003a40"
+   "sha256": "71788697877600e8d2b69404ef84cd81ddce31f0acd7f146c54fdbd8c523ecbd"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "02c9ae70070ed83e452f08ba5ced5d161d7ddb63497f533ef23c77128720a81e"
+   "sha256": "5885730dc82a681752d8f82ef059f508c28ddf60c31552b77d22e693fd6b513d"
   },
   {
    "path": "careerhub/filler.py",
@@ -136,11 +140,11 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "ba69f0ee560da3d8c19895d43bc743bdffd2607913628b2a7d6122877442b804"
+   "sha256": "7f8dcf8079040482d81d320aee64eada0f63e4c730176b09f7555e5db7413c30"
   },
   {
    "path": "careerhub/history.py",
-   "sha256": "8de29f1a9b128d101d0808f8835b38d44d976d2040a047d2cac7e7090ebbc90c"
+   "sha256": "9e6e9087fa3667ed9854a5234d7697a72512da0c66af3fbca73f54b1f6e2f3cb"
   },
   {
    "path": "careerhub/jobsites.py",
@@ -284,7 +288,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "9b4c936d52a3f4cb34ea1765356e5823d55cc14ac9e309e9f03bc5d6f8eeaade"
+   "sha256": "cd63b12633864821b086fede19daf8227c73040d96de03288f135336118ce1bb"
   },
   {
    "path": "CLAUDE.md",
@@ -311,5 +315,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "72x/rsiga4g50chodzcqPReoKxQXKFApoFFJZjfbRDVJjeDhrx4gD8VBjIXXzd4o7RgGeliliX08HiBnPW72Cw=="
+ "signature": "k7I2w6kTVdh6lHd6GkqcTK4WBuKSrsq1uMLiTaANNXy2wkVn728gzQKWMnjMMv3h8Uuxf0KNhwAvTHTcWanpCg=="
 }

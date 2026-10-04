@@ -1,6 +1,13 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.2',
+CHANGELOG = [{'version': '2.3',
+  'title': 'Safer LinkedIn, Indeed and Naukri',
+  'new': ['Paste LinkedIn, Indeed or Naukri links on Apply: the app keeps to a daily limit (default 10 per site) so your accounts stay safe',
+          'The app waits a little between jobs on these sites, like a person would',
+          'If a site asks you to prove you are human, the app waits for you and rests from that site if it keeps happening',
+          'Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs'],
+  'fixed': []},
+ {'version': '2.2',
   'title': 'Smarter forms and automatic updates',
   'new': ['Updates install themselves from GitHub: checked at start, every hour, or with Check for updates',
           'All new questions on a page come together on one card, with AI drafts per question',

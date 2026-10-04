@@ -1,8 +1,19 @@
 {
- "version": "2.2",
+ "version": "2.3",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.3",
+   "title": "Safer LinkedIn, Indeed and Naukri",
+   "new": [
+    "Paste LinkedIn, Indeed or Naukri links on Apply: the app keeps to a daily limit (default 10 per site) so your accounts stay safe",
+    "The app waits a little between jobs on these sites, like a person would",
+    "If a site asks you to prove you are human, the app waits for you and rests from that site if it keeps happening",
+    "Job links in LinkedIn, Indeed and Naukri alert emails now appear in Find jobs"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.2",
    "title": "Smarter forms and automatic updates",
@@ -121,15 +132,6 @@
     "Reads your resume and finds matching marketing jobs at companies you name or ones it discovers"
    ],
    "fixed": []
-  },
-  {
-   "version": "0.3",
-   "title": "Logins handled",
-   "new": [
-    "Clicks Apply, creates accounts and signs in by itself (Workday and others)",
-    "One password for job sites, and a list of every account"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -151,11 +153,11 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "b2541d8880aa455c414bdd70412060255f3d3b5dff8623e748877bd78c6e4695"
+   "sha256": "e4d71b44853f356dbfe1b995f2c38d5da626d67a8cbccaba1a81269019c68ec8"
   },
   {
    "path": "careerhub/apply_run.py",
-   "sha256": "5851ef67a394a37c58f619ed1c2a5840fa9960eb6a014e2e49e0765dcf0351f8"
+   "sha256": "40d0b0b22c1d1ed374a7f020211e6312c7ee2160953e4d38ec04477036b9fef5"
   },
   {
    "path": "careerhub/auth.py",
@@ -167,11 +169,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "6153a7b2fb4ff8d184df92ea0a001398c3d781f1fba3b7ead316552989e71583"
+   "sha256": "11a1c424b7497150aae8a020b501016d3d4576402e248c3586a12cd9ecefc5f4"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "91c2e957d68b96ac8fbd2cd41210b541127a8d96c9b91b4753506f7cebae2e3d"
+   "sha256": "12c0f44d817631bf956e662768892e191538a7f603932727f56033125336d966"
   },
   {
    "path": "careerhub/filler.py",
@@ -183,7 +185,11 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "341070e04d6f9477eadafd781b7af6b73d42e33e8c3a011633854e237d725b08"
+   "sha256": "28563389778d0915fdc36ed011b39b862ee3040f1243ac26d7b27835fe2493b5"
+  },
+  {
+   "path": "careerhub/jobsites.py",
+   "sha256": "de9eec7c5e9422629dd7865c5a0fc12c2c9da10596f5b318d733c50a78366e4c"
   },
   {
    "path": "careerhub/launch.py",
@@ -203,7 +209,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "c296a03f5ab775cce8265f7f8fa8eb0f43cc7cbdf7a9997127ab8e8899f58d87"
+   "sha256": "7d0272790ab14b2f6c5c1c1b200ec7da28d4f05cf9047ee1456de47b8ca0dfe4"
   },
   {
    "path": "careerhub/records.py",
@@ -223,7 +229,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "3eaf2dacab2857a41899afde9e0f2cb539e4257a96ddaac5d33f6ca11a5796bd"
+   "sha256": "d8cff1c1ebe6b171dc340374ce4c8eb03aaf3b160d22b88f1d65d2d4f9fce73e"
   },
   {
    "path": "careerhub/textutil.py",
@@ -287,7 +293,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "b9b098efa14b75e3aeafc45d27e5f53654565fa1c27489d4057cf8d09f5de91f"
+   "sha256": "aad084104a9c33a395ebb92fdbfe689d4dc7077205e2ae1a5062c698c11ef4c3"
   },
   {
    "path": "CLAUDE.md",
@@ -295,7 +301,7 @@
   },
   {
    "path": "MAP.md",
-   "sha256": "51c66418093c3ca98c297879228909bcc05953bd8e7d9c5430ecfbabab09c4b0"
+   "sha256": "6b5477876de1881b70a853d82fa4cde14c8143a7c7b8d9231bb4b135f9fb836c"
   },
   {
    "path": "Setup (Mac).command",

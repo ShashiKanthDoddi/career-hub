@@ -1,8 +1,7 @@
 /* ===== activity, report, palette ===== */
 let LOGTEXT = "";
-function addLog(t){ LOGTEXT += t + "\n"; const el = $("#log"); if (el){ el.textContent = LOGTEXT; el.parentElement.scrollTop = el.parentElement.scrollHeight; } else $("#logDot").hidden = false; }
+function addLog(t){ LOGTEXT += t + "\n"; const el = $("#log"); if (el){ el.textContent = LOGTEXT; el.parentElement.scrollTop = el.parentElement.scrollHeight; } }
 function openActivity(){
-  $("#logDot").hidden = true;
   $("#layer").innerHTML = `<div class="scrim" id="scrim"></div><aside class="drawer" aria-label="Activity"><div class="dh"><div class="grow"><h2>Activity</h2><div class="muted small">Everything the app is doing, step by step</div></div>
     <button class="btn sm" id="copyLog">Copy</button><button class="btn sm" data-open2="logs">Logs</button><button class="btn sm ghost" id="closeDrawer">${icon("x")}</button></div>
     <div class="db"><pre id="log"></pre></div></aside>`;
@@ -32,7 +31,7 @@ const ACTIONS = [
   ["Go to Home", () => go("home"), "1"], ["Apply to a job", () => { go("apply"); setTimeout(() => $("#links").focus(), 50); }, "2"],
   ["Find new jobs", () => go("find"), "3"], ["Open My jobs", () => go("jobs"), "4"], ["Edit Profile", () => go("profile"), "5"], ["Open Settings", () => go("settings"), "6"],
   ["Check email now", () => { go("home"); $("#checkMailBtn").click(); }], ["Apply to all saved jobs", () => startApply(SAVED)],
-  ["Theme: Midnight (dark)", () => setTheme("midnight")], ["Theme: Lavender (light)", () => setTheme("lavender")], ["Theme: Ocean", () => setTheme("ocean")], ["Theme: Forest", () => setTheme("forest")], ["Theme: Sand", () => setTheme("sand")], ["Theme: Rose", () => setTheme("rose")], ["Theme: Slate", () => setTheme("slate")], ["Theme: match my computer", () => setTheme("auto")], ["Check for updates", () => checkUpdates(true)],
+  ["Theme: Sand", () => setTheme("sand")], ["Theme: Emerald", () => setTheme("emerald")], ["Theme: Slate", () => setTheme("slate")], ["Theme: Clean white", () => setTheme("clean")], ["Theme: Mint", () => setTheme("mint")], ["Check for updates", () => checkUpdates(true)],
   ["Show activity", openActivity], ["Report a problem", openReport], ["What's new", showNews], ["Add a resume or file", () => { go("profile"); setTimeout(() => $("#addFile").click(), 80); }]];
 function openPalette(){
   $("#layer").innerHTML = `<div class="palette" id="pal"><div class="box"><input type="text" id="palIn" placeholder="Type a command, e.g. dark, email, apply"><div class="list" id="palList"></div></div></div>`;
@@ -55,3 +54,5 @@ document.addEventListener("keydown", e => {
   if (ASK && !typing && /^[1-9]$/.test(e.key)){ const o = ASK.options[+e.key - 1]; if (o !== undefined) reply(o); return; }
   if (!typing && !ASK && !$("#layer").innerHTML && /^[1-6]$/.test(e.key)) go(PAGES[+e.key - 1]);
 });
+
+$("#moreBtn").onclick = () => { const box = $("#moreBox"); box.hidden = !box.hidden; $("#moreBtn").setAttribute("aria-expanded", String(!box.hidden)); };

@@ -32,7 +32,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `auth.py` | 146 | Gets from job posting to the form: clicks Apply, signs in / creates accounts. | `get_password`, `auth_state`, `handle_auth`, `get_to_form` |
 | `apply_run.py` | 310 | Runs a list of jobs: apply_one (page loop, summary, submit), run_apply, job browser. | `save_draft`, `open_browser`, `table_rows`, `apply_one`, `job_browser`, `run_apply` |
 | `launch.py` | 26 | Starts Chrome/Chromium with the sandbox on; downloads the browser if missing. | `launch_chrome`, `SANDBOX` |
-| `finder.py` | 363 | Find jobs: hiring-system APIs (Workday, Greenhouse, Lever, Ashby, SmartRecruiters), web discovery, filters, scoring, diagnostics. | `boards_in`, `board_label`, `seniority_excludes`, `location_ok`, `relevant_title`, `match_score`, `get_json`, `fetch_board`, `web_search`, `UA`, `STRONG_TITLE_WORDS`, `TECH_WORDS`, `CITY_ALIASES` … |
+| `finder.py` | 363 | Find jobs: hiring-system APIs (Workday, Greenhouse, Lever, Ashby, SmartRecruiters), web discovery plus `DEFAULT_BOARDS` (verified built-in boards, used when search engines refuse us), title-only search without a resume, filters, scoring, diagnostics. | `boards_in`, `board_label`, `seniority_excludes`, `location_ok`, `relevant_title`, `match_score`, `get_json`, `fetch_board`, `web_search`, `UA`, `STRONG_TITLE_WORDS`, `TECH_WORDS`, `CITY_ALIASES` … |
 | `jobsites.py` | 100 | LinkedIn / Indeed / Naukri safety: daily limit, pacing between jobs, robot-check detection, rest-for-the-day, job links from alert emails. | `site_of`, `allowed`, `pace`, `challenged`, `alert_jobs`, `clean_job_link` |
 | `gmail.py` | 258 | Reads the job Gmail (IMAP, read-only), classifies replies, friendly errors. | `mail_settings`, `classify_mail`, `dec`, `mail_body`, `company_from_sender`, `match_application`, `process_mail`, `imap_fetch`, `gmail_link`, `MONTHS`, `MAIL_TYPES`, `MAIL_SKIP`, `JOB_WORDS` … |
 | `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. | `make_report`, `smtp_send`, `send_report` |
@@ -47,7 +47,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | File | Lines | Purpose |
 | --- | --- | --- |
 | `ui/index.html` | 226 | All page markup (sidebar, Home, Apply, Find jobs, My jobs, Profile, Settings) + SVG icons. |
-| `ui/styles.css` | 285 | Design tokens, 8 colour themes (data-theme / data-mode), components, layout. |
+| `ui/styles.css` | 285 | Design tokens, 5 colour themes (data-theme / data-mode), components, layout. |
 | `ui/js/core.js` | 60 | Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
 | `ui/js/home.js` | 51 | Home: greeting, funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/apply.js` | 38 | Apply: the one job list (add links, apply to one/selected/all). |
@@ -56,7 +56,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `ui/js/find.js` | 59 | Find jobs: resume tags, companies, results list, skip reasons, dismiss. |
 | `ui/js/jobs.js` | 87 | My jobs board (drag and drop), list, emails, accounts, found, job drawer. |
 | `ui/js/forms.js` | 137 | Profile and Settings forms, files, saved answers, themes, What's new, zip install. |
-| `ui/js/palette.js` | 57 | Activity drawer, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
+| `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
 | `ui/js/events.js` | 68 | window.onPy event handling, filled-fields pop-up, update modal, startup sequence. |
 
 ## Where common changes go

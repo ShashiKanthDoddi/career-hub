@@ -97,21 +97,18 @@ $("#ansSearch").oninput = renderAnswers;
 /* appearance & what's new */
 // [sidebar, background, card, accent, mode] per theme; previews and data-mode come from here
 const THEMES = {
-  auto:["#0A120F","#0E1915","#15251F","#3DD9A0","auto"], emerald:["#0A120F","#0E1915","#15251F","#3DD9A0","dark"], peach:["#3A2822","#F3E6DA","#FFF7F0","#C0532B","light"],
-  mint:["#12403A","#DDEBE6","#F2FAF7","#0E8A70","light"], lavender:["#241A38","#ECE8F4","#F7F5FB","#6B4FD8","light"],
-  midnight:["#120D1C","#15111F","#1E182C","#FFD84D","dark"], ocean:["#0A141C","#0E1A24","#142533","#4FC3D6","dark"],
-  forest:["#1F3A2B","#E3EBE3","#F3F7F1","#2E7D55","light"], sand:["#23324A","#EFE7DA","#FAF6EE","#2F6D8A","light"],
-  rose:["#4A1F35","#F4E6EB","#FCF5F8","#B03A6F","light"], slate:["#0F1114","#16181C","#1E2126","#F0A43A","dark"]};
-const THEME_LABEL = {auto:"Match my computer", emerald:"Emerald", peach:"Peach", mint:"Mint", lavender:"Lavender", midnight:"Midnight", ocean:"Ocean", forest:"Forest", sand:"Sand", rose:"Rose", slate:"Slate"};
+  clean:["#26272B","#FFFFFF","#F5F7FA","#2F6BDB","light"],
+  sand:["#23324A","#EFE7DA","#FAF6EE","#2F6D8A","light"], emerald:["#0A120F","#0E1915","#15251F","#3DD9A0","dark"],
+  slate:["#0F1114","#16181C","#1E2126","#F0A43A","dark"], mint:["#12403A","#DDEBE6","#F2FAF7","#0E8A70","light"]};
+const THEME_LABEL = {emerald:"Emerald", mint:"Mint", sand:"Sand", slate:"Slate", clean:"Clean white"};
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme(t){
-  t = THEMES[t] ? t : "auto";
-  const real = t === "auto" ? (darkQuery.matches ? "emerald" : "mint") : t;
+  const real = THEMES[t] ? t : "clean";
   document.documentElement.dataset.theme = real; document.documentElement.dataset.mode = THEMES[real][4];
 }
 darkQuery.addEventListener("change", () => applyTheme(STATE.theme));
 function renderThemes(){
-  const cur = THEMES[STATE.theme] ? STATE.theme : "auto";
+  const cur = THEMES[STATE.theme] ? STATE.theme : "clean";
   $("#themes").innerHTML = Object.keys(THEMES).map(t => { const [sb, bg, card, acc] = THEMES[t];
     const half = t === "auto" ? `background:linear-gradient(90deg,${bg} 50%,#DDEBE6 50%)` : `background:${bg}`;
     return `<button class="themecard ${t === cur ? "on" : ""}" data-t="${t}"><div class="pv"><div class="a" style="background:${sb}"></div>

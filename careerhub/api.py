@@ -54,7 +54,7 @@ async def api_state():
                 t for t in st.get("find_tokens", []) if t != "auto"), "find_auto": "auto" in st.get("find_tokens", ["auto"]),
             "profile": profile, "profile_error": err, "files": folder_files(),
             "jobs_text": "\n".join(read_jobs_file()), "app_name": APP_NAME, "owner": OWNER,
-            "theme": st.get("theme", "auto"), "changelog": CHANGELOG,
+            "theme": st.get("theme", "clean"), "changelog": CHANGELOG,
             "whats_new": st.get("last_seen_version") not in (None, APP_VERSION),
             "first_run": st.get("last_seen_version") is None,
             "needs_profile": (not email) or "example.com" in email, "busy": UI.busy,
@@ -126,7 +126,14 @@ async def api_start_find(roles_text, companies_text, auto):
     if auto:
         tokens.append("auto")
     if not tokens:
-        return {"ok": False, "error": "Type some company names, or tick “Also search the internet”."}
+        return {"ok": False, "error": "Add a company name, or switch on “Search the web for companies hiring”."}
+    if not roles:
+        try:
+            has_resume = resume_info(Answers()) is not None
+        except ProfileError:
+            has_resume = False
+        if not has_resume:
+            return {"ok": False, "error": "I need a job title to look for. Add one above, or add your resume in Profile → Files."}
     start_task(run_find(roles, tokens))
     return {"ok": True}
 
@@ -153,7 +160,7 @@ async def api_set_daily(flag):
     return True
 
 
-THEMES = ["auto", "emerald", "peach", "mint", "lavender", "midnight", "ocean", "forest", "sand", "rose", "slate"]
+THEMES = ["clean", "sand", "emerald", "slate", "mint"]
 
 
 async def api_home():
@@ -357,7 +364,7 @@ async def api_delete_file(name):
 
 
 async def api_set_theme(theme):
-    save_app_state(theme=theme if theme in THEMES else "auto")
+    save_app_state(theme=theme if theme in THEMES else "clean")
     return True
 
 

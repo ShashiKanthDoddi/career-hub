@@ -1,6 +1,17 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.3',
+CHANGELOG = [{'version': '2.4',
+  'title': 'Clearer look and better job search',
+  'new': ['New default look: Clean white, with a charcoal side panel. Themes are now Clean white, Sand, Emerald, Slate and Mint',
+          'Sharper, larger text and easier-to-read grey text',
+          'Quick actions, Activity and Report a problem now sit under one More item in the sidebar',
+          'Sharper "H" icon',
+          'Find jobs: "Where should I search?" is explained in plain words, and searching the web now always checks a built-in list of companies that hire marketers',
+          'Find jobs works from the job titles you type when no resume is found'],
+  'fixed': ['Find jobs gave no answer when the resume was missing: it now says what to do',
+            'Search the web found nothing because search engines blocked it',
+            'Removed the duplicate "Paste a job link" bar from Home (use Apply), and the confusing dot and "1" in the sidebar']},
+ {'version': '2.3',
   'title': 'Safer LinkedIn, Indeed and Naukri',
   'new': ['Paste LinkedIn, Indeed or Naukri links on Apply: the app keeps to a daily limit (default 10 per site) so your accounts stay safe',
           'The app waits a little between jobs on these sites, like a person would',

@@ -12,7 +12,7 @@
   --r-s:8px; --r-m:12px; --r-l:18px;
   --shadow-1:0 1px 2px rgba(36,26,56,.06);
   --shadow-2:0 10px 30px rgba(36,26,56,.14);
-  --font:"Avenir Next","Avenir","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font:"Segoe UI Variable Text","Segoe UI",-apple-system,"SF Pro Text",system-ui,sans-serif;
 }
 /* ===== themes: set by applyTheme() in js/forms.js (data-theme = palette, data-mode = light/dark) ===== */
 :root[data-mode=dark]{
@@ -22,26 +22,18 @@
 }
 :root[data-theme=emerald]{ --paper:#0E1915; --surface:#15251F; --surface-2:#1A2E27; --ink:#E8F3EE; --ink-2:#B7CFC5; --muted:#7FA093;
   --line:#243B33; --line-2:#2F4B41; --plum:#0A120F; --plum-2:#173028; --violet:#3DD9A0; --violet-soft:#12392D; --hi:#F2C14E; }
-:root[data-theme=peach]{ --paper:#F3E6DA; --surface:#FFF7F0; --surface-2:#FAEDE2; --ink:#2B1B14; --ink-2:#5E4437; --muted:#8C7061;
-  --line:#E7D2C3; --line-2:#DAC0AD; --plum:#3A2822; --plum-2:#503730; --violet:#C0532B; --violet-soft:#F8DDD0; --hi:#FFC857; }
-:root[data-theme=mint]{ --paper:#DDEBE6; --surface:#F2FAF7; --surface-2:#E8F4EF; --ink:#12302B; --ink-2:#3A5A53; --muted:#6A8982;
+:root[data-theme=mint]{ --paper:#DDEBE6; --surface:#F2FAF7; --surface-2:#E8F4EF; --ink:#12302B; --ink-2:#3A5A53; --muted:#4F6B64;
   --line:#CBDFD8; --line-2:#B8D2C9; --plum:#12403A; --plum-2:#1D554D; --violet:#0E8A70; --violet-soft:#D2EFE6; --hi:#FFD166; }
-:root[data-theme=lavender]{ --paper:#ECE8F4; --surface:#F7F5FB; --surface-2:#F1EEF8; --line:#DDD7EA; --line-2:#CFC7E0; }
-:root[data-theme=midnight]{ --paper:#15111F; --surface:#1E182C; --surface-2:#231C33; --line:#2E2642; --line-2:#3A3152; --plum:#120D1C; --plum-2:#221A33; }
-:root[data-theme=ocean]{ --paper:#0E1A24; --surface:#142533; --surface-2:#18303F; --ink:#E6F1F7; --ink-2:#B6CCD8; --muted:#7F9AAA;
-  --line:#22394A; --line-2:#2C4659; --plum:#0A141C; --plum-2:#16283A; --violet:#4FC3D6; --violet-soft:#133846; }
-:root[data-theme=forest]{ --paper:#E3EBE3; --surface:#F3F7F1; --surface-2:#EAF0E8; --ink:#17261C; --ink-2:#3C5244; --muted:#6C8172;
-  --line:#D0DCCF; --line-2:#BFCEBE; --plum:#1F3A2B; --plum-2:#2C4D3A; --violet:#2E7D55; --violet-soft:#D8ECDF; --hi:#F2C94C; }
-:root[data-theme=sand]{ --paper:#EFE7DA; --surface:#FAF6EE; --surface-2:#F4EDE2; --ink:#2A2118; --ink-2:#5A4A3A; --muted:#8A7866;
+:root[data-theme=sand]{ --paper:#EFE7DA; --surface:#FAF6EE; --surface-2:#F4EDE2; --ink:#2A2118; --ink-2:#5A4A3A; --muted:#6B5A47;
   --line:#E3D7C6; --line-2:#D5C5AF; --plum:#23324A; --plum-2:#2F4260; --violet:#2F6D8A; --violet-soft:#DAE8EF; }
-:root[data-theme=rose]{ --paper:#F4E6EB; --surface:#FCF5F8; --surface-2:#F8ECF1; --ink:#2B1720; --ink-2:#5C3A48; --muted:#8E6B79;
-  --line:#E9D5DD; --line-2:#DDC2CD; --plum:#4A1F35; --plum-2:#5E2A45; --violet:#B03A6F; --violet-soft:#F5DCE7; }
+:root[data-theme=clean]{ --paper:#FFFFFF; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#1B2430; --ink-2:#44505F; --muted:#5F6B7A;
+  --line:#E3E8EE; --line-2:#CFD7E0; --plum:#26272B; --plum-2:#34363B; --violet:#2F6BDB; --violet-soft:#E3ECFC; --hi:#FFC857; --shadow-1:0 1px 2px rgba(27,36,48,.08); }
 :root[data-theme=slate]{ --paper:#16181C; --surface:#1E2126; --surface-2:#23272D; --ink:#ECEEF1; --ink-2:#C1C6CE; --muted:#8C939D;
   --line:#2C3138; --line-2:#383E46; --plum:#0F1114; --plum-2:#22262C; --violet:#F0A43A; --violet-soft:#3A2E1A; --hi:#F0A43A; }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font:15px/1.5 var(--font);background:var(--paper);color:var(--ink);display:grid;grid-template-columns:232px 1fr;overflow:hidden;
-  -webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+body{font:16px/1.5 var(--font);background:var(--paper);color:var(--ink);display:grid;grid-template-columns:232px 1fr;overflow:hidden;
+  text-rendering:optimizeLegibility}
 button,input,select,textarea{font:inherit;color:inherit}
 a{color:var(--violet);text-decoration:none}a:hover{text-decoration:underline}
 :focus-visible{outline:2px solid var(--violet);outline-offset:2px;border-radius:6px}
@@ -61,6 +53,9 @@ aside.side{background:var(--plum);color:var(--plum-ink);display:flex;flex-direct
 .nav .count{margin-left:auto;background:var(--hi);color:var(--plum);font-size:11.5px;font-weight:800;border-radius:99px;padding:0 7px;min-width:20px;text-align:center}
 .nav kbd{margin-left:auto;font:600 11px var(--font);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.22);border-radius:5px;padding:0 5px}
 .side .grow{flex:1}
+.nav .chev{margin-left:auto;width:16px;height:16px;transition:transform .15s}.nav .count + .chev{margin-left:8px}
+#moreBtn[aria-expanded=true] .chev{transform:rotate(180deg)}
+.more{display:flex;flex-direction:column;gap:2px;padding-left:10px}.more[hidden]{display:none}
 .side-status{margin:6px 4px 10px;padding:10px 12px;border-radius:10px;background:var(--plum-2);font-size:13px;color:rgba(255,255,255,.88);display:flex;gap:8px;align-items:center}
 .dot{width:8px;height:8px;border-radius:50%;background:#7CE0C3;flex:none}
 .dot.busy{background:var(--hi);animation:pulse 1.2s infinite}
@@ -77,7 +72,7 @@ main{min-width:0;overflow:auto;position:relative}
 @keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 h2{font-size:17px;margin:0;font-weight:700;letter-spacing:-.01em}
 h3{font-size:14px;margin:0 0 10px;font-weight:700;color:var(--ink-2)}
-.muted{color:var(--muted)}.small{font-size:13px}
+.muted{color:var(--muted)}.small{font-size:14px}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:20px;box-shadow:var(--shadow-1)}
 .panel + .panel{margin-top:16px}
 .panel-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -99,7 +94,7 @@ h3{font-size:14px;margin:0 0 10px;font-weight:700;color:var(--ink-2)}
 .btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
 .btn:disabled{opacity:.5;pointer-events:none}
 .field label{display:block;font-size:13px;font-weight:650;color:var(--ink-2);margin-bottom:6px}
-.field .hint{font-size:12px;color:var(--muted);margin-top:5px}
+.field .hint{font-size:13px;color:var(--muted);margin-top:5px}
 input[type=text],input[type=password],input[type=number],input[type=email],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;outline:none;transition:border-color .15s,box-shadow .15s}
 input:focus,select:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px var(--violet-soft)}
 textarea{resize:vertical;min-height:90px}

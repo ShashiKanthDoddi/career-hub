@@ -73,6 +73,7 @@
       <div class="panel">
         <div class="panel-head"><h2 class="grow">Inbox</h2><button class="btn sm" id="checkMailBtn"><svg class="i"><use href="#i-mail"/></svg>Check email</button></div>
         <div class="muted small" id="mailInfo" style="margin:-6px 0 6px"></div>
+        <div id="mailSpin" class="inbox-spin" hidden role="status" aria-live="polite"><div class="spinner"></div><b>Checking your job email</b><span class="muted small">This takes a few seconds</span></div>
         <div id="feed"></div>
       </div>
     </div>
@@ -248,7 +249,6 @@
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
 </svg>
 
-<div id="mailSpin" class="spin-wrap" hidden role="status" aria-live="polite"><div class="spin-card"><div class="spinner"></div><b>Checking your job email</b><span class="muted small">This takes a few seconds</span></div></div>
 <script src="js/core.js"></script>
 <script src="js/home.js"></script>
 <script src="js/planner.js"></script>

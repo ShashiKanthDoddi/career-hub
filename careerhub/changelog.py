@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.2',
+CHANGELOG = [{'version': '2.6.3',
+  'title': 'Calmer email check',
+  'new': [],
+  'fixed': ['The spinning circle for Check email now shows inside the Inbox box instead of over the whole page']},
+ {'version': '2.6.2',
   'title': 'Reads more kinds of resumes',
   'new': [],
   'fixed': ['Work and education: "Read from my resume" now finds sections written in normal capitals (like Professional Experience) and jobs without a heading']},

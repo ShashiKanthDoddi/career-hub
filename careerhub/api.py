@@ -500,7 +500,7 @@ async def _job_text(job):
 
 async def api_resume_match(job, name=""):
     """How well one resume fits one job: keywords the job asks for that are in / missing from the resume."""
-    from .resume_tools import keyword_match
+    from .resume_tools import job_roles, job_skills, keyword_match, skill_gaps
     text = await _job_text(job)
     if not text:
         return {"ok": False, "error": "I couldn't read that job page (it may need a login). Copy the job text and paste it here instead."}
@@ -510,7 +510,8 @@ async def api_resume_match(job, name=""):
         return {"ok": False, "error": str(e)}
     if not resume:
         return {"ok": False, "error": "I can't read this resume. Use a PDF saved from Word or Google Docs."}
-    return {"ok": True, **keyword_match(resume, text), "job": text[:6000]}
+    m = keyword_match(resume, text)
+    return {"ok": True, **m, "job": text[:6000], "learn": job_skills(m["missing"]), "roles": skill_gaps(resume, job_roles(text))}
 
 
 async def api_resume_tailor(job, name=""):

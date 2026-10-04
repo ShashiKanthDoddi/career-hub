@@ -92,6 +92,11 @@ def main():
     check(rt.target_roles("Performance Marketing Manager", []) == ["performance marketing"], "resume skills: role from Find jobs titles")
     g = rt.skill_gaps("Google Ads, GA4", ["performance marketing"])[0]
     check("Google Ads" in g["have"] and all(x["url"].startswith("https://") for x in g["missing"]), "resume skills: gaps come with a course link")
+    check(rt.job_roles("Senior SEO Executive, Bengaluru. We need Semrush.") == ["seo"] and rt.job_roles("Embedded engineer") == [],
+          "resume skills: role read from the job text")
+    ls = rt.job_skills(["ga4", "semrush", "tableau"])
+    check([x["skill"] for x in ls] == ["ga4", "semrush", "tableau"] and all(x["url"].startswith("https://") for x in ls),
+          "resume skills: each missing job word gets a course link")
     from careerhub import jobsites
     check(jobsites.site_of("https://in.indeed.com/viewjob?jk=abc") == "Indeed" and jobsites.site_of("https://x.com/linkedin.com") is None,
           "job sites recognised by host")

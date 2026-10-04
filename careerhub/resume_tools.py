@@ -158,6 +158,29 @@ def target_roles(roles_text, resume_roles):
     return out[:3] or ["digital marketing"]
 
 
+def _course_for(word):
+    for items in ROLE_SKILLS.values():
+        for _, phrases, course in items:
+            if word in [norm(p) for p in phrases]:
+                return COURSES.get(course) or _coursera(course)
+    return _coursera(word)
+
+
+def job_skills(missing):
+    """[{'skill', 'course', 'url'}]: a free course for each word the job asks for that her resume lacks."""
+    return [{"skill": w, "course": c, "url": u} for w in missing for c, u in [_course_for(w)]]
+
+
+def job_roles(job):
+    """Role keys (as in ROLE_SKILLS) named at the top of a job text, at most two; [] if none is recognised."""
+    n = norm((job or "")[:600].lower())
+    out = []
+    for k, v in ROLE_KEYS.items():
+        if has_phrase(norm(k), n) and v not in out:
+            out.append(v)
+    return out[:2]
+
+
 def skill_gaps(text, roles):
     """[{'role', 'have': [skill], 'missing': [{'skill', 'course', 'url'}]}] for each target role."""
     t = norm((text or "").lower())

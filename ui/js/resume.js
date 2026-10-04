@@ -1,5 +1,5 @@
 /* ===== resume: her resume on the left; summary tiles on top; Health / Fit / Skills / Files tabs on the right ===== */
-let RS = null, RS_URL = "", RS_VIEW = "pdf", RS_TAB = "health", RS_FIT = null;
+let RS = null, RS_URL = "", RS_VIEW = "pdf", RS_TAB = "files", RS_FIT = null;
 const scoreColor = n => n >= 80 ? "var(--green)" : n >= 60 ? "var(--amber)" : "var(--rose)";
 const CAPS = new Set(["seo","sem","ppc","crm","ga4","cro","gtm","aso","b2b","b2c","d2c","sql","atl","btl","saas","fmcg","roas","cac","cpa","cms","pr"]);
 /* "google ads" -> "Google Ads", "a b testing" -> "A/B testing", "seo" -> "SEO" */
@@ -24,7 +24,7 @@ async function loadResumePage(name){
   $("#rsText").innerHTML = r.text ? resumeHTML(r.text, (r.ats && r.ats.skills) || [])
     : emptyHTML("file", "No text could be read", "Job sites can't read this file either. Save it again as a PDF from Word or Google Docs.");
   $("#rsTailorBtn").title = r.ai ? "" : "Needs your Claude key in Settings, AI helper";
-  renderSummary(); renderAts(r.ats); renderSkills(r.gaps); setRsTab(RS_TAB);
+  renderSummary(); renderAts(r.ats); renderSkills(); setRsTab(RS_TAB);
   await showResumeFile(r);
 }
 
@@ -34,7 +34,7 @@ async function showResumeFile(r){
   if (RS_URL){ URL.revokeObjectURL(RS_URL); RS_URL = ""; }
   if (canPdf){ const f = await api_resume_pdf(r.file);       // shown from memory (a blob): the window never opens other files from disk
     if (f && f.ok && f.b64){ const bytes = Uint8Array.from(atob(f.b64), c => c.charCodeAt(0));
-      RS_URL = URL.createObjectURL(new Blob([bytes], {type: "application/pdf"})); $("#rsPdf").src = RS_URL; } }
+      RS_URL = URL.createObjectURL(new Blob([bytes], {type: "application/pdf"})); $("#rsPdf").src = RS_URL + "#navpanes=0&view=FitH"; } }   // no thumbnail strip, page fills the width
   $("#rsView").hidden = !RS_URL; setRsView(RS_URL ? RS_VIEW : "text");
 }
 function setRsView(v){ $("#rsPdf").hidden = v !== "pdf"; $("#rsText").hidden = v !== "text"; $("#rsHint").hidden = v !== "text" || !RS || !RS.text;
@@ -56,13 +56,14 @@ $("#rsOpen").onclick = async () => { if (!RS || !await api_resume_open(RS.file))
 
 /* ---- top: four tiles that open their tab ---- */
 function renderSummary(){
-  const a = RS.ats, gaps = RS.gaps || [], miss = gaps.reduce((n, g) => n + g.missing.length, 0), all = gaps.reduce((n, g) => n + g.missing.length + g.have.length, 0);
+  const a = RS.ats, gaps = RS.gaps || [], job = !!RS_FIT && !!RS_FIT.asked;
+  const miss = job ? RS_FIT.missing.length : gaps.reduce((n, g) => n + g.missing.length, 0), all = job ? RS_FIT.asked : gaps.reduce((n, g) => n + g.missing.length + g.have.length, 0);
   const fixes = a ? a.checks.filter(c => !c.ok).length : 0;
   const tiles = [
+    ["files", "Resume versions", RS.versions.length, RS.versions.length > 1 ? "for different roles" : "add one per kind of role", 100 * RS.versions.length / 3, "var(--teal)"],
     ["health", "Resume health", a ? a.score : "–", a ? (fixes ? `${fixes} thing${fixes > 1 ? "s" : ""} to fix` : "Looks great") : "PDF files only", a ? a.score : 0, a ? scoreColor(a.score) : "var(--muted)"],
     ["fit", "Fit to a job", RS_FIT ? RS_FIT.score : "–", RS_FIT ? `${RS_FIT.missing.length} word${RS_FIT.missing.length === 1 ? "" : "s"} missing` : "Paste a job to check", RS_FIT ? RS_FIT.score : 0, RS_FIT ? scoreColor(RS_FIT.score) : "var(--muted)"],
-    ["skills", "Skills to build", miss, gaps.map(g => sentence(g.role)).join(", "), all ? 100 * (all - miss) / all : 0, "var(--violet)"],
-    ["files", "Resume versions", RS.versions.length, RS.versions.length > 1 ? "for different roles" : "add one per kind of role", 100 * RS.versions.length / 3, "var(--teal)"]];
+    ["skills", "Skills to build", miss, job ? "For the job you checked" : gaps.map(g => sentence(g.role)).join(", "), all ? 100 * (all - miss) / all : 0, "var(--violet)"]];
   $("#rsSum").innerHTML = tiles.map(([t, l, n, s, p, c]) => `<button class="stagebox rs-tile${t === RS_TAB ? " on" : ""}" data-t="${t}" style="--c:${c}">
     <div class="n">${esc(n)}</div><div class="l">${l}</div><div class="s">${esc(s)}</div><div class="bar"><i style="width:${Math.round(p)}%"></i></div></button>`).join("");
   $$("#rsSum .rs-tile").forEach(b => b.onclick = () => setRsTab(b.dataset.t));
@@ -86,15 +87,26 @@ function renderAts(a){
     ${good.length ? `<h3 style="margin-top:18px">Already good</h3><div class="chips" style="margin-top:0">${good.map(c => `<span class="tag got">${icon("check")}${esc(c.title)}</span>`).join("")}</div>` : ""}`;
 }
 
-/* ---- Skills (from the roles she looks for) ---- */
-function renderSkills(g){
-  $("#rsSkills").innerHTML = `<h2>Skills to build</h2><p class="muted small">For the roles you look for (your Find jobs titles, or your resume). Already have one? Add it to your resume.</p>` +
-    (g || []).map(r => { const all = r.have.length + r.missing.length, pct = all ? Math.round(100 * r.have.length / all) : 0;
-      return `<div class="rs-role"><div class="row"><b class="grow">${esc(sentence(r.role))}</b><span class="muted small">${r.have.length} of ${all} on your resume</span></div>
-        <div class="rs-meter"><i style="width:${pct}%"></i></div>
-        ${r.have.length ? `<div class="chips">${r.have.map(h => `<span class="tag got">${icon("check")}${esc(h)}</span>`).join("")}</div>` : ""}
-        ${r.missing.length ? r.missing.map(m => `<div class="rs-learn"><span class="grow">${esc(m.skill)}</span><a class="btn sm" href="${esc(m.url)}" target="_blank" title="${esc(m.course)}">${icon("ext")}Free course</a></div>`).join("")
-          : `<p class="small" style="margin:10px 0 0">Your resume already shows every skill on my list for this role.</p>`}</div>`; }).join("");
+/* ---- Skills: for the job she checked (if any), then for the roles she looks for; always judged against her resume ---- */
+function learnRow(m){ return `<div class="rs-learn"><span class="grow">${esc(m.skill)}</span><a class="btn sm" href="${esc(m.url)}" target="_blank" title="${esc(m.course)}">${icon("ext")}Free course</a></div>`; }
+function roleHTML(r){ const all = r.have.length + r.missing.length, pct = all ? Math.round(100 * r.have.length / all) : 0;
+  return `<div class="rs-role"><div class="row"><b class="grow">${esc(sentence(r.role))}</b><span class="muted small">${r.have.length} of ${all} on your resume</span></div>
+    <div class="rs-meter"><i style="width:${pct}%"></i></div>
+    ${r.have.length ? `<div class="chips">${r.have.map(h => `<span class="tag got">${icon("check")}${esc(h)}</span>`).join("")}</div>` : ""}
+    ${r.missing.length ? r.missing.map(learnRow).join("") : `<p class="small" style="margin:10px 0 0">Your resume already shows every skill on my list for this role.</p>`}</div>`; }
+function renderSkills(){
+  const f = RS_FIT && RS_FIT.asked ? RS_FIT : null, gaps = (RS && RS.gaps) || [];
+  let h = `<h2>Skills to build</h2>`;
+  if (f){
+    h += `<p class="muted small">For the job you checked, compared with your resume. Already have one? Add it to your resume.</p>
+      <div class="rs-role"><div class="row"><b class="grow">This job</b><span class="muted small">${f.have.length} of ${f.asked} on your resume</span></div>
+      <div class="rs-meter"><i style="width:${Math.round(100 * f.have.length / f.asked)}%"></i></div>
+      ${f.have.length ? `<div class="chips">${f.have.map(w => `<span class="tag got">${icon("check")}${esc(kwLabel(w))}</span>`).join("")}</div>` : ""}
+      ${(f.learn || []).length ? f.learn.map(m => learnRow({...m, skill: kwLabel(m.skill)})).join("") : `<p class="small" style="margin:10px 0 0">Your resume already shows every skill this job asks for.</p>`}</div>
+      ${(f.roles || []).map(roleHTML).join("")}
+      <h3 style="margin-top:22px">For the roles you look for</h3>`;
+  } else h += `<p class="muted small">For the roles you look for (your Find jobs titles, or your resume). Check a job in the Fit to a job tab to see its skills here.</p>`;
+  $("#rsSkills").innerHTML = h + gaps.map(roleHTML).join("");
 }
 
 /* ---- Fit to one job: keywords in / missing, and (with the Claude key) rewrite suggestions ---- */
@@ -104,11 +116,13 @@ $("#rsMatchBtn").onclick = async () => { const job = rsJob(); if (!job) return;
   const r = await busyBtn($("#rsMatchBtn"), "Checking…", () => api_resume_match(job, RS ? RS.file : ""));
   if (!r.ok) return toast(r.error, true);
   if (!r.asked){ $("#rsMatch").innerHTML = `<p class="muted small" style="margin-top:14px">I found no marketing keywords in that text. Paste the full job description.</p>`; return; }
-  RS_FIT = r; renderSummary();
+  RS_FIT = r; renderSummary(); renderSkills();
   $("#rsMatch").innerHTML = `<div class="rs-hero" style="margin-top:18px"><div class="rs-ring" style="--p:${r.score};--c:${scoreColor(r.score)}"><b>${r.score}</b><small>fit</small></div>
       <div><h2>${r.have.length} of ${r.asked} job words are on your resume</h2><p class="muted small">${r.score >= 70 ? "A good fit. Apply with confidence." : "Add the missing words that are true for you, then check again."}</p></div></div>
     ${r.missing.length ? `<h3>Missing from your resume</h3><div class="chips" style="margin-top:0">${r.missing.map(w => `<span class="tag miss">${esc(kwLabel(w))}</span>`).join("")}</div>` : ""}
-    ${r.have.length ? `<h3 style="margin-top:14px">Already there</h3><div class="chips" style="margin-top:0">${r.have.map(w => `<span class="tag got">${icon("check")}${esc(kwLabel(w))}</span>`).join("")}</div>` : ""}`; };
+    ${r.have.length ? `<h3 style="margin-top:14px">Already there</h3><div class="chips" style="margin-top:0">${r.have.map(w => `<span class="tag got">${icon("check")}${esc(kwLabel(w))}</span>`).join("")}</div>` : ""}
+    <button class="btn sm" id="rsToSkills" style="margin-top:14px">See skills to build for this job</button>`;
+  $("#rsToSkills").onclick = () => setRsTab("skills"); };
 $("#rsTailorBtn").onclick = async () => { const job = rsJob(); if (!job) return;
   const r = await busyBtn($("#rsTailorBtn"), "Thinking…", () => api_resume_tailor(job, RS ? RS.file : ""));
   if (!r.ok) return toast(r.error, true);

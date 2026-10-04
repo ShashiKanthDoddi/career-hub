@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '3.1',
+CHANGELOG = [{'version': '3.2',
+  'title': 'Resume page: files first, skills for each job',
+  'new': ['After you check a job on the Resume page, Skills to build shows the skills for that job compared with your resume, each missing one with a free course',
+          'Your files are now the first tab on the Resume page'],
+  'fixed': ['Your resume preview fills the width and no longer shows the small page strip']},
+ {'version': '3.1',
   'title': 'A Resume page',
   'new': ['A new Resume page: your resume on the left, the way it looks or the way job sites read it (with marketing keywords highlighted)',
           'Resume health: a score out of 100 and a short list of what to fix so job sites read it well',

@@ -17,7 +17,8 @@ maintains it and ships fixes through automatic updates from GitHub.
 - `career_hub.py`: bootstrap (packages, start, restart, rollback). Keep it small and stable.
 - `careerhub/`: Python package, one concern per module (filler, auth, finder, gmail, updater…).
 - `ui/`: `index.html`, `styles.css`, `js/<page>.js`. Plain scripts sharing globals; no build step.
-- `tools/`: `selftest.py`, `make_release.py`.
+- `tools/`: `selftest.py`, `make_release.py`, `make_guide.py`.
+- `docs/Career_Hub_Guide.docx`: source of the user guide (PDF is generated from it).
 - `Harshitha's Data/`: her data. **Never commit it, never change its format destructively.**
 
 ## Rules
@@ -35,7 +36,9 @@ maintains it and ships fixes through automatic updates from GitHub.
 ## Release (automatic update to her laptop)
 
 0. **Update the documentation first**: `MAP.md` (new/changed modules), `CLAUDE.md` (rules, known limits), and the
-   user guide `Career_Hub_Guide.pdf` when something she sees or sets has changed. No release without this.
+   user guide when something she sees or sets has changed. The guide's source is `docs/Career_Hub_Guide.docx`: edit that
+   (also the version in its page header), then run `python tools/make_guide.py` to write `Career_Hub_Guide.pdf` for her
+   (uses Word or LibreOffice). Never edit the PDF by hand. No release without this.
 1. Bump `APP_VERSION` in `careerhub/config.py`.
 2. Add an entry at the top of `CHANGELOG` in `careerhub/changelog.py` (title, `new`, `fixed`).
 3. `python3 tools/make_release.py` (add `--urgent` for important fixes). It runs the self-test and writes `release.json`.

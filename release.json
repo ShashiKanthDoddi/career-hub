@@ -288,6 +288,10 @@
    "sha256": "dbeabddecbc7b5fc43b4a9bc20f1f0096f2dd20178e78e49e3739a7c1e287146"
   },
   {
+   "path": "tools/make_guide.py",
+   "sha256": "ed21bd93da306ca4ac7dbed0a274e9f486720638e83f3c58295ce17a7d120999"
+  },
+  {
    "path": "tools/make_release.py",
    "sha256": "ae626a43117aa3e9bbc5d837379810ec3bab2a05285745954427b58f49f2b95d"
   },
@@ -297,11 +301,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "163a5c2f1437feda7b0e9e5add1a030a9cef4812e7ed87985506b26ab0e97a0c"
+   "sha256": "9bd1237dcadf31a1f6dd20bcc1b517f9f1d3801a2c7bddb222da9a0f78f28eb5"
   },
   {
    "path": "MAP.md",
-   "sha256": "6b5477876de1881b70a853d82fa4cde14c8143a7c7b8d9231bb4b135f9fb836c"
+   "sha256": "f58f45cc69f4ed5ba37370d8e0643e123f4ac6042137f90070c0d3c7a54a30a0"
   },
   {
    "path": "Setup (Mac).command",

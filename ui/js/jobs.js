@@ -30,6 +30,11 @@ function renderJobs(){
           ${!cards.length ? `<div class="muted small" style="padding:8px 4px">Drop here</div>` : ""}</div>`; }).join("")}</div>`;
     $("#clearFilter") && ($("#clearFilter").onclick = () => { JFILTER = "all"; renderJobs(); });
     if (!JOBS.jobs.length) v.innerHTML = `<div class="panel">${emptyHTML("board", "No applications yet", "Every job you apply to shows up here, and moves along as emails come in.")}</div>`;
+    else if (!list.length && JFILTER !== "all"){      // a filter with nothing in it: say so instead of showing empty columns
+      v.innerHTML = `<div class="panel">${emptyHTML("board", `No jobs in “${esc(JFILTER === "replied" ? "heard back" : COLNAME[JFILTER] || JFILTER)}” yet`, `You have ${JOBS.jobs.length} job${JOBS.jobs.length > 1 ? "s" : ""} in other stages.`)}
+        <div class="row" style="justify-content:center;margin-top:10px"><button class="btn primary" id="clearFilter">Show all my jobs</button></div></div>`;
+      $("#clearFilter").onclick = () => { JFILTER = "all"; renderJobs(); };
+    }
     wireBoard();
   } else if (JVIEW === "list"){
     const list = filtered();

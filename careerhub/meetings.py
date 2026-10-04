@@ -104,8 +104,41 @@ def _time_near(text, pos):
     return f"{h:02d}:{mi:02d}"
 
 
+LINK_RE = re.compile(r"https?://[^\s<>\"')\]]*(?:zoom\.us|zoom\.com|meet\.google\.com|teams\.microsoft\.com|teams\.live\.com|webex\.com|"
+                     r"gotomeeting\.com|goto\.com|whereby\.com|bluejeans\.com|skype\.com|chime\.aws)[^\s<>\"')\]]*", re.I)
+WHO_RE = re.compile(r"(?i:\b(?:interviewers?|hiring manager|recruiter|you will (?:be )?(?:meet|meeting|speak|speaking|talk|talking) with|"
+                    r"(?:interview|call|meeting|chat|discussion) (?:will be )?(?:with|by)|(?:meet|speak|talk) with))"
+                    r"\s*(?:is|are|will be)?\s*[:\-]?\s*((?:Mr|Ms|Mrs|Dr)\.?\s+)?([A-Z][a-z]{1,15}(?:[ 	][A-Z][a-z]{1,15})?)")
+NOT_NAME = {"The", "Our", "Your", "Team", "Hiring", "Us", "You", "Her", "His", "Their", "Zoom", "Google", "Microsoft", "Teams",
+            "Meet", "Hr", "Recruitment", "Talent", "Please", "Interview", "Company", "Panel", "Manager", "This", "That"}
+ROUND_RE = re.compile(r"\b(first|second|third|final|initial|technical|hr|managerial|panel|screening|culture fit|case study)"
+                      r"\s+(?:round|interview|screen(?:ing)?|call|discussion|presentation)\b|\b(phone screen(?:ing)?)\b|\bround\s*(\d)\b", re.I)
+
+
+def find_details(text):
+    """Meeting link, interviewer's name and round written in an interview email. Only the parts found are returned."""
+    lines = re.sub(r"[ 	]+", " ", text or "")          # keeps line breaks, so a name does not run into the next line
+    flat = re.sub(r"\s+", " ", lines)
+    out = {}
+    m = LINK_RE.search(flat)
+    if m:
+        out["link"] = m.group(0).rstrip(".,;")[:500]
+    for m in WHO_RE.finditer(lines):
+        words = m.group(2).split()
+        if words[0] not in NOT_NAME:
+            out["who"] = ((m.group(1) or "").strip() + " " + " ".join(w for w in words if w not in NOT_NAME)).strip()
+            break
+    m = ROUND_RE.search(flat)
+    if m:
+        w = (m.group(1) or m.group(2) or "").lower()
+        out["round"] = (f"Round {m.group(3)}" if m.group(3) else "HR round" if w == "hr"
+                        else "Phone screen" if w.startswith("phone") else f"{w.capitalize()} round")
+    return out
+
+
 def find_meeting(text, sent):
-    """text: subject + email body. sent: datetime.date the email was sent. Returns {'date','time'} or None."""
+    """text: subject + email body. sent: datetime.date the email was sent. Returns {'date','time'} (plus 'link', 'who',
+    'round' when the email has them) or None."""
     found = _candidates(re.sub(r"\s+", " ", text or ""), sent)
     if not found:
         return None
@@ -115,7 +148,7 @@ def find_meeting(text, sent):
     zone = _zone_minutes(flat, pos) if t else None
     if zone is not None:
         d, t = _to_local(d, t, zone)
-    return {"date": d.isoformat(), "time": t}
+    return {"date": d.isoformat(), "time": t, **find_details(text)}
 
 
 CANCEL_RE = re.compile(r"\b(cancel(l)?ed|cancell?ation|no longer (going|able) to (hold|proceed)|called off)\b", re.I)

@@ -20,6 +20,11 @@ function links(t){ return [...new Set((t || "").split(/\s+/).filter(l => /^https
 function countUp(el, to){ if (reduce || !to){ el.textContent = to; return; } const t0 = performance.now();
   const step = t => { const k = Math.min(1, (t - t0) / 700); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
 
+/* a soft ripple where a button is clicked (styles.css .btn.rip); none in calm mode */
+document.addEventListener("pointerdown", e => { const b = e.target.closest?.(".btn"); if (!b || reduce || STATE.calm) return;
+  const r = b.getBoundingClientRect(); b.style.setProperty("--rx", (e.clientX - r.left) + "px"); b.style.setProperty("--ry", (e.clientY - r.top) + "px");
+  b.classList.remove("rip"); void b.offsetWidth; b.classList.add("rip"); clearTimeout(b._rip); b._rip = setTimeout(() => b.classList.remove("rip"), 650); });
+
 /* ===== navigation ===== */
 const PAGES = ["home","apply","find","jobs","profile","settings"];
 function go(p, opts={}){
@@ -29,7 +34,7 @@ function go(p, opts={}){
   $("#main").scrollTop = 0;
   if ((p === "profile" || p === "settings") && FORMS_STALE) drawForms();
   if (p === "home") loadHome();
-  if (p === "jobs") loadJobs(opts.filter);
+  if (p === "jobs") loadJobs(opts.filter || "all");     // from the sidebar: never keep an old stage filter (it looked like an empty board)
   if (p === "find"){ $("#navFound").hidden = true; if (!RESUME) loadResume(); loadFound(); }
   if (p === "settings") loadFeedback();
   if (p === "profile"){ loadAnswers(); loadHistory(); }
@@ -44,7 +49,7 @@ async function loadState(){
   $("#verSide").textContent = "Version " + STATE.version; $("#verTag").textContent = "You have version " + STATE.version;
   setSaved(links(STATE.jobs_text));
   $("#pauseToggle").checked = !/^no/i.test(val("pause_after_each_page") || "Yes");
-  $("#dailyFind").checked = STATE.daily; $("#autoSearch").checked = STATE.find_auto !== false;
+  $("#dailyFind").checked = STATE.daily; setFindMode(STATE.find_auto !== false ? "auto" : "mine");
   if (!COMPS.length && STATE.find_companies) STATE.find_companies.split(",").map(s => s.trim()).filter(Boolean).forEach(c => addTag("comp", c));
   if (STATE.find_roles && !ROLES.length) STATE.find_roles.split(",").map(s => s.trim()).filter(Boolean).forEach(r => addTag("role", r));
   FORMS_STALE = true; if (PAGE === "profile" || PAGE === "settings") drawForms();   // the big forms are only drawn when she opens them
@@ -56,7 +61,7 @@ function val(key){ const f = STATE.profile.find(f => f.key === key); return f ? 
 
 /* ===== confetti (only after a sent application or an offer) ===== */
 function confetti(){
-  if (reduce) return; const c = $("#confetti"), x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+  if (reduce || STATE.calm) return; const c = $("#confetti"), x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
   const colors = ["#FFD84D","#C0532B","#1A8F86","#D9506A","#2E8B4E"];
   const ps = Array.from({length:140}, () => ({x:innerWidth / 2, y:innerHeight * .35, vx:(Math.random() - .5) * 14, vy:-Math.random() * 12 - 4, r:Math.random() * 6 + 3, c:colors[Math.random() * 5 | 0], a:Math.random() * 6}));
   let f = 0; (function tick(){ x.clearRect(0, 0, c.width, c.height);

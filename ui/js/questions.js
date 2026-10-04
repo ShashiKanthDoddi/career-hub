@@ -10,7 +10,7 @@ function showAsk(q){
      <div class="row" style="margin-top:10px"><span class="kbdhint grow"><kbd>Enter</kbd> to save, <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span><button class="btn primary" id="askSave">Save answer</button></div>` : "";
   const choices = q.choices.map((c, i) => `<button class="btn ${c[2] === "primary" ? "primary" : c[2] === "danger" ? "danger" : ""}" data-c="${i}">${esc(c[0]).replace(/\s*→$/, "")}</button>`).join("");
   $("#layer").innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="sheet" style="--k:${color}">
-     <div class="sh"><div class="kind">${kind}</div><h2>${esc(q.title)}</h2>${q.message ? `<p class="msg">${esc(q.message)}</p>` : ""}</div>
+     <div class="sh"><div class="kind">${kind}</div><h2>${esc(q.title)}</h2>${q.message ? `<p class="msg">${esc(q.message)}</p>` : ""}${q.chrome ? `<p class="muted small">The Chrome window is now in front. Look there first, then come back here to answer.</p>` : ""}</div>
      <div class="sb">${table}${opts ? `<div style="margin-top:6px">${opts}</div>` : ""}${text}<div class="row" style="margin-top:14px">${choices}</div></div></div></div>`;
   $$("#layer .opt").forEach(b => b.onclick = () => reply(q.options[+b.dataset.i]));
   $$("#layer [data-c]").forEach(b => b.onclick = () => reply(q.choices[+b.dataset.c][1]));
@@ -21,8 +21,11 @@ function showAsk(q){
   else setTimeout(() => ($("#layer .opt") || $("#layer .btn.primary"))?.focus(), 30);
 }
 function reply(v){ if (!ASK) return; const id = ASK.id; ASK = null; $("#layer").innerHTML = "";
-  if (id === -1){ window._notice && window._notice(); return; } api_answer(id, v); }
+  if (id === -1){ window._notice && window._notice(v); return; } api_answer(id, v); }
 function notice(title, msg){ return new Promise(res => { window._notice = res; showAsk({id:-1, title, message:msg, options:[], choices:[["OK","ok","primary"]], text:false, table:[], kind:"info"}); }); }
+/* Yes / Cancel inside the app. Never use confirm(): the window is driven by Playwright, which closes those at once. */
+function askYes(title, msg, yes = "Yes"){ return new Promise(res => { window._notice = v => res(v === "yes");
+  showAsk({id:-1, title, message:msg, options:[], choices:[[yes, "yes", "primary"], ["Cancel", "no", "ghost"]], text:false, table:[], kind:"info"}); }); }
 
 /* ===== all new questions on a page, on one card (kind "form") ===== */
 function formField(x){

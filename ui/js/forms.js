@@ -100,10 +100,16 @@ const THEMES = {
   sand:["#23324A","#EFE7DA","#FAF6EE","#2F6D8A","light"], emerald:["#0A120F","#0E1915","#15251F","#3DD9A0","dark"],
   slate:["#0F1114","#16181C","#1E2126","#F0A43A","dark"], mint:["#12403A","#DDEBE6","#F2FAF7","#0E8A70","light"]};
 const THEME_LABEL = {emerald:"Emerald", mint:"Mint", sand:"Sand", slate:"Slate", clean:"Clean white"};
+// [label, sample font for the preview]; the real font stacks are in styles.css (data-font)
+const FONTS = {classic:["Classic","Segoe UI,system-ui,sans-serif"], friendly:["Friendly","Trebuchet MS,Avenir Next,sans-serif"],
+  elegant:["Elegant","Georgia,Palatino,serif"], bold:["Bold","Bahnschrift,Futura,Avenir Next Condensed,sans-serif"],
+  handwritten:["Handwritten","Segoe Print,Ink Free,Chalkboard SE,Marker Felt,cursive"]};
 const darkQuery = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme(t){
   const real = THEMES[t] ? t : "clean";
   document.documentElement.dataset.theme = real; document.documentElement.dataset.mode = THEMES[real][4];
+  document.documentElement.dataset.font = FONTS[STATE.font] ? STATE.font : "classic";
+  document.documentElement.dataset.motion = STATE.calm ? "calm" : "lively";
 }
 darkQuery.addEventListener("change", () => applyTheme(STATE.theme));
 function renderThemes(){
@@ -113,8 +119,16 @@ function renderThemes(){
     return `<button class="themecard ${t === cur ? "on" : ""}" data-t="${t}"><div class="pv"><div class="a" style="background:${sb}"></div>
       <div class="b" style="${half}"><i style="background:${acc}"></i><i style="background:${card}"></i><i style="background:${card}"></i></div></div><b>${THEME_LABEL[t]}</b></button>`; }).join("");
   $$(".themecard").forEach(b => b.onclick = () => setTheme(b.dataset.t));
+  const curF = FONTS[STATE.font] ? STATE.font : "classic";
+  $("#fonts").innerHTML = Object.keys(FONTS).map(f => `<button class="fontcard ${f === curF ? "on" : ""}" data-f="${f}">
+    <span style="font-family:${FONTS[f][1]}">Aa</span><b>${FONTS[f][0]}</b></button>`).join("");
+  $$(".fontcard").forEach(b => b.onclick = () => setFont(b.dataset.f));
+  $("#calmMotion").checked = !!STATE.calm;
+  $("#calmMotion").onchange = async e => { STATE.calm = e.target.checked; applyTheme(STATE.theme); await api_set_calm(STATE.calm);
+    toast(STATE.calm ? "Calm: fewer animations" : "Lively animations are back"); };
 }
 async function setTheme(t){ STATE.theme = t; applyTheme(t); renderThemes(); await api_set_theme(t); toast(`${THEME_LABEL[t]} theme`); }
+async function setFont(f){ STATE.font = f; applyTheme(STATE.theme); renderThemes(); await api_set_font(f); toast(`${FONTS[f][0]} letters`); }
 function versionHTML(v, open){ return `<details class="version ${v.version === STATE.version ? "cur" : ""}" ${open ? "open" : ""}>
   <summary>Version ${esc(v.version)}<span>${esc(v.title)}${v.version === STATE.version ? ", the one you have" : ""}</span></summary>
   <ul>${v.new.map(x => `<li>${esc(x)}</li>`).join("")}${v.fixed.map(x => `<li class="fx">Fixed: ${esc(x)}</li>`).join("")}</ul></details>`; }

@@ -24,7 +24,7 @@ $("#histAddWork").onclick = () => { collectHistory(); HIST.work.push({title: "",
 $("#histAddEdu").onclick = () => { collectHistory(); HIST.education.push({school: "", degree: "", field: "", start: "", end: "", grade: ""}); renderHistory(); };
 $("#histRead").onclick = async () => {
   collectHistory();
-  if ((HIST.work.length || HIST.education.length) && !confirm("Replace what is below with what the resume says?")) return;
+  if ((HIST.work.length || HIST.education.length) && !await askYes("Read your resume again?", "This replaces the jobs and education below with what your resume says.", "Replace them")) return;
   const b = $("#histRead"); b.disabled = true; const r = await api_read_history(); b.disabled = false;
   if (!r.ok) return toast(r.error, true);
   HIST = {work: r.work, education: r.education}; renderHistory(); $("#histState").textContent = "Check each box, then save"; toast("Read from your resume. Please check it."); };

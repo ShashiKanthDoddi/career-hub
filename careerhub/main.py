@@ -2,12 +2,17 @@
 run() returns RESTART_CODE when an update was installed, so the launcher starts the new version."""
 import asyncio
 import datetime
+import os
+import sys
+import threading
+import time
 from playwright.async_api import async_playwright
 from . import api
-from .bridge import LOG, UI, log
+from .bridge import LOG, UI, log, notify
 from .config import APP_NAME, APP_VERSION, APP_WINDOW_DIR, BASE, LOG_DIR, RESTART_CODE
 from .gmail import mail_settings
 from .launch import launch_chrome
+from .planner import due_reminders, reminder_text
 from .state import APP, JOB, PW, TASKS
 from .store import backup_data, data
 from .updater import confirm_started
@@ -63,14 +68,40 @@ async def mail_loop():
         await asyncio.sleep(3600)
 
 
+async def remind_loop():
+    """Every minute: a pop-up for an interview that starts within the hour (or today, if it has no time)."""
+    await asyncio.sleep(20)
+    while True:
+        try:
+            for e in due_reminders():
+                title, body = reminder_text(e)
+                log(f"⏰ {title}")
+                notify(title, body)
+        except Exception as e:
+            log(f"⚠  Interview reminder failed: {e}")
+        await asyncio.sleep(60)
+
+
 async def after_load(rolled_back):
     await asyncio.sleep(2)                     # the page's scripts are ready by then
     if rolled_back:
         await UI.emit({"type": "rolled_back", "from": rolled_back.get("from"), "to": rolled_back.get("to")})
 
 
+def _force_exit_soon(code, seconds=4):
+    """A background thread still busy (mail fetch, a waiting input()) would keep the black window open after the
+    app closes: asyncio.run waits for it. If we are not gone in a few seconds, leave anyway."""
+    def kill():
+        time.sleep(seconds)
+        try:
+            sys.stdout.flush()
+        finally:
+            os._exit(code)
+    threading.Thread(target=kill, daemon=True).start()
+
+
 async def main():
-    data()                                     # creates / upgrades Harshitha's Data on first run
+    data()                                    # creates / upgrades Harshitha's Data on first run
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     LOG["file"] = LOG_DIR / f"{datetime.datetime.now().strftime('%Y-%m-%d_%H%M')}.txt"
     log(f"{APP_NAME} {APP_VERSION} started")
@@ -89,7 +120,7 @@ async def main():
         page = app.pages[0] if app.pages else await app.new_page()
         await page.goto(UI_INDEX.as_uri())
         UI.page = page
-        for coro in (after_load(confirm_started()), update_loop(), mail_loop()):
+        for coro in (after_load(confirm_started()), update_loop(), mail_loop(), remind_loop()):
             t = asyncio.get_running_loop().create_task(coro)
             TASKS.add(t)
             t.add_done_callback(TASKS.discard)
@@ -109,11 +140,10 @@ async def main():
                     await c.close()
             except Exception:
                 pass
-    if APP["restart"]:
-        print("Restarting into the new version…")
-        return RESTART_CODE
-    print(f"{APP_NAME} closed. You can close this window.")
-    return 0
+    code = RESTART_CODE if APP["restart"] else 0
+    print("Restarting into the new version…" if code else f"{APP_NAME} closed.")
+    _force_exit_soon(code)
+    return code
 
 
 def run():

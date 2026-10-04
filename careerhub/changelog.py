@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.2',
+CHANGELOG = [{'version': '2.7.3',
+  'title': 'Opens maximised',
+  'new': ['The Career Hub window now always opens maximised, filling the screen'],
+  'fixed': []},
+ {'version': '2.7.2',
   'title': 'Reports reach GitHub on a Mac',
   'new': [],
   'fixed': ['Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly']},

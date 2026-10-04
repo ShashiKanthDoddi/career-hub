@@ -3,13 +3,24 @@ import datetime
 
 from .gmail import TYPE_LABELS, job_from_subject
 from .records import tracker_rows
-from .store import data
+from .store import STORE, data
 
 
 STAGE_ORDER = ["Offer", "Interview", "Assessment", "Waiting", "Rejected", "Applied", "NoResponse", "Draft", "Skipped", "Error"]
 
 
+_MEMO = {}
+
+
 def jobs_overview():
+    """Cached until the data is saved again (or the hour changes, since stages depend on dates)."""
+    key = (STORE.version, datetime.datetime.now().strftime("%Y-%m-%d %H"))   # interview times pass during the day
+    if _MEMO.get("key") != key:
+        _MEMO["key"], _MEMO["val"] = key, _build_overview()
+    return _MEMO["val"]
+
+
+def _build_overview():
     rows = tracker_rows()
     notes = data()["notes"]
     updates = data()["email_updates"]

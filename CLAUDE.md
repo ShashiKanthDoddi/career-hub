@@ -87,4 +87,6 @@ maintains it and ships fixes through automatic updates from GitHub.
 - The app window opens maximised (`main.open_app_window`: `--start-maximized`, then forced through Chrome's DevTools protocol because Chrome may restore a saved smaller size). She can still resize it.
 - "Show every opening at these companies" (`all_openings` in `finder.search_jobs`) skips the role, city, age and minimum-match filters and the web search; it only works for companies on the five supported systems.
 - Rejection wording is regex-based (`MAIL_TYPES` in `gmail.py`); a polite rejection with none of the listed phrases is still shown as an update.
+- Speed (2.8): the data file is saved compact (no indent) and `Store.version` counts saves; `jobs_overview` is cached on (version, hour), so anything that changes data must call `save_data()`. Profile/Settings forms are drawn only when opened (`FORMS_STALE`); My jobs tables (`api_tables`) are fetched only for the Accounts and Found tabs; Find jobs draws 60 rows at a time.
+- Duplicate warning (`api_found` `dup`) matches company and title exactly after `norm()`; a re-worded title is not caught. Interview prep tips (`api_prep`) need the Claude key and use only her resume, not the job text.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

@@ -119,6 +119,7 @@ def migrate_legacy(src):
 class Store:
     def __init__(self):
         self.d = None
+        self.version = 0                                 # goes up on every save: lets slow results (jobs_overview) be reused
 
     def load(self):
         if self.d is None:
@@ -159,7 +160,8 @@ class Store:
     def save(self):
         DATA.mkdir(exist_ok=True)
         tmp = DATA_FILE.with_name(DATA_FILE.name + ".tmp")
-        tmp.write_text(json.dumps(self.d, indent=1, ensure_ascii=False), encoding="utf-8")
+        self.version += 1
+        tmp.write_text(json.dumps(self.d, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")   # compact: about 5x faster than indent
         tmp.replace(DATA_FILE)
 
 

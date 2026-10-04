@@ -147,6 +147,10 @@ def main():
         {"id": "r2", "date": "2026-09-20T10:00", "company": "Zeta", "title": "", "subject": "Update", "type": "rejection", "link": ""}]}
     check(sorted((j["company"], j["stage"]) for j in _ov.jobs_overview()[0]) == [("Acme", "Rejected"), ("Zeta", "Rejected")],
           "My jobs: a rejection email that matched no link still shows (on the company's card, or its own)")
+    first = _ov.jobs_overview()
+    same = _ov.jobs_overview() is first
+    _ov.STORE.version += 1                                # any save makes the next call recompute
+    check(same and _ov.jobs_overview() is not first, "My jobs: overview is reused until the data is saved again")
 
     from careerhub.history import parse_history
     hh = parse_history("WORK EXPERIENCE\nSenior Manager\nAcme Corp, Bengaluru   Jan 2021 - Present\n- Led campaigns\n"

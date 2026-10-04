@@ -1,8 +1,20 @@
 {
- "version": "2.7.7",
+ "version": "2.8.0",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.8.0",
+   "title": "Quicker app, weekly summary and interview prep",
+   "new": [
+    "Home has a new \"Your last 7 days\" summary: applications sent, replies, interviews, offers, a weekly chart and a reminder when a job has had no reply for a week",
+    "Find jobs warns you when you already applied to the same job through another link, and leaves it unticked",
+    "Interview and test cards have a \"Get ready\" box with the date, a checklist and, with the AI helper on, prep tips written from your resume"
+   ],
+   "fixed": [
+    "The app opens pages faster: big forms and tables are only loaded when you open them, long job lists show 60 at a time, and saving is quicker"
+   ]
+  },
   {
    "version": "2.7.7",
    "title": "More rejection emails found",
@@ -66,16 +78,6 @@
    "fixed": [
     "The Chrome bar about an \"unsupported command-line flag\" no longer shows"
    ]
-  },
-  {
-   "version": "2.7.0",
-   "title": "A fresher look",
-   "new": [
-    "A cleaner design: separate coloured cards on Home, a lighter calendar, softer shadows and a tidier side bar"
-   ],
-   "fixed": [
-    "On My jobs the stage filter no longer stretches across the whole page"
-   ]
   }
  ],
  "files": [
@@ -89,7 +91,7 @@
   },
   {
    "path": "careerhub/ai.py",
-   "sha256": "a03f5e47e51e7a918cbbe9780291aff4850156e9e4521da4c35ec28efda5b042"
+   "sha256": "2702e5504a2da0190ac278e608382a785f7e402ebb3b0cb29c05f88c9a2081f5"
   },
   {
    "path": "careerhub/answers.py",
@@ -97,7 +99,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "d6deed0b1e323dc3f0fbda75a920ef2491665614e6e22f193de995a01d6c8599"
+   "sha256": "c0c0ef78fb9492c8176dc53308132ea0c4dc751de0d7ecc1bfaab0acac4f125d"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -113,11 +115,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "8f0fe4569efd3b3368f77aabdef8cba9ca070aefb14d61d98d154ab1ab1d5a9a"
+   "sha256": "a7d6ac8621e0b0061de9fcce0adc757d5028751c5ae03bbfa761f10223263b94"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "92296cee1bf722cde298414b52be732362efc676c154b9a538889a586cb442bf"
+   "sha256": "5db48520d7b63be12b341eee75aa4d8239d78678484f45fa3b13370fa3ff91b1"
   },
   {
    "path": "careerhub/filler.py",
@@ -153,7 +155,7 @@
   },
   {
    "path": "careerhub/overview.py",
-   "sha256": "3cffa2da00b17d0631538013c828fc2de721fc04ed6bb800f845f8cd445439ea"
+   "sha256": "c3d0a585c7ef006003e62de9c6ce2024f91314cf14c62eaa33cc48c0c5f3ec19"
   },
   {
    "path": "careerhub/page_js.py",
@@ -189,7 +191,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "a7457198d526c4d7ab1690451489d973a317f18593dc85f08e36bce326830681"
+   "sha256": "36ff21324fdb4974a0f464258e63452e155cae7b93cc8dccff9c58cb9e518844"
   },
   {
    "path": "careerhub/textutil.py",
@@ -205,11 +207,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "823c00827f375c87826c6c28f9275b4e2cdb9523516fbbd9d1e0ee5bd5fddb08"
+   "sha256": "bf6a11802aee5a35dd9e50df03d17b136accb5f741559f93627910dd4ad55c6b"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "182df61775e0206282e1cb8a4aa34eb061f249622ffe774500630f24a7abe308"
+   "sha256": "6f54ba03d992cfb41af92de2750ed28a86e71897d0c090d094514471fb90e750"
   },
   {
    "path": "ui/js/apply.js",
@@ -217,7 +219,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "fefada55a1ab9f0afa2c4865cfd0442f3dd79b02bc4968d8ed2e12bb4e90edd1"
+   "sha256": "f3606b5b8adc22eb89d95f83bbfb5adcd0c58a2eac01cde7cc580044e4f6a5aa"
   },
   {
    "path": "ui/js/events.js",
@@ -225,7 +227,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "44862d7b6bb5e75e6b3eb8c44dba42df265ee1a15b72ea01b4656a0084488e77"
+   "sha256": "cae683ab265fb881aa12dba72241e10799c0fa8d148bf1e3d469627bd22e5fa6"
   },
   {
    "path": "ui/js/forms.js",
@@ -237,11 +239,11 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "31805cfe9b7c58a5a4bf932929cfd3f0af5d276fc89652f0f7ae178b88238186"
+   "sha256": "ffaae1bd235f5b4e6bbb936f23e0ae2e4d144c2db914abc1792d439046eb00c3"
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "f12de420d629eb281e20717d142639d8975a0f466a704d52bfdceaeaec872cec"
+   "sha256": "54024cf41a43e42e6d866598b465492a26fe8065ee4c62fad9e52cc5ac5a25db"
   },
   {
    "path": "ui/js/palette.js",
@@ -277,15 +279,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "f236793cbf0bb33e7811b3fc5707999d611b8271017e38e6f9ce96f2642222e2"
+   "sha256": "b51066c5dea3a37fb68f85869b4b213b9668b362ee9e25482a4ed1cafcf919e9"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "f08c243d5942cfb03b08b7ea6534cf4ef979168d320d22960c62e927da1c62ed"
+   "sha256": "cdb4e5e79f111a32b8b2cc4f07e21cf50de8c2aba79c17e5ad51d337c609ff7f"
   },
   {
    "path": "MAP.md",
-   "sha256": "f885ef4a54e7afb10330f19af981a52a163ce257e1239bcbbf5c37a4492e068d"
+   "sha256": "e7311dbab69a7a7f376c635b460c1c1a6acc5e9d2164359804b1df748506612d"
   },
   {
    "path": "Setup (Mac).command",
@@ -304,5 +306,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "iBl+tPO24RciG7MLUZ9xAMaOql4Syp57B39PkZV9lekMdOm9Hnj0eHVUBb3B6txa/UaYbnZg1YMmMLqiIKmDAA=="
+ "signature": "438B4iBvdHowLYNQ9fTUQeRk3xnuvv3S9ayoMS+Dlz2i/C5AWhVruUu7OV69xQ38VWvWUN/piFOkRvae/egvDQ=="
 }

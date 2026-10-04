@@ -1,8 +1,16 @@
 {
- "version": "2.7.6",
+ "version": "2.7.7",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.7",
+   "title": "More rejection emails found",
+   "new": [],
+   "fixed": [
+    "Rejection emails worded without \"unfortunately\" (for example \"decided not to\", \"not shortlisted\", \"moving ahead with other candidates\") are now recognised, and older \"received\" cards are re-read once"
+   ]
+  },
   {
    "version": "2.7.6",
    "title": "Company search and tidier boards",
@@ -68,14 +76,6 @@
    "fixed": [
     "On My jobs the stage filter no longer stretches across the whole page"
    ]
-  },
-  {
-   "version": "2.6.21",
-   "title": "Sign-in fix",
-   "new": [],
-   "fixed": [
-    "Google no longer says \"This browser or app may not be secure\" when you sign in to LinkedIn in the job window"
-   ]
   }
  ],
  "files": [
@@ -113,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "19bf8f4a96e4b300b6da2f6d17214fee70fb2217bf70592341f08b4b481b4986"
+   "sha256": "8f0fe4569efd3b3368f77aabdef8cba9ca070aefb14d61d98d154ab1ab1d5a9a"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "17d623c9491d17913698a76d1081aca29b70b08d078d9d7ac20597c992a6c23c"
+   "sha256": "92296cee1bf722cde298414b52be732362efc676c154b9a538889a586cb442bf"
   },
   {
    "path": "careerhub/filler.py",
@@ -129,7 +129,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "a3055649870204961ca1d0492ea7bf2ef519213e66e2c43881890ab5c7bf87c6"
+   "sha256": "5fd2ca8863185bdbeaa3f2f5c8a433d90b32eb6afad4bad667320556711e6835"
   },
   {
    "path": "careerhub/history.py",
@@ -277,11 +277,11 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "7d6955ec977699c062e73c7f3b6e32830d47cf06c468534f8e692a1326c52fb9"
+   "sha256": "f236793cbf0bb33e7811b3fc5707999d611b8271017e38e6f9ce96f2642222e2"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "d95eb306360c68fe8ca84102309f4e6f58b5825c439179668878f1e6c08670a0"
+   "sha256": "f08c243d5942cfb03b08b7ea6534cf4ef979168d320d22960c62e927da1c62ed"
   },
   {
    "path": "MAP.md",
@@ -304,5 +304,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "yw+S3IvBGlXdrsTO7+E235I2/DcywuhTGbBqF3rebb7nGsgXGV2I/FxWRLjcbLV93OTrhEOmGR/FoYH2AM5nCQ=="
+ "signature": "iBl+tPO24RciG7MLUZ9xAMaOql4Syp57B39PkZV9lekMdOm9Hnj0eHVUBb3B6txa/UaYbnZg1YMmMLqiIKmDAA=="
 }

@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.6',
+CHANGELOG = [{'version': '2.7.7',
+  'title': 'More rejection emails found',
+  'new': [],
+  'fixed': ['Rejection emails worded without "unfortunately" (for example "decided not to", "not shortlisted", "moving ahead with other candidates") are now recognised, and older "received" cards are re-read once']},
+ {'version': '2.7.6',
   'title': 'Company search and tidier boards',
   'new': ['Find jobs has a new tick box, "Show every opening at these companies": type a company and see all its current jobs',
           'The browser keeps your logins more reliably, and says so in the log if it cannot save them'],

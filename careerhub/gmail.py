@@ -24,7 +24,11 @@ MAIL_TYPES = [
     ("rejection", r"unfortunately|regret to inform|not (be )?(moving|move|proceed|proceeding) forward|decided to "
                   r"(move forward|proceed|pursue|go ahead) with other|other candidates|will not be (progressing|proceeding|"
                   r"moving)|not been selected|were not selected|position has (now )?been filled|no longer (under "
-                  r"consideration|being considered)|not (a|the right) (fit|match)|we won.t be (moving|progressing)"),
+                  r"consideration|being considered)|not (a|the right) (fit|match)|we won.t be (moving|progressing)|"
+                  r"decided not to|(move|moving|proceed|proceeding|go|going) (ahead|forward) with (other|another|different)|"
+                  r"(continue|continuing) with (other|another)|not (been )?shortlisted|not successful|unsuccessful|"
+                  r"unable to (offer|move|proceed|take)|regret|after careful (consideration|review)|"
+                  r"pursue (other|another)|not (be )?selected"),
     ("interview", r"\binterview|schedule (a|an|your) (call|chat|conversation|meeting)|phone screen|next round|your "
                   r"availability|calendly\.com|meet with (you|our)|speak with you|invite you to"),
     ("assessment", r"\bassessment|\bassignment|case study|take.?home|online test|hackerrank|testgorilla|task for you"),
@@ -39,7 +43,8 @@ MAIL_SKIP = re.compile(r"verify your (email|account)|confirm your email|activate
 
 
 JOB_WORDS = re.compile(r"applica|applied|interview|position|candida|opportunit|offer|assessment|recruit|hiring|role\b|"
-                       r"next steps|talent", re.I)
+                       r"next steps|talent|update on|status of|regarding your|thank you for your|unfortunately|regret|shortlist|"
+                       r"not selected|your interest|your candidacy|your profile", re.I)
 
 
 BOARD_SENDERS = ALERT_SENDERS + ("ambitionbox", "glassdoor", "foundit", "monster", "shine.com", "instahyre", "cutshort",
@@ -316,15 +321,15 @@ async def check_mail(manual=False):
                       if not (any(b.split(".")[0] in (u.get("from") or "").lower() for b in BOARD_SENDERS)
                               and classify_mail(u.get("subject", ""), "") not in ("interview", "assessment", "offer"))]
         old_unmatched = {}
-        if st.get("label_scan") != 3:                   # re-read cards that got a person's name as the company
-            old_unmatched = {u["id"]: u for u in updates if not u.get("link")}
+        if st.get("label_scan") != 4:                   # re-read unmatched cards and "received"/"update" ones (a rejection may hide there)
+            old_unmatched = {u["id"]: u for u in updates if not u.get("link") or u.get("type") in ("received", "other")}
             updates[:] = [u for u in updates if u["id"] not in old_unmatched]
         known = {u["id"]: u.get("type") for u in updates}
         try:
             last = datetime.datetime.fromisoformat(st.get("last_mail_check", "")) - datetime.timedelta(days=2)
         except Exception:
             last = datetime.datetime.now() - datetime.timedelta(days=60)
-        if st.get("label_scan") != 3:                   # one wider pass so labelled mail from before label reading is sorted
+        if st.get("label_scan") != 4:                   # one wider pass so labelled mail from before label reading is sorted
             last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
         rows = list(reversed(tracker_rows()))
         log("📬 Checking the job inbox for updates…")
@@ -364,7 +369,7 @@ async def check_mail(manual=False):
         if booked:
             log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
         save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="",
-                       label_scan=3)
+                       label_scan=4)
         counts = {}
         for u in new:
             counts[u["type"]] = counts.get(u["type"], 0) + 1

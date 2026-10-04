@@ -86,4 +86,5 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Logins persist because `launch.py` re-saves session cookies (`.job_browser_cookies.json`, `.app_window_cookies.json` in her data folder, plain text) every minute; a login made in the last minute before closing may be lost.
 - The app window opens maximised (`main.open_app_window`: `--start-maximized`, then forced through Chrome's DevTools protocol because Chrome may restore a saved smaller size). She can still resize it.
 - "Show every opening at these companies" (`all_openings` in `finder.search_jobs`) skips the role, city, age and minimum-match filters and the web search; it only works for companies on the five supported systems.
+- Rejection wording is regex-based (`MAIL_TYPES` in `gmail.py`); a polite rejection with none of the listed phrases is still shown as an update.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

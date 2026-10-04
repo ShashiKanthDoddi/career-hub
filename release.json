@@ -1,8 +1,25 @@
 {
- "version": "2.6.15",
+ "version": "2.6.17",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.17",
+   "title": "Rejection emails show again",
+   "new": [],
+   "fixed": [
+    "Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card"
+   ]
+  },
+  {
+   "version": "2.6.16",
+   "title": "Waiting for reply and No response",
+   "new": [
+    "My jobs has a \"Waiting for reply\" column: an interview card moves there by itself once the interview date has passed",
+    "My jobs has a \"No response\" column: jobs you applied to 30 or more days ago with no reply move there by itself"
+   ],
+   "fixed": []
+  },
   {
    "version": "2.6.15",
    "title": "Each rejection gets its own card",
@@ -58,24 +75,6 @@
    "fixed": [
     "\"You applied for 5 jobs\" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed"
    ]
-  },
-  {
-   "version": "2.6.9",
-   "title": "Updates keep working",
-   "new": [],
-   "fixed": [
-    "After one update, the next update could fail to restart the app. The start file is now kept in the right format"
-   ]
-  },
-  {
-   "version": "2.6.8",
-   "title": "Filters on your job lists",
-   "new": [
-    "Find jobs results can be filtered by job, company or city, how recently posted, and minimum match, and sorted by best match, newest or company",
-    "The Apply list has a filter box",
-    "My jobs: search now works on Emails, Accounts and Found, and a stage list narrows the Board and List"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -97,7 +96,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "196c2098185861e87c1caf6edccd3e7f116e880223e7685e5f415118359b4d5a"
+   "sha256": "49c6608f9c09d449460e46fb797527824ae59f3760533fb0fca21132901d3af7"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -113,11 +112,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "2bd396d10b0dc1e754394c2eeed3c0b81483b0fd7873d5d8fd94945003fac586"
+   "sha256": "186a9c981662df84cd56060e152361706dee0fd9d5cf73b508d4a89656e0485d"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "3fe5bee7e618b5b019c29905b896b9b76c011f72cc95f102c14ce5b0eaeecbdf"
+   "sha256": "484a6dae22255a4c0c5a2a742e8d9a3c0cb5095f65ebc81688cf4b792285537b"
   },
   {
    "path": "careerhub/filler.py",
@@ -153,7 +152,7 @@
   },
   {
    "path": "careerhub/overview.py",
-   "sha256": "389956ed69495df82b71871c9e14efb3d14df9b7fe4d9509d3957b1337ee8537"
+   "sha256": "3cffa2da00b17d0631538013c828fc2de721fc04ed6bb800f845f8cd445439ea"
   },
   {
    "path": "careerhub/page_js.py",
@@ -201,11 +200,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "d5d8537d368a416f01a35d199ff26d5f358e9321207bf4e5f9259a37a9de5776"
+   "sha256": "7b337a771b952045246a6b3103ad6a2f6cdd8b9d09c9dda515850b6290265c08"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "1324bf837b11094d5f44dcff46736577dd5767f2cbfeed3237e2b33d7dd46b38"
+   "sha256": "eaab49b4473565086d0a1b9170b699ff7001941b7a525c529c2a9e929bdb2be7"
   },
   {
    "path": "ui/js/apply.js",
@@ -237,7 +236,7 @@
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "940fae7f835965bb080b8a0fc73278fe99e3f579682207e9615f354cb5119c11"
+   "sha256": "f12de420d629eb281e20717d142639d8975a0f466a704d52bfdceaeaec872cec"
   },
   {
    "path": "ui/js/palette.js",
@@ -269,15 +268,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "9ab19e6822fc0fb602ada608816fc7093af0ad396020128abf9075b2baafacee"
+   "sha256": "e2425ddae3c251c8b109bec8d75fb8a9c03c1fdaac195330c0bb5488b3eed84c"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "2b7babfbf7602e54cb927f1e07a8958892e98f70c8ed7c9c3fde24334373abbb"
+   "sha256": "5860e88fa7a876c13263fb0952ec5ffca7d1a1ef2df671ddb11c4cc9d26dabc6"
   },
   {
    "path": "MAP.md",
-   "sha256": "229d540299605f2965089a8a424aa862c74f5778d3a1b05ec15a10fefcbe1dba"
+   "sha256": "1f1cda63750dac7599cdd3eb7b284083eb2439eec7fd6ea41ea81c35d165c889"
   },
   {
    "path": "Setup (Mac).command",

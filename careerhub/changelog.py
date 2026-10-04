@@ -1,6 +1,15 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.15',
+CHANGELOG = [{'version': '2.6.17',
+  'title': 'Rejection emails show again',
+  'new': [],
+  'fixed': ['Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card']},
+ {'version': '2.6.16',
+  'title': 'Waiting for reply and No response',
+  'new': ['My jobs has a "Waiting for reply" column: an interview card moves there by itself once the interview date has passed',
+          'My jobs has a "No response" column: jobs you applied to 30 or more days ago with no reply move there by itself'],
+  'fixed': []},
+ {'version': '2.6.15',
   'title': 'Each rejection gets its own card',
   'new': ['You can add a second and third job Gmail in Settings, and the app reads all of them',
           'Home shows a "See all emails" link, and the emails list shows 25 at a time with Show more'],

@@ -116,6 +116,7 @@ textarea{resize:vertical;min-height:90px}
 .s-Applied,.s-received,.s-other{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
 .s-Interview{background:var(--teal-soft);color:var(--teal)}.s-Assessment{background:var(--violet-soft);color:var(--violet)}
 .s-Offer{background:var(--green-soft);color:var(--green)}.s-Rejected{background:var(--rose-soft);color:var(--rose)}
+.s-Waiting{background:var(--amber-soft);color:var(--amber)}.s-NoResponse{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
 .s-Draft{background:var(--amber-soft);color:var(--amber)}.s-Skipped,.s-Error{background:var(--surface-2);color:var(--muted)}
 .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r-m)}
 table{border-collapse:collapse;width:100%;font-size:14px}

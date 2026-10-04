@@ -61,6 +61,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 - Mail from job boards (`BOARD_SENDERS` in `gmail.py`: Naukri, AmbitionBox, LinkedIn…) is judged by subject only; digests never become interview cards.
 - Gmail labels (`X-GM-LABELS`, read from All Mail) decide the mail type via `label_kind` in `gmail.py`: names containing interview/assessment/reject/offer; "Job boards" is skipped. The whole label path counts (Rejected/Naukri), and one 180-day re-scan (`label_scan` in app state) re-sorts older mail. The company comes from the sender name only if it looks like a company; otherwise from the mail domain (`company_from_sender`). Job-board senders without a strong subject are dropped, not shown as Update.
 - A new version is downloaded in the background as soon as it is found (`prefetch_update`); "Update now" installs the cached files.
+- My jobs stages "Waiting for reply" (Interview whose date, from the email or the calendar entry, has passed; no date = stays Interview) and "No response" (Applied 30+ days, `NO_REPLY_DAYS`) are derived in `overview._timed_stage`, not stored. A hand-set stage holds until the derived stage changes.
 - Cards from emails with no tracker row are made in `overview.py` (key `mail:<company>`); a stage she set by hand holds only until the auto stage changes.
 - Captchas are never solved: if one is empty, the app asks her to type it in Chrome before it clicks Submit.
 - Calendar pop-up date boxes are set by script (jQuery datepicker if present, else dd/mm/yyyy); other picker libraries are untested.

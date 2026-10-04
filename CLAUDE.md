@@ -42,10 +42,13 @@ maintains it and ships fixes through automatic updates from GitHub.
 
 ## Release (automatic update to her laptop)
 
-0. **Update the documentation first**: `MAP.md` (new/changed modules), `CLAUDE.md` (rules, known limits), and the
-   user guide when something she sees or sets has changed. The guide's source is `docs/Career_Hub_Guide.docx`: edit that
-   (also the version in its page header), then run `python tools/make_guide.py` to write `Career_Hub_Guide.pdf` for her
-   (uses Word or LibreOffice). Never edit the PDF by hand. No release without this.
+0. **Update the documentation once per day** (saves tokens): the first release of a day updates `MAP.md` (new/changed
+   modules), `CLAUDE.md` (rules, known limits), and the user guide when something she sees or sets has changed, covering
+   every change since the last docs update (see `Docs updated:` at the top of `MAP.md`, then set it to today and the version).
+   Later releases the same day skip this step (their changes go into the next day's docs update), unless the change is
+   important (a new setting or page she uses, a changed rule or security behaviour, an `--urgent` release): then update now.
+   The guide's source is `docs/Career_Hub_Guide.docx`: edit that (also the version in its page header), then run
+   `python tools/make_guide.py` to write `Career_Hub_Guide.pdf` for her (uses Word or LibreOffice). Never edit the PDF by hand.
 1. Bump `APP_VERSION` in `careerhub/config.py`.
 2. Add an entry at the top of `CHANGELOG` in `careerhub/changelog.py` (title, `new`, `fixed`).
 3. `python3 tools/make_release.py` (hashes use LF line ends, like GitHub serves, so CRLF files on Windows still verify) (add `--urgent` for important fixes). It runs the self-test and writes `release.json`.
@@ -87,6 +90,7 @@ maintains it and ships fixes through automatic updates from GitHub.
 - The app window opens maximised (`main.open_app_window`: `--start-maximized`, then forced through Chrome's DevTools protocol because Chrome may restore a saved smaller size). She can still resize it.
 - "Show every opening at these companies" (`all_openings` in `finder.search_jobs`) skips the role, city, age and minimum-match filters and the web search; it only works for companies on the five supported systems.
 - Rejection wording is regex-based (`MAIL_TYPES` in `gmail.py`); a polite rejection with none of the listed phrases is still shown as an update.
+- Mail sorting (2.8.2, `process_mail`): Gmail Promotions/Social are skipped at scan time (job alerts and ATS mail kept); newsletters (`is_bulk`: List-Unsubscribe, bulk header, marketing sender) are judged by subject only; the full text is read only for mail tied to her applications (tracked company, ATS, reply thread); other job-like mail needs 2 points for interview/test. Types are scored (`type_scores`: subject 3, text 1 each, quoted replies and `NOT_INVITE` phrases ignored); an offer or rejection wins when found. "Not a job email" (`api_not_job`) adds the sender to `mail_blocked` (data, schema 6); there is no unblock in the app yet. One re-sort pass (`label_scan` 6) re-checks old interview/received cards; cards too old to re-read are kept.
 - Speed (2.8): the data file is saved compact (no indent) and `Store.version` counts saves; `jobs_overview` is cached on (version, hour), so anything that changes data must call `save_data()`. Profile/Settings forms are drawn only when opened (`FORMS_STALE`); My jobs tables (`api_tables`) are fetched only for the Accounts and Found tabs; Find jobs draws 60 rows at a time.
 - Duplicate warning (`api_found` `dup`) matches company and title exactly after `norm()`; a re-worded title is not caught. Interview prep tips (`api_prep`) need the Claude key and use only her resume, not the job text.
 - Passwords, the Gmail app password and the API key are stored in plain text in the data file (her choice).

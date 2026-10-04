@@ -12,7 +12,7 @@ function openActivity(){
 }
 $("#activityBtn").onclick = openActivity;
 /* Pictures for a report or idea: pick files or paste a screenshot (Ctrl+V anywhere in the box). Up to 5, each under 5 MB. */
-let PICS = [];
+let PICS = [], PIC_PASTE = null;
 const picsHtml = () => `<div class="row" style="margin-top:10px"><label class="btn" style="cursor:pointer">Add a picture<input type="file" id="picIn" accept="image/*" multiple hidden></label><span class="muted">or press Ctrl+V to paste a screenshot</span></div><div class="row" id="picList" style="margin-top:8px;gap:8px"></div>`;
 function picsInit(){
   PICS = [];
@@ -23,9 +23,11 @@ function picsInit(){
     if (f.size > 5e6) return toast("That picture is too big (over 5 MB)", true);
     const r = new FileReader(); r.onload = () => { PICS.push({ name: f.name || "screenshot.png", data: String(r.result).split(",")[1] }); draw(); }; r.readAsDataURL(f); });
   $("#picIn").onchange = e => { add(e.target.files); e.target.value = ""; };
-  const onPaste = e => { if (!$("#picList")) return document.removeEventListener("paste", onPaste);
-    const fs = [...(e.clipboardData?.files || [])]; if (fs.length) { e.preventDefault(); add(fs); } };
-  document.addEventListener("paste", onPaste);
+  // One listener only: each opening of the form replaces the previous one (several meant one Ctrl+V added several pictures).
+  if (PIC_PASTE) document.removeEventListener("paste", PIC_PASTE);
+  PIC_PASTE = e => { if (!$("#picList")) return;
+    const fs = [...(e.clipboardData?.files || [])].slice(0, 1); if (fs.length) { e.preventDefault(); add(fs); } };
+  document.addEventListener("paste", PIC_PASTE);
 }
 function openReport(){
   $("#layer").innerHTML = `<div class="modal"><div class="sheet" style="--k:var(--rose)"><div class="sh"><div class="kind">Report a problem</div><h2>What went wrong?</h2>

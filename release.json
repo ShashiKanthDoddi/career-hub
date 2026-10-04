@@ -1,8 +1,21 @@
 {
- "version": "2.8.1",
+ "version": "2.8.2",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.8.2",
+   "title": "Smarter email sorting",
+   "new": [
+    "Cards in \"Needs you\" have a new ✕ button, \"Not a job email\": it hides the card and stops showing emails from that sender"
+   ],
+   "fixed": [
+    "Newsletters and adverts (for example \"interview tips\" or \"practice test\" emails) are no longer shown as interviews",
+    "Emails in Gmail's Promotions and Social tabs are skipped, so checking email is quicker",
+    "Older cards are sorted again once with the new rules, and wrong ones are removed",
+    "Pasting a screenshot into Report a problem adds it only once"
+   ]
+  },
   {
    "version": "2.8.1",
    "title": "Check email shows its progress",
@@ -70,14 +83,6 @@
     "The Career Hub window now always opens maximised, filling the screen"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.7.2",
-   "title": "Reports reach GitHub on a Mac",
-   "new": [],
-   "fixed": [
-    "Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly"
-   ]
   }
  ],
  "files": [
@@ -99,7 +104,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "c0c0ef78fb9492c8176dc53308132ea0c4dc751de0d7ecc1bfaab0acac4f125d"
+   "sha256": "80baa75a8eaaee5cb4a602f3d7654a91c6a6fa4df0855682bbba31dc1db25fd0"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -115,11 +120,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "74b327c52f987cf4d1b6f08e0ccf684cd9e915947d64ca1bbcce42204da1c558"
+   "sha256": "9ec9cfe8ca0f1d17deec0c88ee9e64b1c55074f8f68dc5cd39bbe83286a5fbd0"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "6bde7a616e9beb0d66feea9d87566cef9b593ac9bb0e18a9b07331669c999b9d"
+   "sha256": "7b747589cb01f77a7618a8a519cf07d0c55f83aa3a07587f1e5f0a693dab781b"
   },
   {
    "path": "careerhub/filler.py",
@@ -131,7 +136,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "4aaaff533df636547b5fa43f02f44eacf22c89cfe49c6f63e21118691aef2bf1"
+   "sha256": "ba69f0ee560da3d8c19895d43bc743bdffd2607913628b2a7d6122877442b804"
   },
   {
    "path": "careerhub/history.py",
@@ -191,7 +196,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "36ff21324fdb4974a0f464258e63452e155cae7b93cc8dccff9c58cb9e518844"
+   "sha256": "fb2d3f8c7b3d1ec1875b0e32d4e00c46cefe254bcfa31e9c3f77ebf58f5cd63f"
   },
   {
    "path": "careerhub/textutil.py",
@@ -239,7 +244,7 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "0b48022a80f07c516b0f623aaf3d644f314602b76c0a33fa49d7c17d2c3467ab"
+   "sha256": "0bb6a5be0a4b8dd9aa350a2a4cbdd48918eb609f946f673aeb6d1a580a1b3832"
   },
   {
    "path": "ui/js/jobs.js",
@@ -247,7 +252,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "bfb31c73ece568136f858d3863392b77794c59205675fb2d514dd5c4e61f3dd9"
+   "sha256": "bbe46bab0f6bdf5c7afc0e1f0de31865bb939448648d50f7636a253463f6bf53"
   },
   {
    "path": "ui/js/planner.js",
@@ -279,15 +284,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "b51066c5dea3a37fb68f85869b4b213b9668b362ee9e25482a4ed1cafcf919e9"
+   "sha256": "9b4c936d52a3f4cb34ea1765356e5823d55cc14ac9e309e9f03bc5d6f8eeaade"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "7b766b5c7d8378cc0e8687050e3c841237064e1c827c1133c99eb26f23126be4"
+   "sha256": "fb327c6a570091b35496afc0fa950a363f30e9518f369fb4612ae37acc76233c"
   },
   {
    "path": "MAP.md",
-   "sha256": "68b9f03a9b1971be068a0b8abc036e683b52913c41ab2143c0367fade845ab19"
+   "sha256": "fea092a9e600c5fb90ddc2daf7602e8feb6ef9ec2276c5468294e7edf2965dae"
   },
   {
    "path": "Setup (Mac).command",
@@ -306,5 +311,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "C7FYnECXx/8TGztrtwoO2CJWPw5h1XNy7S26iNnbK9AoGLfpn3Wp3nCH5cKL0h5vt/+Aooh9F+aMjnqklRo0Cw=="
+ "signature": "22EipAF0a0GPofyV1g4Ax0DsvD9FMiOjOUPP1uwLsmM5twPQMNZofbdHh3ahETlGoSCmp41U+HTL0kQI/e2kDg=="
 }

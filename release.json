@@ -1,8 +1,18 @@
 {
- "version": "2.6",
+ "version": "2.6.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.1",
+   "title": "Updates in the side menu",
+   "new": [
+    "An Updates button at the bottom of the left menu checks for a new version, and shows a \"new\" tag when one is waiting"
+   ],
+   "fixed": [
+    "The update source is set automatically, so the empty box is gone from Settings"
+   ]
+  },
   {
    "version": "2.6",
    "title": "Work history on Workday, and smarter interview dates",
@@ -108,25 +118,6 @@
     "Sidebar didn't reach the bottom of the window",
     "Version 2.1 was listed twice in What's new"
    ]
-  },
-  {
-   "version": "2.1",
-   "title": "A fresh new look",
-   "new": [
-    "Redesigned app with a sidebar, a job-hunt funnel on Home and calmer, clearer screens",
-    "My jobs is now a board: drag a card to change its stage, click it for emails and notes",
-    "New Settings page: appearance, job email, logins, job search, AI helper, help, updates and what's new",
-    "Quick actions: press ⌘K (Ctrl+K on Windows) to jump anywhere or run a command",
-    "Pasted links turn into chips that show the job site, and you can save them for later in one click",
-    "Find jobs shows a match ring for every result, with select-all and one-click apply or save",
-    "Drop your resume onto Profile to add it",
-    "Questions can be answered with the number keys",
-    "A small celebration when an application is sent or an offer comes in",
-    "Press 1 to 6 to switch pages"
-   ],
-   "fixed": [
-    "Unsaved changes are now clearly shown, with Save and Discard buttons"
-   ]
   }
  ],
  "files": [
@@ -164,11 +155,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "51ce51e2f441e22cf91c5f517e62b2d55593493973f3df736789edf0243c48f1"
+   "sha256": "8de9ee499d15a23eff6c952fb57b9a57b10602e42fafdcbe70b4d8aa2aa74cfd"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "dcb8f20e615477776b427a820e0db1313d9c0648eaa964bb8aee4404d7f9c5de"
+   "sha256": "e743afa036afc986721c06e8f50627b5e60da7806cbd9ce779f32f261def33e8"
   },
   {
    "path": "careerhub/filler.py",
@@ -216,7 +207,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "7d0272790ab14b2f6c5c1c1b200ec7da28d4f05cf9047ee1456de47b8ca0dfe4"
+   "sha256": "6d25d0b91c96dbded65395a64732a5f4d46a21b4cdf3de4d873f99f21f21d392"
   },
   {
    "path": "careerhub/records.py",
@@ -248,11 +239,11 @@
   },
   {
    "path": "careerhub/workday.py",
-   "sha256": "4de9b22c704102ec0bcd9a57cf85b454fc56f26d3fd3aeeca4b1325a5cb0ed5f"
+   "sha256": "7e255ce25ab45eadd94ecd7b187c8b67e830e517446d44dbbf8a52e2d27fcead"
   },
   {
    "path": "ui/index.html",
-   "sha256": "5d552f60cfc76f97d2c5490a6a462ed740c746146f08721fdd9d7171a8c723dc"
+   "sha256": "747e0ac0cddebf90a4e2cd940853b460da61b3ce6771d4a79c14ff85b5095f43"
   },
   {
    "path": "ui/styles.css",
@@ -268,7 +259,7 @@
   },
   {
    "path": "ui/js/events.js",
-   "sha256": "04605b8a79dde779efb4ce3844be0d3662765607544a8c754a0599af2741fa21"
+   "sha256": "d638c50beca153796ceb4dcf4f84ba49823691e4e9847a1899e37515ab163e0f"
   },
   {
    "path": "ui/js/find.js",
@@ -276,7 +267,7 @@
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "b904682a75f9f7a485fc2bd50c0b1e2ab916b97da4d40d3d33e5ea66a13e0ef0"
+   "sha256": "7a172ea38968fca9cf1c94dcdc21f8ff91ec97e504472f410d188b1511538611"
   },
   {
    "path": "ui/js/history.js",
@@ -328,7 +319,7 @@
   },
   {
    "path": "MAP.md",
-   "sha256": "e0876548093bb36cb9045c206905d4d9c0588c8a7fc02dc43e9137f51e6e81f1"
+   "sha256": "40a95327d492c52b7ffe0c564f3cf4b5a20639fd9e8b07ff7f4f5fdfab1e41c2"
   },
   {
    "path": "Setup (Mac).command",

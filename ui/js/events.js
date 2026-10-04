@@ -29,13 +29,15 @@ function filledToast(items){
 
 /* ===== updates ===== */
 async function checkUpdates(manual){
-  const b = $("#checkUpdBtn"); if (b){ b.disabled = true; b.lastChild.textContent = "Checking"; }
+  const b = $("#checkUpdBtn"), sb = $("#sideUpd span"); if (b){ b.disabled = true; b.lastChild.textContent = "Checking"; } sb.textContent = "Checking";
   await api_check_update(!!manual);
-  if (b){ b.disabled = false; b.lastChild.textContent = "Check for updates"; }
+  if (b){ b.disabled = false; b.lastChild.textContent = "Check for updates"; } sb.textContent = "Updates";
 }
+$("#sideUpd").onclick = () => checkUpdates(true);
 function updateResult(ev){
   STATE.last_update_check = new Date().toISOString(); renderUpdateInfo();
   if (!ev.ok){ if (ev.manual) toast(ev.error, true); return; }
+  $("#navUpd").hidden = !ev.available;
   if (!ev.available){ if (ev.manual) toast(`You have the latest version (${ev.version})`); return; }
   const list = (ev.notes || []).map(v => `<div class="version cur" style="margin-bottom:10px"><b>Version ${esc(v.version)}: ${esc(v.title)}</b>
      <ul>${v.new.map(x => `<li>${esc(x)}</li>`).join("")}${(v.fixed || []).map(x => `<li class="fx">Fixed: ${esc(x)}</li>`).join("")}</ul></div>`).join("");
@@ -51,9 +53,8 @@ function updateResult(ev){
 }
 function renderUpdateInfo(){
   const el = $("#updInfo"); if (!el) return;
-  el.textContent = STATE.update_source ? (STATE.last_update_check ? "Last checked " + when(STATE.last_update_check).toLowerCase() + " at " +
-    new Date(STATE.last_update_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "Not checked yet")
-    : "Updates come from GitHub once your helper adds the update source below.";
+  el.textContent = STATE.last_update_check ? "Last checked " + when(STATE.last_update_check).toLowerCase() + " at " +
+    new Date(STATE.last_update_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "Not checked yet";
 }
 
 /* ===== start ===== */

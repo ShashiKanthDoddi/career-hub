@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.1',
+CHANGELOG = [{'version': '2.7.2',
+  'title': 'Reports reach GitHub on a Mac',
+  'new': [],
+  'fixed': ['Report a problem and Suggest a feature could not reach GitHub on a Mac (a certificate error). They now connect properly']},
+ {'version': '2.7.1',
   'title': 'Stay signed in',
   'new': ['LinkedIn and other sites you sign in to in the job window stay signed in after you close and reopen the app'],
   'fixed': ['The Chrome bar about an "unsupported command-line flag" no longer shows']},

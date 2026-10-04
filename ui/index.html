@@ -184,8 +184,16 @@
         <p class="muted small" id="rsHint" hidden>Highlighted words are marketing keywords that job sites look for.</p>
       </div>
       <div class="rs-right panel">
-        <div class="seg rs-tabs" id="rsTabs"><button data-t="health" class="on">Health</button><button data-t="fit">Fit to a job</button><button data-t="skills">Skills</button><button data-t="files">Files</button></div>
-        <div class="rs-tab" data-t="health" id="rsAts"></div>
+        <div class="seg rs-tabs" id="rsTabs"><button data-t="files" class="on">Files</button><button data-t="health">Health</button><button data-t="fit">Fit to a job</button><button data-t="skills">Skills</button></div>
+        <div class="rs-tab" data-t="files" id="sec-files">
+          <h2>Your files</h2>
+          <p class="muted small">Your resumes and cover letter. Changes here save by themselves.</p>
+          <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
+            <input type="file" id="addFile" accept=".pdf,.doc,.docx" hidden>
+            <div class="filelist" id="fileList"></div>
+            <div class="formgrid" id="fileForm" style="margin-top:16px"></div>
+        </div>
+        <div class="rs-tab" data-t="health" id="rsAts" hidden></div>
         <div class="rs-tab" data-t="fit" hidden>
           <h2>Fit it to a job</h2>
           <p class="muted small">Paste a job link or the job text. You see which words the job asks for that your resume doesn't have yet.</p>
@@ -194,14 +202,6 @@
           <div id="rsMatch"></div>
         </div>
         <div class="rs-tab" data-t="skills" id="rsSkills" hidden></div>
-        <div class="rs-tab" data-t="files" id="sec-files" hidden>
-          <h2>Your files</h2>
-          <p class="muted small">Your resumes and cover letter. Changes here save by themselves.</p>
-          <div class="dropzone" id="drop"><svg class="i" style="width:28px;height:28px"><use href="#i-upload"/></svg><br><b>Drop your resume here</b><br><span class="small">or click to choose a PDF or Word file</span></div>
-            <input type="file" id="addFile" accept=".pdf,.doc,.docx" hidden>
-            <div class="filelist" id="fileList"></div>
-            <div class="formgrid" id="fileForm" style="margin-top:16px"></div>
-        </div>
       </div>
     </div>
   </section>

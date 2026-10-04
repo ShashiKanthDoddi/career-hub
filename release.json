@@ -1,8 +1,19 @@
 {
- "version": "3.1",
+ "version": "3.2",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.2",
+   "title": "Resume page: files first, skills for each job",
+   "new": [
+    "After you check a job on the Resume page, Skills to build shows the skills for that job compared with your resume, each missing one with a free course",
+    "Your files are now the first tab on the Resume page"
+   ],
+   "fixed": [
+    "Your resume preview fills the width and no longer shows the small page strip"
+   ]
+  },
   {
    "version": "3.1",
    "title": "A Resume page",
@@ -94,18 +105,6 @@
    "fixed": [
     "The first email check is much quicker: job emails are downloaded in groups instead of one by one"
    ]
-  },
-  {
-   "version": "2.8.0",
-   "title": "Quicker app, weekly summary and interview prep",
-   "new": [
-    "Home has a new \"Your last 7 days\" summary: applications sent, replies, interviews, offers, a weekly chart and a reminder when a job has had no reply for a week",
-    "Find jobs warns you when you already applied to the same job through another link, and leaves it unticked",
-    "Interview and test cards have a \"Get ready\" box with the date, a checklist and, with the AI helper on, prep tips written from your resume"
-   ],
-   "fixed": [
-    "The app opens pages faster: big forms and tables are only loaded when you open them, long job lists show 60 at a time, and saving is quicker"
-   ]
   }
  ],
  "files": [
@@ -127,7 +126,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "22254a64873f8cbde149723204fc6177d53572c7757b6e32e9aff5ce772311a9"
+   "sha256": "79e4beba2afe5e6d630c8fc3560b4fd30b6d42fcfecb8d11af82e2ba8526fcdf"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -143,11 +142,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "089bab8019576144409bb1fdcd64bf4682e9a15618b23b46aedb817412f89b7a"
+   "sha256": "3f7c0e86ab6d90fde468f6f95e94cf380a17ee51bc537ac486dda640724d794d"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "2cb9d21857e0acf5bd1088037db0bb414fe3818c60c05bca3a981d49b2a9982a"
+   "sha256": "adb57f0f114da6c6df53938889e9e3375c13ce542b5445f24d17d6128db911d0"
   },
   {
    "path": "careerhub/filler.py",
@@ -215,7 +214,7 @@
   },
   {
    "path": "careerhub/resume_tools.py",
-   "sha256": "7bd06fd980993d46103a85edb49904908b7dbd6b808b62d4c462283ce5d35277"
+   "sha256": "1f032490d374408c96ef993ba2ad84b7693e78702b4a0e519a1352ea64cf5eb9"
   },
   {
    "path": "careerhub/sigcheck.py",
@@ -243,7 +242,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "c9f589e4bb304c3cc640e7abac2c5c21070e6cc4d98cd4d7b5333a1a6f3de46c"
+   "sha256": "0075ea5813b65095f3e7d7a45cb2a7c2084784a16c74ede31360ad216e5ca494"
   },
   {
    "path": "ui/styles.css",
@@ -295,7 +294,7 @@
   },
   {
    "path": "ui/js/resume.js",
-   "sha256": "2c29a64be09e6c441b61c8fdfac85d3b4a8475b92e8388d9f096c593188995ee"
+   "sha256": "be88e31fb33ea43ed725f2eae9ffcf193d148e5307933ff65bdcc67dba739364"
   },
   {
    "path": "ui/js/run.js",
@@ -319,7 +318,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "18d051b644a2530f575d825a7247153789e4f57c1b6c34021d788e9890276cab"
+   "sha256": "b3a34b25156309b68de5230bc3ea910672a25206f99c5aaa443ac0d7ff55af6e"
   },
   {
    "path": "CLAUDE.md",
@@ -346,5 +345,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "fL34bwbLSGvAzmbh6vlNzyD+tfmAvlMOwuiHD/uAx7s6scTd53Gai/B8XWZXzW8mFphGb55mOa4J4G+rDNyKDQ=="
+ "signature": "A3DR2eapsYNrzlOvgbBNQVxZ1vtw4gx28/hWSM1sIuVtfXjgTYwyy7Rq/Kwo3pYvH9KuYbpFgTLaJMerLqQCDg=="
 }

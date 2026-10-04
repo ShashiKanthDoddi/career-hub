@@ -1,8 +1,16 @@
 {
- "version": "2.6.10",
+ "version": "2.6.11",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.11",
+   "title": "Tidier job filters",
+   "new": [],
+   "fixed": [
+    "The filters above the Find jobs results now sit in one neat row instead of four long boxes"
+   ]
+  },
   {
    "version": "2.6.10",
    "title": "Your Gmail labels are used",
@@ -65,14 +73,6 @@
    "fixed": [
     "Links to Gmail, job pages and other websites now open in your normal browser instead of a new tab inside the app window"
    ]
-  },
-  {
-   "version": "2.6.3",
-   "title": "Calmer email check",
-   "new": [],
-   "fixed": [
-    "The spinning circle for Check email now shows inside the Inbox box instead of over the whole page"
-   ]
   }
  ],
  "files": [
@@ -110,11 +110,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "e2132748bfd887ae330c2773a3ddf7e8f0e5beff0d1104f6b6b058c1e77113d2"
+   "sha256": "83d4266c30c2db4fa8d505f29f026afcf2b3d4cce0dcaa8f843a808e455d0148"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "2659365ccfcdc78e24c4853db9aab86131b157157913c13afa708e60c09bea07"
+   "sha256": "01283a01fead277780496088dcf04dc08a2f0666d0647716a15f0199ea6b0a73"
   },
   {
    "path": "careerhub/filler.py",
@@ -198,11 +198,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "51fff1f79d57527f1b245407824f0779b02bb44587a1c4b09955bd1ffeb3c9f3"
+   "sha256": "e141e3ff06dbb0621926e1a82b9e8a4155a0d1213d2bc4a3dc4bb89d8dd290ef"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "99ff22ad1c5e496db0a4dff10f07e1fea5e65ad59f47428adc1634aa4d54c00a"
+   "sha256": "3a3dd7ce573af51f8839bdf3c8b3a4ef6b50670a45c999059aad28fd59211317"
   },
   {
    "path": "ui/js/apply.js",

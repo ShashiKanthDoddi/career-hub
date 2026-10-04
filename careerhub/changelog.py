@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.10',
+CHANGELOG = [{'version': '2.6.11',
+  'title': 'Tidier job filters',
+  'new': [],
+  'fixed': ['The filters above the Find jobs results now sit in one neat row instead of four long boxes']},
+ {'version': '2.6.10',
   'title': 'Your Gmail labels are used',
   'new': ['The app reads your Gmail labels: mail labelled Interviews, Rejected or Offer is sorted that way, and mail labelled Job boards is ignored'],
   'fixed': ['"You applied for 5 jobs" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed']},

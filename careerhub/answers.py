@@ -20,6 +20,27 @@ class Answers:
         self.memory = dict(data()["answers"])
         self.ai_key = str(settings.get("claude_api_key") or "").strip()
 
+    def _experience_part(self, unit):
+        """Years or months out of her total experience ('3', '3.5', '3 years 6 months')."""
+        total = ""
+        for pat, val in self.fields.items():
+            if pat.startswith("total (work"):
+                total = str(val or "")
+        if not re.search(r"\d", total):
+            return None
+        y = re.search(r"(\d+(?:\.\d+)?)\s*(?:\+)?\s*(?:years?|yrs?|y)", total, re.I)
+        m = re.search(r"(\d+)\s*(?:months?|mos?)", total, re.I)
+        if y or m:
+            years = float(y.group(1)) if y else 0.0
+            months = int(m.group(1)) if m else 0
+        else:
+            years, months = float(re.search(r"\d+(?:\.\d+)?", total).group(0)), 0
+        whole = int(years)
+        months += round((years - whole) * 12)
+        whole += months // 12
+        months %= 12
+        return str(whole if unit == "years" else months)
+
     def remember(self, label, value, nm=""):
         k = norm(label + " " + nm) if nm else norm(label)
         self.memory[k] = value
@@ -29,6 +50,10 @@ class Answers:
     def lookup(self, f):
         """Answer for a field from memory or profile, without asking. Returns (value, source) or (None, None)."""
         key = norm(f["label"])
+        if f.get("unit") and re.search(r"experience|exp|tenure|how long|duration", key):
+            part = self._experience_part(f["unit"])
+            if part is not None:
+                return part, "profile"
         old = norm(f["label"], split=False)               # answers saved before v2.2 used this form
         both = norm(f["label"] + " " + f.get("nm", "")) if f.get("nm") else key
         for k in (both, key, old):
@@ -61,6 +86,8 @@ FIELD_ALIASES = {
     "current (company|employer)|most recent (company|employer)": r"^company( name)?$|employer( name)?|organi[sz]ation( name)?|current organi[sz]ation",
     "current (job )?(title|role|designation|position)": r"^job title$|^designation$|^title$|current role|^role$|current position",
     "total (work |professional )?experience|total years": r"^experience$|years? of experience|work experience|experience in years|total exp|^exp\b|how many years",
+    "date of joining|joining date|start date (at|in) (current|this|your current)|employment start":
+        r"(current|present|latest|last) (company|employer|organi[sz]ation|job).*(join|start|since|from)|(join|start|since|from).*(current|present|latest|last) (company|employer|organi[sz]ation|job)|working (here |there )?since|employed since|since when (are|have) you|date joined|joined (on|in)|^start date$|^from( date)?$",
     "notice period": r"available to join|availability to join|days to join|joining (time|period)|how soon can you (join|start)|when can you (join|start)|earliest (joining|start)|notice",
     "country phone code|phone code|country code": r"dial(ing)? code|\bisd\b|calling code",
     "full name|legal name|^name$|your name": r"candidate name|applicant name",

@@ -75,7 +75,8 @@ def to_iso_date(s):
     if m:
         n = int(m.group(1)) * {"day": 1, "week": 7, "month": 30}[m.group(2)]
         return (today + datetime.timedelta(days=n)).isoformat()
-    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y", "%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y"):
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y", "%d %b %Y", "%d %B %Y", "%b %d %Y", "%B %d %Y",
+                "%b %Y", "%B %Y", "%m/%Y", "%m-%Y", "%Y-%m", "%b, %Y"):                  # the last ones have no day: the 1st is used
         try:
             return datetime.datetime.strptime(str(s).strip().replace(",", ""), fmt).date().isoformat()
         except ValueError:

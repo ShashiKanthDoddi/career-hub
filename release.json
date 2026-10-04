@@ -1,8 +1,17 @@
 {
- "version": "2.6.5",
+ "version": "2.6.6",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.6",
+   "title": "Experience in years and months",
+   "new": [],
+   "fixed": [
+    "Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",
+    "More ways of asking when you joined your current company are understood, and dates like June 2023 work"
+   ]
+  },
   {
    "version": "2.6.5",
    "title": "Updates install again",
@@ -65,22 +74,6 @@
    "fixed": [
     "The note shown after many rejection emails is now just two short lines"
    ]
-  },
-  {
-   "version": "2.5",
-   "title": "Calendar, to-do and a smarter inbox",
-   "new": [
-    "Home has a calendar for interviews and a to-do list",
-    "The app reads your job Gmail when it opens and every hour, and puts interview dates from emails on the calendar",
-    "Moving a card to Interview or Test asks for the date and adds it to the calendar",
-    "My jobs now also shows companies that emailed you but were not applied to through the app",
-    "A spinning circle shows while Check email works, and it tells you the result",
-    "A kind note appears after more than 6 rejection emails"
-   ],
-   "fixed": [
-    "A card you moved by hand now follows a newer email (for example a rejection after an interview)",
-    "The calendar and to-do update without reloading the whole Home page"
-   ]
   }
  ],
  "files": [
@@ -98,7 +91,7 @@
   },
   {
    "path": "careerhub/answers.py",
-   "sha256": "5eb10fd3b1b8516968ac55fdda8b362175f3cc62b1b8b1c7f1b1ceb1f1efec57"
+   "sha256": "275282cfdb472e0e7a3be00027965f6459ab262998c649c59da7cdeccac94679"
   },
   {
    "path": "careerhub/api.py",
@@ -118,11 +111,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "52fd9c6f5341cb743d13ef500941aa3492a89258150c904a5bc21f8bc8d0d727"
+   "sha256": "ae658b139dea2d930b3a95d1ce69eaf9e24ed7a14e40a6e891dd61d0273e1101"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "1e39cbc779ac067f8a3154f189ca59dea3908e599fae08a294ed6ef5ca28ade2"
+   "sha256": "488314e27ce35cf7a36ba481ab86718d8717c34ceacb1e73e8a922b80fedd175"
   },
   {
    "path": "careerhub/filler.py",
@@ -162,7 +155,7 @@
   },
   {
    "path": "careerhub/page_js.py",
-   "sha256": "78ac436bd7e792261e0398b563a3b4b5ff600b847dbd70b2b9df1df8db0a3d7c"
+   "sha256": "1d4fe68a3511b1dc00b892ffd6e059709e2193c22f934878d42f8cdd637131e2"
   },
   {
    "path": "careerhub/planner.py",
@@ -194,7 +187,7 @@
   },
   {
    "path": "careerhub/textutil.py",
-   "sha256": "921632f8867844efe86b178d57d3df12e93270a7251aea28c9d215eb71e697b7"
+   "sha256": "5a6e4826869af9d7938cc8e54aa40b28f0aa089b0c5816820c3fb43b9d812453"
   },
   {
    "path": "careerhub/updater.py",
@@ -274,7 +267,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "a7e8995033410dd2f349b04cde89ad0f5839c9487e3f949647202b46f03c4887"
+   "sha256": "81ceff166ffad20c0b609358aec1cb4faf9fb4357ec3ad5ff749898990695adf"
   },
   {
    "path": "CLAUDE.md",
@@ -282,7 +275,7 @@
   },
   {
    "path": "MAP.md",
-   "sha256": "e2591ac3bc40a700a69afe9ca75ccb03f851dbfe76274dec15d9776d0c0e06a8"
+   "sha256": "11a73d42566b7c9275883a04bc41987058f47e8f1dc1504ae5a6ce531985040a"
   },
   {
    "path": "Setup (Mac).command",

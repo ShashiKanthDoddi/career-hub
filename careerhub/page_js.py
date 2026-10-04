@@ -61,6 +61,9 @@ COLLECT_JS = r"""
   const isReq = (el, label) => el.required || el.getAttribute('aria-required') === 'true' || label.includes('*');
   const tag = el => { if (!el.dataset.afid) el.dataset.afid = String(++window.__afid); return el.dataset.afid; };
   const EMPTY = /^(select|choose|--|please select)/i;
+  // "Experience: [3] Years [0] Months": the unit is text beside the box, not part of the label
+  const unitOf = el => { for (const t of [T(el.parentElement), T(el.nextElementSibling), T(el.previousElementSibling)]) {
+    const m = /^(years?|yrs?|months?|mos?)$/i.exec(t || ''); if (m) return /^m/i.test(m[1]) ? 'months' : 'years'; } return ''; };
 
   // LinkedIn Easy Apply & similar: only look inside the open modal
   const dlg = [...document.querySelectorAll('[role=dialog], [aria-modal=true]')]
@@ -114,7 +117,7 @@ COLLECT_JS = r"""
     const combo = el.getAttribute('role') === 'combobox' || el.getAttribute('aria-autocomplete') === 'list'
                   || el.dataset.automationId === 'searchBox';
     out.push({id: tag(el), kind: combo ? 'combo' : (el.tagName === 'TEXTAREA' ? 'textarea' : 'text'),
-              label, value: el.value || '', required: isReq(el, label), auto: el.dataset.automationId || '', itype: type, picker: !!picker});
+              label, value: el.value || '', required: isReq(el, label), auto: el.dataset.automationId || '', itype: type, picker: !!picker, unit: unitOf(el)});
   });
   Object.values(radios).forEach(g => out.push(g));
   out.forEach(o => {

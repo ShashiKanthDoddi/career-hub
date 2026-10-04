@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.5',
+CHANGELOG = [{'version': '2.6.6',
+  'title': 'Experience in years and months',
+  'new': [],
+  'fixed': ["Boxes like Experience: Years and Months are now filled separately (3.5 years becomes 3 years and 6 months)",
+            "More ways of asking when you joined your current company are understood, and dates like June 2023 work"]},
+ {'version': '2.6.5',
   'title': 'Updates install again',
   'new': [],
   'fixed': ["Updating failed with a 'didn't download correctly' message. Updates now install normally"]},

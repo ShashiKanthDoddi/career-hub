@@ -113,6 +113,20 @@ def main():
     check(hh["education"] and (hh["education"][0]["degree"], hh["education"][0]["school"], hh["education"][0]["end"]) == ("MBA", "XYZ University", "2018"),
           "resume: education read")
 
+    from careerhub.answers import Answers
+    from careerhub.textutil import to_iso_date
+
+    class _A(Answers):
+        def __init__(self, fields):
+            self.fields, self.memory, self.files = fields, {}, {}
+    a = _A({"total (work |professional )?experience|total years": "3.5",
+            "date of joining|joining date|start date (at|in) (current|this|your current)|employment start": "June 2023"})
+    check(a.lookup({"label": "Experience *", "kind": "text", "unit": "years"})[0] == "3"
+          and a.lookup({"label": "Experience", "kind": "text", "unit": "months"})[0] == "6", "Experience boxes: years and months split")
+    check(a.lookup({"label": "Date of joining (current company)", "kind": "text"})[0] == "June 2023"
+          and a.lookup({"label": "Working since", "kind": "text"})[0] == "June 2023", "Joined current company: wordings found")
+    check(to_iso_date("June 2023") == "2023-06-01" and to_iso_date("06/2023") == "2023-06-01", "month and year dates understood")
+
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

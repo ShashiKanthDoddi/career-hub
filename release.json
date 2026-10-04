@@ -1,8 +1,16 @@
 {
- "version": "2.6.19",
+ "version": "2.6.20",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.20",
+   "title": "Clearer report messages",
+   "new": [],
+   "fixed": [
+    "When a report or idea cannot be sent to GitHub, the message now says why (for example no token, or the token is missing a permission)"
+   ]
+  },
   {
    "version": "2.6.19",
    "title": "Pictures in reports and ideas",
@@ -66,16 +74,6 @@
     "Mail you labelled Rejected or Interviews is now sorted that way, including older mail and mail in sub-labels. Mail already in the app is re-sorted once",
     "An interview card shows the company (for example Accenture) instead of the name of the recruiter"
    ]
-  },
-  {
-   "version": "2.6.12",
-   "title": "Select all and Unselect all",
-   "new": [
-    "Find jobs has Select all and Unselect all buttons. They work on the jobs you can see after filtering"
-   ],
-   "fixed": [
-    "Changing a filter no longer ticks every job again; the ones you unticked stay unticked"
-   ]
   }
  ],
  "files": [
@@ -113,11 +111,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "42a35fa42bfa11206ece211aaba2e745fd7acfd4ab77300ed4cff5145e4ccadb"
+   "sha256": "4884f13583c729cf7b13fea9dfc423ef370dbee28ce9262784425ae8b403a19f"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "5f6808ba7c0f30483ebe5b5c0857c4f41b7e5cec5374273f5eb71dde7e10b205"
+   "sha256": "86c483a1946c72156261bf379a76aaca690172ab35463b143c4d771f99452397"
   },
   {
    "path": "careerhub/filler.py",
@@ -173,7 +171,7 @@
   },
   {
    "path": "careerhub/reports.py",
-   "sha256": "8d335ba6fa59dad07209523f72e077e4a3dc917431bc246ddc95c8f26ce8ef8a"
+   "sha256": "f9e1627a2b4db823a09aca9e4507c93dc8ff6a84421a3a7a0db15a308298a397"
   },
   {
    "path": "careerhub/resume.py",
@@ -241,7 +239,7 @@
   },
   {
    "path": "ui/js/palette.js",
-   "sha256": "6e92abb6070251f7b5ef2d1000c47d979ded04e43957e0a6fb8a1e1a1dd812f5"
+   "sha256": "f1c4e84dabd2b367f470b615ab0e912d306ba78a2bfee09bc43ce203fce0ef6b"
   },
   {
    "path": "ui/js/planner.js",

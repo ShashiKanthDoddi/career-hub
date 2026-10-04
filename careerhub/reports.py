@@ -158,6 +158,7 @@ async def file_issue(kind, title, body, open_page=True, files=None):
     if not repo:
         return {"ok": False, "error": "No GitHub repository is set up."}
     token = str((load_profile().get("settings") or {}).get("github_token") or "").strip()
+    why = "no GitHub token in Settings"
     if token:
         try:
             if files:
@@ -171,10 +172,17 @@ async def file_issue(kind, title, body, open_page=True, files=None):
             log(f"📨 GitHub issue created ({kind}): {url}")
             return {"ok": True, "created": True, "url": url}
         except Exception as e:
+            why = f"GitHub said no ({str(e)[:100]})"
+            if isinstance(e, urllib.error.HTTPError):
+                why = {401: "the token is wrong or has expired", 403: "the token is missing permission (Issues and Contents)",
+                       404: "the token can't reach the reports repository"}.get(e.code, f"GitHub error {e.code}")
             log(f"⚠  Couldn't create the GitHub issue ({str(e)[:120]}).")
+    if not token:
+        log("⚠  No GitHub token in Settings, so nothing was sent to GitHub.")
     if not open_page:                                  # a report falls back to email
-        return {"ok": True, "created": False}
-    return {"ok": False, "error": "Sending ideas isn't set up on this computer yet. Please ask your helper."}
+        return {"ok": True, "created": False, "why": why}
+    return {"ok": False, "error": f"Couldn't send it: {why}. Please ask your helper." if token else
+            "Sending ideas isn't set up on this computer yet (no GitHub token in Settings). Please ask your helper."}
 
 
 async def send_suggestion(text, images=None):
@@ -199,11 +207,12 @@ async def send_report(note, images=None):
                          f"{platform.platform()}\n\n<details><summary>Last activity</summary>\n\n```\n{tail[-2500:]}\n```\n</details>", open_page=False, files=attach)
     if r.get("created"):
         return {**r, "sent": False, "issue": True, "path": str(zpath)}
+    why = r.get("why", "")
     if ms["addr"] and ms["pw"] and ms["helper"]:
         try:
             await asyncio.to_thread(smtp_send, ms["addr"], ms["pw"], ms["helper"], subject, body, zpath)
             log(f"📨 Problem report sent to {ms['helper']}.")
-            return {"ok": True, "sent": True, "to": ms["helper"]}
+            return {"ok": True, "sent": True, "to": ms["helper"], "why": why}
         except Exception as e:
             log(f"⚠  Couldn't email the report ({str(e)[:120]}). Saved it instead.")
     if sys.platform == "darwin":
@@ -213,4 +222,4 @@ async def send_report(note, images=None):
     if ms["helper"]:
         webbrowser.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + quote(ms["helper"]) + "&su=" +
                         quote(subject) + "&body=" + quote(body[:1800]))
-    return {"ok": True, "sent": False, "path": str(zpath), "helper": ms["helper"]}
+    return {"ok": True, "sent": False, "path": str(zpath), "helper": ms["helper"], "why": why}

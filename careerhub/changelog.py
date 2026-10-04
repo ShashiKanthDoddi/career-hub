@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.19',
+CHANGELOG = [{'version': '2.6.20',
+  'title': 'Clearer report messages',
+  'new': [],
+  'fixed': ['When a report or idea cannot be sent to GitHub, the message now says why (for example no token, or the token is missing a permission)']},
+ {'version': '2.6.19',
   'title': 'Pictures in reports and ideas',
   'new': ['Report a problem and Suggest a feature let you add pictures: pick them or paste a screenshot with Ctrl+V'],
   'fixed': []},

@@ -9,7 +9,7 @@ APP_NAME = "Harshitha's Career Hub"
 OWNER = "Harshitha"
 
 
-APP_VERSION = "2.6.19"
+APP_VERSION = "2.6.20"
 
 
 BASE = Path(__file__).resolve().parent.parent      # the "Career Hub" folder

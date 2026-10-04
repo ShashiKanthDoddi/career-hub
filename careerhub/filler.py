@@ -34,9 +34,14 @@ async def plan_field(f, db, page):
     kind = f["kind"]
     if f.get("captcha"):
         return {"action": "manual", "why": "captcha"}
-    if f["value"]:
+    if f["value"] and kind != "select":
         return {"action": "have"} if kind != "checkbox" else {"action": "skip"}
     ans, src = db.lookup(f)
+    if f["value"]:                                   # a select already showing a value (often the site's default, e.g. Male)
+        c = pick(ans, f["options"]) if ans not in (None, SKIP, "") else None
+        if not c or norm(c) == norm(f["value"]):
+            return {"action": "have"}
+        return {"action": "fill", "value": c, "src": src}
     if ans in (SKIP, ""):
         return {"action": "skip"}
     q = {"label": pretty_label(f["label"]) or "(this field has no label)", "required": bool(f.get("required")),
@@ -77,7 +82,7 @@ async def plan_field(f, db, page):
                 return {"action": "fill", "value": made, "src": "AI cover letter"}
         if path and resolve_path(path).is_file():
             return {"action": "fill", "value": path, "src": src}
-        if src == "profile" and not f.get("required"):
+        if (src == "profile" or f.get("weak")) and not f.get("required"):
             return {"action": "skip"}
         q.update(kind="file", options=folder_files(), note=f"Couldn't find {Path(str(path)).name}." if path else "")
         return {"action": "ask", "q": q}
@@ -130,7 +135,17 @@ async def fill_field(f, value, src, page, db):
     ans = value
     try:
         if kind in ("text", "textarea"):
-            if f.get("itype") == "date":
+            if f.get("picker"):                                          # read-only calendar boxes: set by script
+                iso = to_iso_date(ans)
+                if not iso:
+                    log(f"   ⚠ '{ans}' isn't a date I understand for '{f['label'][:40]}'")
+                    return None
+                await loc.evaluate("""(e, iso) => { const [y, m, d] = iso.split('-').map(Number), dt = new Date(y, m - 1, d);
+                    const jq = window.jQuery;
+                    if (jq && jq.fn.datepicker && jq(e).hasClass('hasDatepicker')) jq(e).datepicker('setDate', dt);
+                    else { const p = n => String(n).padStart(2, '0'); e.value = `${p(d)}/${p(m)}/${y}`; }
+                    e.dispatchEvent(new Event('input', {bubbles: true})); e.dispatchEvent(new Event('change', {bubbles: true})); }""", iso)
+            elif f.get("itype") == "date":
                 iso = to_iso_date(ans)
                 if not iso:
                     log(f"   ⚠ '{ans}' isn't a date I understand for '{f['label'][:40]}'")
@@ -289,6 +304,11 @@ async def empty_required(page):
             if l and l not in out:
                 out.append(l)
     return out
+
+
+async def empty_captcha(page):
+    """True when a captcha box on the page is still empty (she has to type it herself)."""
+    return any(f.get("captcha") and not f["value"] for f in await scan(page))
 
 
 SUCCESS_RE = re.compile(r"thank you for (applying|your application|your interest)|application (has been |was )?"

@@ -1,8 +1,21 @@
 {
- "version": "2.4",
+ "version": "2.4.1",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.4.1",
+   "title": "Fixes for forms, captcha and the icon",
+   "new": [
+    "A sharper \"H\" icon in the taskbar",
+    "Before submitting, the app now reminds you to type a captcha in Chrome, and waits for you"
+   ],
+   "fixed": [
+    "Gender (and other dropdowns) now use your saved answer even when the website pre-selects something else",
+    "Date of birth is now filled on websites with a calendar pop-up",
+    "Upload boxes whose only text is a size note, like \"10 MB max size\", are no longer asked about"
+   ]
+  },
   {
    "version": "2.4",
    "title": "Clearer look and better job search",
@@ -132,17 +145,6 @@
     "The AI button no longer appears on date and link fields",
     "Submit confirmation now reads the application page, not the summary tab"
    ]
-  },
-  {
-   "version": "1.0",
-   "title": "The app",
-   "new": [
-    "A proper app window with tabs instead of typing in Terminal",
-    "Questions pop up as cards with buttons",
-    "Profile form instead of editing a text file",
-    "Tracker of applications, accounts and found jobs"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -168,7 +170,7 @@
   },
   {
    "path": "careerhub/apply_run.py",
-   "sha256": "40d0b0b22c1d1ed374a7f020211e6312c7ee2160953e4d38ec04477036b9fef5"
+   "sha256": "3d1a1fe9eae5b95f34af5c6818c4af00abeb9f7d08916ecbc94dc3d1c30b6e82"
   },
   {
    "path": "careerhub/auth.py",
@@ -180,15 +182,15 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "5cb524d9b55e089fb8aa0398cd19162ed6faf080a172222cb68e89d68a488ad9"
+   "sha256": "1c5602aa685e2257f809c0569f7c4d4186c670ca84f84b9b8f1b58cb2dc6aa1a"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "0df84e8677aff53fc0d6aefc464a60f82f513b179c761dc520ca47e5eeb6c019"
+   "sha256": "d67585fc9e21c733547e9bc290048598b7d18d70dd01b7d78e1af511974dfc13"
   },
   {
    "path": "careerhub/filler.py",
-   "sha256": "49dab11c5ab907674478c4537d6ef17dee4470b83980336000b316714b0b36dc"
+   "sha256": "626ab6de5f13a12409d9964dcea2a49fa20aecf556a1a60cdf6cb09d8973bde3"
   },
   {
    "path": "careerhub/finder.py",
@@ -216,7 +218,7 @@
   },
   {
    "path": "careerhub/page_js.py",
-   "sha256": "df9446bc521a3bacf28e277e5e01a5ac0125cd63de034cd2946cbed3f7bccbd0"
+   "sha256": "a15d37a5f6df28e86b8fbdbfe601df868d2812dba39906d5fe931877a7510d08"
   },
   {
    "path": "careerhub/profile_form.py",
@@ -252,7 +254,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "b21f4749c757a21f074f4b2d427f1e9cdf6671061b04358fdddaaf4a7190cce5"
+   "sha256": "2f722d833091a78ef7b18067fcabd8384e36de65ab34ff84a3eaaa9fe798137f"
   },
   {
    "path": "ui/styles.css",
@@ -280,7 +282,7 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "ea6c3ca18f4e836aa566a4b9cf3a2dbeedf21a2f635ac1a4ca9b5442e033a662"
+   "sha256": "7141435e2c685b068a10b2b551b154fc585aeadba892a0b9eaccc996a30481c8"
   },
   {
    "path": "ui/js/jobs.js",
@@ -303,6 +305,10 @@
    "sha256": "df729ff72edee1732b5594c5fcd4018fae2bbb6d3dd998643281c67e0b96264f"
   },
   {
+   "path": "tools/make_icon.py",
+   "sha256": "2e6cb49094394a5779aa0bc62eb5e4dfd04ceb6d10bfff20cbf000ac61a05ea4"
+  },
+  {
    "path": "tools/make_release.py",
    "sha256": "ae626a43117aa3e9bbc5d837379810ec3bab2a05285745954427b58f49f2b95d"
   },
@@ -312,11 +318,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "09fe291c807b3c66c6b1ca728a6c7e9d72b35e2bbd21e96b013350f4d8c34a67"
+   "sha256": "5cf7d554777c2654a66d145a6fdceee14bbea1d0d5e94595b11d73d1b1c21f80"
   },
   {
    "path": "MAP.md",
-   "sha256": "5c380c80970c92d91bbf982ef99d4eb2997063e6f8a2859e7b91018541ecce7a"
+   "sha256": "7727c5f34b2823f7c19e54c252eacd0656d770c6270e78d569ab5e96f2320b24"
   },
   {
    "path": "Setup (Mac).command",

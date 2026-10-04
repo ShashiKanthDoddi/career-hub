@@ -1,6 +1,13 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.4',
+CHANGELOG = [{'version': '2.4.1',
+  'title': 'Fixes for forms, captcha and the icon',
+  'new': ['A sharper "H" icon in the taskbar',
+          'Before submitting, the app now reminds you to type a captcha in Chrome, and waits for you'],
+  'fixed': ['Gender (and other dropdowns) now use your saved answer even when the website pre-selects something else',
+            'Date of birth is now filled on websites with a calendar pop-up',
+            'Upload boxes whose only text is a size note, like "10 MB max size", are no longer asked about']},
+ {'version': '2.4',
   'title': 'Clearer look and better job search',
   'new': ['New default look: Clean white, with a charcoal side panel. Themes are now Clean white, Sand, Emerald, Slate and Mint',
           'Sharper, larger text and easier-to-read grey text',

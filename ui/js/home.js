@@ -38,6 +38,7 @@ async function loadHome(){
   $("#feed").innerHTML = HOME.feed.length ? HOME.feed.slice(0, 8).map(u => itemHTML(u, false)).join("")
     : emptyHTML("inbox", HOME.mail_ready ? "No job emails yet" : "Connect your job Gmail", HOME.mail_ready ? "Replies from companies will show up here." : `Settings, then Job email. <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Open settings</a>`);
   const more = (HOME.mail_total || HOME.feed.length) - 8;
+  if (HOME.mail_busy) mailBusy(HOME.mail_progress || "Starting…");
   if (more > 0) $("#feed").insertAdjacentHTML("beforeend", `<a href="#" class="feed-more" onclick="JVIEW='updates';go('jobs');return false">See all ${more + 8} emails</a>`);
   $("#mailInfo").textContent = HOME.mail_ready && HOME.last_mail_check ? "Checked " + when(HOME.last_mail_check).toLowerCase() + " at " + new Date(HOME.last_mail_check).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}) : "";
   if (HOME.mail_error) $("#mailInfo").innerHTML = `<span style="color:var(--rose)">${esc(HOME.mail_error)}</span> <a href="#" onclick="go('settings');setTimeout(()=>$('#set-email')?.scrollIntoView({behavior:'smooth'}),80);return false">Fix in Settings</a>`;
@@ -71,7 +72,9 @@ function itemHTML(u, attn){
 }
 function emptyHTML(ic, title, text){ return `<div class="empty">${icon(ic)}<b>${title}</b><div class="small">${text}</div></div>`; }
 function setCount(sel, n){ const el = $(sel); el.textContent = n; el.hidden = !n; }
-$("#checkMailBtn").onclick = async () => { const b = $("#checkMailBtn"); b.disabled = true; b.lastChild.textContent = "Checking";
-  MAIL_SPIN_AT = Date.now(); $("#mailSpin span").textContent = "Starting…"; $("#mailSpin").hidden = false; $("#feed").hidden = true; await api_check_mail(true); };
+$("#checkMailBtn").onclick = async () => { mailBusy("Starting…"); await api_check_mail(true); };
+/* While any email check runs (hers or the hourly one): the button waits and the inbox box shows the live count */
+function mailBusy(text){ const b = $("#checkMailBtn"); if (!b.disabled) MAIL_SPIN_AT = Date.now(); b.disabled = true; b.lastChild.textContent = "Checking";
+  $("#mailSpin span").textContent = text; $("#mailSpin").hidden = false; $("#feed").hidden = true; }
 let MAIL_SPIN_AT = 0;
 function hideMailSpin(){ setTimeout(() => { $("#mailSpin").hidden = true; $("#feed").hidden = false; }, Math.max(0, 700 - (Date.now() - MAIL_SPIN_AT))); }

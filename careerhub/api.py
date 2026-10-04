@@ -24,7 +24,7 @@ from .store import ProfileError, app_state, data, load_profile, export_csv, fold
 from .textutil import norm, norm_link
 from .updater import check_for_update, install_latest, install_zip, prefetch_update
 from .ai import ai_answer, ai_prep
-from .state import APP
+from .state import APP, MAIL
 from .config import UPDATE_SOURCE
 from .records import tracker_rows
 
@@ -210,7 +210,8 @@ async def api_home():
             "feed": updates[:15], "mail_total": len(updates), "mail_ready": bool(ms["addr"] and ms["pw"]), "mail_due": due,
             "mail_error": st.get("last_mail_error", ""),
             "last_mail_check": st.get("last_mail_check", ""), "list_count": len(read_jobs_file()),
-            "events": planner.list_events(), "todos": data()["todos"], "cheer": cheer_due()}
+            "events": planner.list_events(), "todos": data()["todos"], "cheer": cheer_due(),
+            "mail_busy": MAIL["busy"], "mail_progress": MAIL.get("progress", "")}
 
 
 async def api_add_event(title, date, time="", company="", note=""):
@@ -318,7 +319,8 @@ async def api_not_job(uid):
 
 async def api_check_mail(manual=False):
     r = await check_mail(manual=manual)
-    await UI.emit({"type": "mail_done", "manual": bool(manual), **r})
+    if not r.get("busy"):                               # a check already running sends its own "done"
+        await UI.emit({"type": "mail_done", "manual": bool(manual), **r})
     return r
 
 

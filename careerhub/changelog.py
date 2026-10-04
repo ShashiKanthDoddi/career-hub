@@ -1,6 +1,10 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.8.4',
+CHANGELOG = [{'version': '2.8.5',
+  'title': 'See the email check as it runs',
+  'new': ['When the app checks your email by itself, Home shows it too: the Check email button waits, and the inbox box and the Activity log count the emails as they are read'],
+  'fixed': ['Pressing Check email while a check was already running no longer stops the progress from showing']},
+ {'version': '2.8.4',
   'title': 'Rejections and outside applications found',
   'new': ['Jobs you applied for outside the app (on LinkedIn or a company site) now get a card in My jobs from their "application received" email'],
   'fixed': ['Rejection emails sent through LinkedIn, Naukri or a company mailing system are now read, and no longer disappear after the next email check',

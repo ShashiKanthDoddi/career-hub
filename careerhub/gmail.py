@@ -392,7 +392,7 @@ def mail_failed(hint):
 
 async def check_mail(manual=False):
     if MAIL["busy"]:
-        return {"ok": False, "error": "Already checking."}
+        return {"ok": False, "error": "Already checking.", "busy": True}
     MAIL["busy"] = True
     try:
         ms = mail_settings()
@@ -430,12 +430,19 @@ async def check_mail(manual=False):
                 tracked.add(norm(c))
                 rows.append({"Company": c, "Job title": u.get("title", ""), "Link": "", "learned": True})
         log("📬 Checking the job inbox for updates…")
+        MAIL["progress"] = "Starting…"
+        UI._send({"type": "mail_start"})                 # also for the hourly check: the button waits and the box shows it
         names = [r.get("Company", "") for r in rows]
         have, found, new, reread = seen_links(), [], [], set()
         loop = asyncio.get_running_loop()
 
+        def show_progress(what, done, total):
+            MAIL["progress"] = f"{what} emails: {done} of {total}"
+            UI._send({"type": "mail_progress", "what": what, "done": done, "total": total})
+            log(f"   📨 {MAIL['progress']}", key="mail-" + what, file=done >= total)   # one live line; the file gets the final count
+
         def progress(what, done, total):                # runs in the reading thread: hand it to the window safely
-            loop.call_soon_threadsafe(UI._send, {"type": "mail_progress", "what": what, "done": done, "total": total})
+            loop.call_soon_threadsafe(show_progress, what, done, total)
         for n, (addr, pw) in enumerate(ms["boxes"]):    # the first inbox must work; extra ones are skipped if they fail
             try:
                 items = await asyncio.to_thread(imap_fetch, addr, pw, last.date(), known, names, 1500, progress, reread)

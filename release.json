@@ -1,8 +1,16 @@
 {
- "version": "2.6.16",
+ "version": "2.6.17",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.17",
+   "title": "Rejection emails show again",
+   "new": [],
+   "fixed": [
+    "Rejection (and other) emails that could not be matched to a job link were hidden when you had already applied to that company. They now show on that company card"
+   ]
+  },
   {
    "version": "2.6.16",
    "title": "Waiting for reply and No response",
@@ -67,14 +75,6 @@
    "fixed": [
     "\"You applied for 5 jobs\" and review emails from Naukri, AmbitionBox and other job sites no longer show up as updates. Old ones are removed"
    ]
-  },
-  {
-   "version": "2.6.9",
-   "title": "Updates keep working",
-   "new": [],
-   "fixed": [
-    "After one update, the next update could fail to restart the app. The start file is now kept in the right format"
-   ]
   }
  ],
  "files": [
@@ -112,11 +112,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "c61d7bf650830f1de35e3ea926b84fc9cf23a31a54bc6e478fcad28dc94d42d0"
+   "sha256": "186a9c981662df84cd56060e152361706dee0fd9d5cf73b508d4a89656e0485d"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "652ef2b5b2f184641629fcb2b93bbbd0f3ba59e0014d2b3b3507a9a433e4b690"
+   "sha256": "484a6dae22255a4c0c5a2a742e8d9a3c0cb5095f65ebc81688cf4b792285537b"
   },
   {
    "path": "careerhub/filler.py",
@@ -152,7 +152,7 @@
   },
   {
    "path": "careerhub/overview.py",
-   "sha256": "6c6f5e5c48ed490c7f416b06a203cf447cddf32c75b1a4dfa4b4afd3def55a33"
+   "sha256": "3cffa2da00b17d0631538013c828fc2de721fc04ed6bb800f845f8cd445439ea"
   },
   {
    "path": "careerhub/page_js.py",
@@ -268,7 +268,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "3d497fce6b573d87e869d38701d4edce8e065d9f590cc2983d9051dd7a5db19a"
+   "sha256": "e2425ddae3c251c8b109bec8d75fb8a9c03c1fdaac195330c0bb5488b3eed84c"
   },
   {
    "path": "CLAUDE.md",

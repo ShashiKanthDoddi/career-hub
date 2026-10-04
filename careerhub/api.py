@@ -23,7 +23,7 @@ from .textutil import split_list
 from .store import ProfileError, app_state, data, load_profile, export_csv, folder_files, save_app_state, save_data, table_of
 from .textutil import norm, norm_link
 from .updater import check_for_update, install_latest, install_zip, prefetch_update
-from .ai import ai_answer
+from .ai import ai_answer, ai_prep
 from .state import APP
 from .config import UPDATE_SOURCE
 from .records import tracker_rows
@@ -191,7 +191,16 @@ async def api_home():
         we = ws + datetime.timedelta(days=7)
         n = sum(1 for j in applied if ws.isoformat() <= j["date"][:10] < we.isoformat())
         weekly.append({"label": ws.strftime("%d %b"), "count": n})
-    return {"weekly": weekly, "stages": stages, "stats": {"applied": len(applied), "week": sum(1 for j in applied if j["date"][:10] >= week_ago),
+    two_weeks_ago = (now - datetime.timedelta(days=14)).strftime("%Y-%m-%d")
+    news = [u for u in updates if (u.get("date") or "")[:10] >= week_ago]
+    summary = {"sent": sum(1 for j in applied if j["date"][:10] >= week_ago),
+               "sent_before": sum(1 for j in applied if two_weeks_ago <= j["date"][:10] < week_ago),
+               "replies": sum(1 for u in news if u["type"] in ("interview", "assessment", "offer", "rejection")),
+               "interviews": sum(1 for u in news if u["type"] in ("interview", "assessment")),
+               "offers": sum(1 for u in news if u["type"] == "offer"),
+               "follow_up": sum(1 for j in applied if j["stage"] == "Applied" and 0 < len(j["date"]) and
+                                j["date"][:10] <= (today - datetime.timedelta(days=7)).isoformat())}   # applied 7+ days ago, no reply yet
+    return {"weekly": weekly, "summary": summary, "stages": stages, "stats": {"applied": len(applied), "week": sum(1 for j in applied if j["date"][:10] >= week_ago),
                       "interviews": stages.get("Interview", 0) + stages.get("Waiting", 0) + stages.get("Assessment", 0),
                       "offers": stages.get("Offer", 0), "rejected": stages.get("Rejected", 0),
                       "waiting": stages.get("Applied", 0) + stages.get("Waiting", 0),
@@ -375,6 +384,17 @@ async def api_restart():
     return True
 
 
+async def api_prep(company, title, kind):
+    """Interview prep tips for the job drawer. Needs the Claude key from Settings."""
+    db = Answers()
+    if not db.ai_key:
+        return {"ok": False, "error": "Add your Claude key in Settings to get prep tips."}
+    try:
+        return {"ok": True, "text": await ai_prep(db, company, title, kind)}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:200]}
+
+
 async def api_ai_draft(question):
     try:
         return {"ok": True, "text": await ai_answer(Answers(), question)}
@@ -384,7 +404,9 @@ async def api_ai_draft(question):
 
 async def api_found():
     """Found jobs she hasn't applied to or dismissed (newest first), for the Find jobs page."""
+    sent = [r for r in tracker_rows() if (r.get("Status") or "").startswith("Submitted")]
     applied = {norm_link(r.get("Link")) for r in tracker_rows()}
+    same_job = {(norm(r.get("Company")), norm(r.get("Job title"))): r.get("Date", "") for r in sent}   # for the "already applied" warning
     out, seen = [], set()
     wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
     for j in reversed(data()["found_jobs"]):
@@ -394,7 +416,8 @@ async def api_found():
         seen.add(k)
         out.append({"score": j.get("Match %"), "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
-                    "link": j.get("Link"), "date": j.get("Date found")})
+                    "link": j.get("Link"), "date": j.get("Date found"),
+                    "dup": same_job.get((norm(j.get("Company")), norm(j.get("Job title")))) if len(norm(j.get("Job title"))) >= 6 else None})
     return out[:150]
 
 

@@ -4,10 +4,12 @@ const COLS = ["Applied","Interview","Waiting","Assessment","Offer","Rejected","N
 const COLNAME = {Applied:"Applied", Interview:"Interview", Waiting:"Waiting for reply", Assessment:"Test", Offer:"Offer", Rejected:"Not selected", NoResponse:"No response", Draft:"Draft"};
 async function loadJobs(filter){
   if (filter){ JFILTER = filter; if (filter !== "all" && filter !== "replied") JVIEW = "board"; }
-  JOBS = await api_jobs(); TABLES = await api_tables(); renderJobs();
+  const needTables = JVIEW === "accounts" || JVIEW === "found";      // the big tables are only fetched when she opens them
+  [JOBS, TABLES] = await Promise.all([api_jobs(), needTables ? api_tables() : TABLES]); renderJobs();
 }
-$$("#jobsTabs button").forEach(b => b.onclick = () => { JVIEW = b.dataset.t; JFILTER = "all"; renderJobs(); });
-$("#jobSearch").oninput = () => renderJobs();
+$$("#jobsTabs button").forEach(b => b.onclick = async () => { JVIEW = b.dataset.t; JFILTER = "all";
+  if (JVIEW === "accounts" || JVIEW === "found") TABLES = await api_tables(); renderJobs(); });
+$("#jobSearch").oninput = debounce(() => renderJobs());
 $("#jobStage").onchange = e => { JFILTER = e.target.value; if (JFILTER !== "all" && JFILTER !== "replied") JVIEW = "board"; renderJobs(); };
 const hasQ = o => { const q = $("#jobSearch").value.trim().toLowerCase(); return !q || Object.values(o).join(" ").toLowerCase().includes(q); };
 $("#exportBtn").onclick = async () => { const m = {board:"applications", list:"applications", updates:"applications", accounts:"accounts", found:"found"};
@@ -75,6 +77,7 @@ function openJob(key){
       <h3>Stage</h3><div class="stagepick">${[...COLS, "Skipped"].map(s => `<button class="stage s-${s} ${s === j.stage ? "on" : ""}" data-s="${s}">${COLNAME[s] || s}</button>`).join("")}</div>
       <div class="row" style="margin:18px 0">${j.link ? `<a class="btn sm" href="${esc(j.link)}" target="_blank">${icon("ext")}Job page</a>` : ""}
         ${j.latest ? `<a class="btn sm" href="${esc(j.latest.gmail || "#")}" target="_blank">${icon("mail")}Latest email</a>` : ""}<span class="muted small grow" style="text-align:right">Applied ${esc(j.date.slice(0,10))}</span></div>
+      ${prepHTML(j)}
       <h3>Notes</h3><textarea id="jobNotes" rows="4" placeholder="Interview date, who you spoke to, salary discussed…">${esc(j.notes)}</textarea>
       <div class="muted small" id="noteState" style="margin-top:4px">Saves automatically</div>
       <h3 style="margin-top:20px">Emails</h3>
@@ -86,8 +89,32 @@ function openJob(key){
   $("#scrim").onclick = close; $("#closeDrawer").onclick = close;
   $$(".stagepick button").forEach(b => b.onclick = async () => { j.stage = b.dataset.s; $$(".stagepick button").forEach(x => x.classList.toggle("on", x === b));
     await api_set_note(j.key, j.stage, $("#jobNotes").value); if (j.stage === "Offer") confetti(); toast(`Moved to ${COLNAME[j.stage] || j.stage}`); await askWhen(j); });
+  $("#prepAi") && ($("#prepAi").onclick = async () => { const b = $("#prepAi"); b.disabled = true; b.textContent = "Thinking…";
+    const r = await api_prep(j.company, j.title, j.stage === "Assessment" ? "test" : "interview");
+    if (!r.ok){ b.disabled = false; b.textContent = "Get prep tips"; return toast(r.error, true); }
+    $("#prepTips").innerHTML = prepTipsHTML(r.text); b.remove();
+    $("#prepToNotes").hidden = false; $("#prepToNotes").onclick = () => { const n = $("#jobNotes"); n.value = (n.value ? n.value + "\n\n" : "") + "Prep tips\n" + r.text; n.dispatchEvent(new Event("input")); toast("Added to notes"); }; });
   let t; $("#jobNotes").oninput = e => { clearTimeout(t); $("#noteState").textContent = "Saving"; t = setTimeout(async () => { j.notes = e.target.value;
     await api_set_note(j.key, j.stage, j.notes); $("#noteState").textContent = "Saved"; }, 600); };
+}
+
+/* Interview prep card in the job drawer: when it is, a checklist, and optional tips written from her resume */
+function prepHTML(j){
+  if (!["Interview", "Assessment", "Waiting"].includes(j.stage)) return "";
+  const test = j.stage === "Assessment", what = test ? "test" : "interview";
+  const m = j.latest && (j.latest.type === "interview" || j.latest.type === "assessment") ? j.latest.meeting : null;
+  const ev = ((typeof HOME !== "undefined" && HOME && HOME.events) || []).filter(e => e.ref === j.key && e.date).sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""))).pop();
+  const d = ev ? ev.date : m && m.date, t = ev ? ev.time : m && m.time;
+  const check = test ? ["Read the instructions and time limit", "Check your laptop, internet and charger", "Find a quiet place", "Have your resume and a pen ready"]
+    : ["Read the job post again and note 3 things they want", `Look at ${j.company}'s website, news and social pages`, "Pick 2 stories from your work with numbers (results)", "Check the link, camera and sound 10 minutes before", "Have 2 questions ready to ask them"];
+  return `<div class="prep"><h3>Get ready for the ${what}</h3>
+    <div class="small" style="margin-bottom:8px">${d ? `<b>${esc(dayName(d))}${t ? " at " + esc(t) : ""}</b>` : `<span class="muted">No date yet. Move the card again to add it to your calendar.</span>`}</div>
+    <ul>${check.map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+    <div id="prepTips"></div>
+    <div class="row" style="gap:8px"><button class="btn sm" id="prepAi">Get prep tips</button><button class="btn sm ghost" id="prepToNotes" hidden>Add tips to my notes</button></div></div>`;
+}
+function prepTipsHTML(text){
+  return text.split("\n").map(l => l.trim()).filter(Boolean).map(l => l.startsWith("-") ? `<li>${esc(l.replace(/^-\s*/, ""))}</li>` : `</ul><h4>${esc(l)}</h4><ul>`).join("").replace(/^<\/ul>/, "") + "</ul>";
 }
 
 /* Moving a card to Interview or Test asks when it is, and puts it on the Home calendar */

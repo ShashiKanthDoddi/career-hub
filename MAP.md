@@ -28,7 +28,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `page_js.py` | 179 | JavaScript run inside job pages: COLLECT_JS (field + label detection), BUTTONS_JS, TITLE_JS, ERRORS_JS, job-window badge. | `COLLECT_JS`, `BUTTONS_JS`, `TITLE_JS`, `ERRORS_JS` |
 | `answers.py` | 89 | Answers.lookup(): finds an answer from memory/profile. FIELD_ALIASES (extra wordings per profile field) and COMPUTED answers. | `Answers`, `FIELD_ALIASES`, `COMPUTED` |
 | `resume.py` | 92 | Reads the resume PDF; skills/titles/years; picks 2nd/3rd resume by job title. | `resume_for_job`, `resume_text`, `read_resume`, `resume_profile`, `resume_info`, `MKT_SKILLS`, `ROLE_PHRASES` |
-| `ai.py` | 80 | Claude API calls: drafts for questions, tailored cover letters (PDF). | `ai_complete`, `ai_context`, `ai_answer`, `text_to_pdf`, `ai_cover_letter_flow` |
+| `ai.py` | 90 | Claude API calls: drafts for questions, interview prep tips (`ai_prep`), tailored cover letters (PDF). | `ai_complete`, `ai_context`, `ai_answer`, `ai_prep`, `text_to_pdf`, `ai_cover_letter_flow` |
 | `filler.py` | 343 | Fills one page: plan_field -> ask_batch (one card for all unknowns) -> fill_field. Next/Submit button detection. | `click_check`, `popup_options`, `plan_field`, `ask_batch`, `fill_field`, `scan`, `fill_page`, `find_buttons`, `settle`, `SUCCESS_RE` … |
 | `auth.py` | 146 | Gets from job posting to the form: clicks Apply, signs in / creates accounts. | `get_password`, `auth_state`, `handle_auth`, `get_to_form` |
 | `apply_run.py` | 310 | Runs a list of jobs: apply_one (page loop, summary, submit), run_apply, job browser. | `save_draft`, `open_browser`, `table_rows`, `apply_one`, `job_browser`, `run_apply` |
@@ -41,7 +41,7 @@ Read this first, then open only the file you need. Each Python module is small a
 | `meetings.py` | 85 | Reads an interview date and time out of an email (`find_meeting`). Add a selftest case for every wording it misses. | `find_meeting` |
 | `history.py` | 190 | Work history and education: `parse_history` (resume text -> draft), saved under data key `history`. | `parse_history`, `get_history`, `save_history` |
 | `workday.py` | 150 | Workday "My Experience" page: adds and fills one block per job and degree from `history`. Not yet tried on a live Workday. | `fill_history` |
-| `overview.py` | 75 | Combines applications + emails into stages for Home and My jobs. `_timed_stage` makes the date-based stages: Interview past its date -> Waiting, Applied 30+ days with no reply -> NoResponse (worked out on the fly, nothing stored). | `jobs_overview`, `STAGE_ORDER`, `_timed_stage`, `NO_REPLY_DAYS` |
+| `overview.py` | 85 | (Cached per data save and hour: `jobs_overview` -> `_build_overview`.) Combines applications + emails into stages for Home and My jobs. `_timed_stage` makes the date-based stages: Interview past its date -> Waiting, Applied 30+ days with no reply -> NoResponse (worked out on the fly, nothing stored). | `jobs_overview`, `STAGE_ORDER`, `_timed_stage`, `NO_REPLY_DAYS` |
 | `profile_form.py` | 95 | PROFILE_FORM: every box on Profile and Settings (section, label, where, key, type). | `profile_values`, `PROFILE_FORM`, `FORM_HINTS` |
 | `updater.py` | 177 | Automatic updates from GitHub: check, background download (cached in `UPDATE['files']`), verify SHA-256, install, rollback info. | `vt`, `source_base`, `safe_path`, `check_for_update`, `download_files`, `prefetch_update`, `install_files`, `install_latest`, `install_zip`, `confirm_started`, `restore_backup`, `UPDATE_DIR`, `PENDING`, `ROLLED_BACK`, `ALLOWED` |
 | `sigcheck.py` | 120 | Ed25519 check (pure Python) of the signed `release.json`; `PUBLIC_KEY` is the helper's key. | `manifest_ok`, `canonical`, `sign`, `verify`, `public_key`, `PUBLIC_KEY` |
@@ -54,15 +54,15 @@ Read this first, then open only the file you need. Each Python module is small a
 | --- | --- | --- |
 | `ui/index.html` | 226 | All page markup (sidebar, Home, Apply, Find jobs, My jobs, Profile, Settings) + SVG icons. |
 | `ui/styles.css` | 314 | Design tokens, 5 colour themes (data-theme / data-mode), components, layout. |
-| `ui/js/core.js` | 65 | Web links open in the default browser (`api_open_url`). Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
-| `ui/js/home.js` | 51 | Home: greeting (pet name that changes hourly, `nickname()`), funnel, Needs you, Inbox (shows Gmail errors). |
+| `ui/js/core.js` | 70 | Forms are drawn lazily (`FORMS_STALE`, `drawForms`); `debounce`. Web links open in the default browser (`api_open_url`). Helpers ($, esc, toast, when, site), navigation go(), loadState(). |
+| `ui/js/home.js` | 62 | Home: 'Your last 7 days' summary (`renderWeekSum`, from `api_home` `summary`/`weekly`), greeting (pet name that changes hourly, `nickname()`), funnel, Needs you, Inbox (shows Gmail errors). |
 | `ui/js/planner.js` | 85 | Home calendar, to-do, the "when is it?" and the rejection-kindness pop-ups. | `renderPlanner`, `showCheer` |
 | `ui/js/history.js` | 45 | Profile, Work and education: edit jobs and degrees, Read from my resume. | `loadHistory` |
 | `ui/js/apply.js` | 42 | Apply: the one job list (add links, filter, apply to one/selected/all). |
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
 | `ui/js/questions.js` | 59 | Question cards from Python: single questions and the all-at-once form (showForm). |
 | `ui/js/find.js` | 70 | Find jobs: resume tags, companies, results list with filters (text, posted, match, sort), skip reasons, dismiss. |
-| `ui/js/jobs.js` | 90 | My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
+| `ui/js/jobs.js` | 115 | Interview 'Get ready' card in the drawer (`prepHTML`, `api_prep`). My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
 | `ui/js/forms.js` | 137 | Profile and Settings forms, files, saved answers, themes, What's new, zip install. |
 | `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
 | `ui/js/events.js` | 68 | window.onPy event handling, filled-fields pop-up, update modal, startup sequence. |

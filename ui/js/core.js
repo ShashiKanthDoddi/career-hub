@@ -10,6 +10,7 @@ function toast(t, bad){ const el = document.createElement("div"); el.className =
   setTimeout(() => { el.style.transition = "opacity .3s"; el.style.opacity = 0; setTimeout(() => el.remove(), 300); }, 2800); }
 function when(d){ if (!d) return ""; const t = new Date(d), days = Math.floor((Date.now() - t) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : days < 7 ? `${days} days ago` : t.toLocaleDateString(undefined, {day:"numeric", month:"short"}); }
+const debounce = (fn, ms = 160) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
 function site(u){ const h = (u.match(/^https?:\/\/([^/]+)/i)||[])[1] || ""; const l = h.toLowerCase();
   if (l.includes("myworkdayjobs")) return ["Workday", h.split(".")[0]]; if (l.includes("greenhouse")) return ["Greenhouse", (u.split("/")[3]||"")];
   if (l.includes("lever.co")) return ["Lever", (u.split("/")[3]||"")]; if (l.includes("ashbyhq")) return ["Ashby", (u.split("/")[3]||"")];
@@ -26,6 +27,7 @@ function go(p, opts={}){
   $$(".nav[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === p));
   PAGES.forEach(x => { const el = $("#p-" + x); el.hidden = x !== p; if (x === p){ el.classList.remove("fade-in"); void el.offsetWidth; el.classList.add("fade-in"); } });
   $("#main").scrollTop = 0;
+  if ((p === "profile" || p === "settings") && FORMS_STALE) drawForms();
   if (p === "home") loadHome();
   if (p === "jobs") loadJobs(opts.filter);
   if (p === "find"){ $("#navFound").hidden = true; if (!RESUME) loadResume(); loadFound(); }
@@ -45,9 +47,11 @@ async function loadState(){
   $("#dailyFind").checked = STATE.daily; $("#autoSearch").checked = STATE.find_auto !== false;
   if (!COMPS.length && STATE.find_companies) STATE.find_companies.split(",").map(s => s.trim()).filter(Boolean).forEach(c => addTag("comp", c));
   if (STATE.find_roles && !ROLES.length) STATE.find_roles.split(",").map(s => s.trim()).filter(Boolean).forEach(r => addTag("role", r));
-  renderForms(); renderThemes(); renderChangelog(); renderUpdateInfo();
+  FORMS_STALE = true; if (PAGE === "profile" || PAGE === "settings") drawForms();   // the big forms are only drawn when she opens them
   $("#navNew").hidden = !STATE.whats_new;
 }
+let FORMS_STALE = true;
+function drawForms(){ renderForms(); renderThemes(); renderChangelog(); renderUpdateInfo(); FORMS_STALE = false; }
 function val(key){ const f = STATE.profile.find(f => f.key === key); return f ? f.value : ""; }
 
 /* ===== confetti (only after a sent application or an offer) ===== */

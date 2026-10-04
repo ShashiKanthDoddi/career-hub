@@ -40,6 +40,17 @@ async def ai_answer(db, question):
     return await ai_complete(db, prompt)
 
 
+async def ai_prep(db, company, title, kind="interview"):
+    """Short interview prep for one job: likely questions, talking points from her resume, questions to ask."""
+    prompt = (f"You are a friendly coach helping a marketing professional get ready for a {kind} at {company or 'a company'}"
+              f" for the role {title or 'a marketing role'}.\nUse ONLY facts from the resume; never invent numbers, employers or skills.\n"
+              "Reply in plain text with exactly three short sections, each starting with its heading on its own line:\n"
+              "Likely questions\nTalking points from your resume\nQuestions to ask them\n"
+              "Give 4 bullet lines (starting with '- ') under each heading. No other text.\n\n"
+              f"CANDIDATE RESUME:\n{resume_text(db)[:8000]}\n")
+    return await ai_complete(db, prompt, 700)
+
+
 async def text_to_pdf(text, path):
     browser = await PW["p"].chromium.launch()
     try:

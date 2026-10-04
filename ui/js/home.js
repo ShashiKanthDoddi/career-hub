@@ -31,6 +31,7 @@ async function loadHome(){
     requestAnimationFrame(() => b.querySelector(".bar i").style.width = (100 * stages[i][2] / max) + "%"); });
   $("#weekline").innerHTML = [s.waiting ? `<span><b>${s.waiting}</b> waiting to hear back</span>` : "",
     s.rejected ? `<span><b>${s.rejected}</b> not selected</span>` : "", s.drafts ? `<span><b>${s.drafts}</b> draft${s.drafts > 1 ? "s" : ""} to finish</span>` : ""].join("");
+  renderWeekSum(HOME);
   $("#attnCount").textContent = HOME.attention.length ? `${HOME.attention.length} open` : "";
   $("#attention").innerHTML = HOME.attention.length ? HOME.attention.map(u => itemHTML(u, true)).join("")
     : emptyHTML("check", "You're all caught up", "Interview invites, tests and offers from your inbox land here.");
@@ -46,6 +47,16 @@ async function loadHome(){
   if (HOME.cheer) showCheer(HOME.cheer);
   setCount("#navAttn", HOME.attention.length); setCount("#navSaved", HOME.list_count);
   return HOME;
+}
+function renderWeekSum(H){
+  const m = H.summary, box = $("#weekSum"); box.hidden = !H.stats.applied && !m.replies; if (box.hidden) return;
+  const diff = m.sent - m.sent_before, top = Math.max(1, ...H.weekly.map(w => w.count));
+  const cell = (n, l, d = "") => `<div><div class="ws-n">${n}</div><div class="ws-l">${l}</div>${d ? `<div class="ws-d">${d}</div>` : ""}</div>`;
+  box.innerHTML = `<div class="panel-head"><h2 class="grow">Your last 7 days</h2></div><div class="ws-top">
+    ${cell(m.sent, "applications sent", diff ? `${diff > 0 ? "up" : "down"} ${Math.abs(diff)} from the week before` : "same as the week before")}
+    ${cell(m.replies, m.replies === 1 ? "reply" : "replies")}${cell(m.interviews, m.interviews === 1 ? "interview or test" : "interviews or tests")}${m.offers ? cell(m.offers, "offer" + (m.offers > 1 ? "s" : "")) : ""}
+    <div class="ws-bars" title="Applications sent per week, last 8 weeks">${H.weekly.map((w, i) => `<i class="${i === H.weekly.length - 1 ? "now" : ""}" style="height:${Math.max(6, 100 * w.count / top)}%" title="Week of ${esc(w.label)}: ${w.count}"></i>`).join("")}</div></div>
+    ${m.follow_up ? `<div class="ws-note">${m.follow_up} application${m.follow_up > 1 ? "s have" : " has"} had no reply for a week or more. <a href="#" onclick="go('jobs',{filter:'Applied'});return false">See them</a>, and think about a short follow-up email.</div>` : ""}`;
 }
 const TYPE = {offer:["Offer","Offer"], rejection:["Not selected","Rejected"], interview:["Interview","Interview"], assessment:["Test","Assessment"], received:["Received","received"], other:["Update","other"]};
 function itemHTML(u, attn){

@@ -36,7 +36,7 @@ function diagText(d){
 }
 async function loadFound(diag){ showFound(await api_found(), diag); }
 function showFound(jobs, diag){
-  FOUND = jobs; OFF.clear(); $("#foundPanel").hidden = false;
+  FOUND = jobs; OFF.clear(); jobs.forEach((j, i) => { if (j.dup) OFF.add(i); }); $("#foundPanel").hidden = false;   // jobs she already applied to start unticked
   $("#foundTitle").textContent = jobs.length ? `${jobs.length} job${jobs.length > 1 ? "s" : ""} that fit you` : "No matching jobs yet";
   $("#findDiag").textContent = diagText(diag || STATE.find_diag);
   $("#foundFilters").hidden = !jobs.length; drawFound();
@@ -51,24 +51,28 @@ function foundView(){
   else if (sort === "co") rows.sort((a, b) => a[0].company.localeCompare(b[0].company));
   return rows;
 }
-function drawFound(){
-  const jobs = FOUND, rows = foundView();
+let FOUND_SHOWN = 60;                            // long lists are drawn 60 at a time so the page stays quick
+function drawFound(more){
+  if (more !== true) FOUND_SHOWN = 60;
+  const jobs = FOUND, all = foundView(), rows = all.slice(0, FOUND_SHOWN);
   $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
       <div class="ring" style="--p:${j.score}">${j.score}</div>
-      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span></div>
+      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>
       <span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
-      <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></label>`).join("")
+      <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></label>`).join("") +
+      (all.length > rows.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${all.length - rows.length} left)</button>` : "")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
     : emptyHTML("search", "Nothing here yet", "Add companies or careers-page links, keep web search on, and press Find jobs. A lower minimum match in Settings shows more.");
   $("#bulk").hidden = !jobs.length; updateBulk();
+  $("#foundMore") && ($("#foundMore").onclick = () => { FOUND_SHOWN += 60; drawFound(true); });
   $$(".fj").forEach(c => c.onchange = () => { c.checked ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); updateBulk(); });
   $$("#foundList [data-dis]").forEach(b => b.onclick = async e => { e.preventDefault(); e.stopPropagation();
     await api_dismiss_found(FOUND[+b.dataset.dis].link); loadFound(); });
 }
-$("#fQ").oninput = $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = drawFound;
-function picked(){ return $$(".fj:checked").map(c => FOUND[+c.dataset.i].link); }
+$("#fQ").oninput = debounce(() => drawFound()); $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = () => drawFound();
+function picked(){ return foundView().filter(([, i]) => !OFF.has(i)).map(([j]) => j.link); }     // every shown-by-filter job, also those not drawn yet
 function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; }
-function selectShown(on){ $$(".fj").forEach(c => { c.checked = on; on ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); }); updateBulk(); }
+function selectShown(on){ foundView().forEach(([, i]) => on ? OFF.delete(i) : OFF.add(i)); $$(".fj").forEach(c => c.checked = on); updateBulk(); }
 $("#selAll").onclick = () => selectShown(true); $("#selNone").onclick = () => selectShown(false);
 $("#applyFoundBtn").onclick = () => { const l = picked(); if (!l.length) return toast("Select at least one job", true); startApply(l); };
 $("#saveFoundBtn").onclick = async () => { const l = picked(); if (!l.length) return toast("Select at least one job", true);

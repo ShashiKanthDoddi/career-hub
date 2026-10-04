@@ -1,6 +1,12 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.7.7',
+CHANGELOG = [{'version': '2.8.0',
+  'title': 'Quicker app, weekly summary and interview prep',
+  'new': ['Home has a new "Your last 7 days" summary: applications sent, replies, interviews, offers, a weekly chart and a reminder when a job has had no reply for a week',
+          'Find jobs warns you when you already applied to the same job through another link, and leaves it unticked',
+          'Interview and test cards have a "Get ready" box with the date, a checklist and, with the AI helper on, prep tips written from your resume'],
+  'fixed': ['The app opens pages faster: big forms and tables are only loaded when you open them, long job lists show 60 at a time, and saving is quicker']},
+ {'version': '2.7.7',
   'title': 'More rejection emails found',
   'new': [],
   'fixed': ['Rejection emails worded without "unfortunately" (for example "decided not to", "not shortlisted", "moving ahead with other candidates") are now recognised, and older "received" cards are re-read once']},

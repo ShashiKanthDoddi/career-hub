@@ -74,7 +74,14 @@ def mail_settings(db=None):
     st = (db.settings if db else (load_profile().get("settings") or {}))
     fields = (load_profile().get("fields") or {}) if db is None else db.fields
     addr = str(st.get("gmail_address") or "").strip() or str(fields.get("e ?mail") or "").strip()
-    return {"addr": addr, "pw": str(st.get("gmail_app_password") or "").replace(" ", "").strip(),
+    pw = str(st.get("gmail_app_password") or "").replace(" ", "").strip()
+    boxes = [(addr, pw)]
+    for n in ("2", "3"):                                # extra inboxes to read, each with its own app password
+        a = str(st.get(f"gmail_address_{n}") or "").strip()
+        p = str(st.get(f"gmail_app_password_{n}") or "").replace(" ", "").strip()
+        if a and len(p) == 16:
+            boxes.append((a, p))
+    return {"addr": addr, "pw": pw, "boxes": boxes,
             "auto": truthy(st.get("gmail_auto") if st.get("gmail_auto") is not None else "Yes"),
             "helper": str(st.get("helper_email") or "").strip()}
 
@@ -117,6 +124,17 @@ def mail_body(msg):
 
 COMPANY_WORDS = re.compile(r"(?i)(inc|ltd|llc|llp|pvt|corp|co|services|technologies|solutions|consulting|group|systems|labs|bank|"
                            r"software|global|india|limited)")
+
+
+SUBJECT_JOB = re.compile(r"(?i)your application (?:to|for|was sent to|to the)\s+(.+?)\s+(?:at|with|@)\s+(.+?)\s*$")
+
+
+def job_from_subject(subject):
+    """LinkedIn-style 'Your application to <title> at <company>': (company, title), or ('', '')."""
+    m = SUBJECT_JOB.search(subject or "")
+    if not m:
+        return "", ""
+    return m.group(2).strip(" .-"), m.group(1).strip(" .-")
 
 
 def company_from_sender(name, addr):
@@ -183,9 +201,10 @@ def process_mail(items, rows, known_ids):
         except Exception:
             when = datetime.datetime.now().isoformat(timespec="minutes")
         meeting = find_meeting(f"{subject} {body[:6000]}", datetime.datetime.fromisoformat(when).date()) if kind == "interview" else None
+        sub_company, sub_title = job_from_subject(subject)
         out.append({"id": gid, "date": when, "from": from_name or from_addr, "subject": subject[:200], "type": kind,
-                    "company": (app or {}).get("Company") or company_from_sender(from_name, from_addr),
-                    "title": (app or {}).get("Job title", ""), "link": (app or {}).get("Link", ""),
+                    "company": (app or {}).get("Company") or sub_company or company_from_sender(from_name, from_addr),
+                    "title": (app or {}).get("Job title", "") or sub_title, "link": (app or {}).get("Link", ""),
                     "snippet": body[:300], "done": kind in ("received", "rejection", "other"),
                     "meeting": meeting, "change": find_change(f"{subject} {body[:6000]}") if kind == "interview" else ""})
     return out
@@ -309,25 +328,33 @@ async def check_mail(manual=False):
             last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
         rows = list(reversed(tracker_rows()))
         log("📬 Checking the job inbox for updates…")
-        items = await asyncio.to_thread(imap_fetch, ms["addr"], ms["pw"], last.date(), known,
-                                        [r.get("Company", "") for r in rows])
-        new = process_mail(items, rows, known)
+        names = [r.get("Company", "") for r in rows]
+        have, found, new = seen_links(), [], []
+        for n, (addr, pw) in enumerate(ms["boxes"]):    # the first inbox must work; extra ones are skipped if they fail
+            try:
+                items = await asyncio.to_thread(imap_fetch, addr, pw, last.date(), known, names)
+            except Exception as e:
+                if n == 0:
+                    raise
+                log(f"⚠  Couldn't read the extra inbox {addr}: {friendly_mail_error(str(e))}")
+                continue
+            box_new = process_mail(items, rows, known)
+            for u in box_new:
+                u["gmail"] = gmail_link(addr, u["id"])
+            new += box_new
+            for link, title, site in alert_links(items):
+                if norm_link(link) not in have:
+                    have.add(norm_link(link))
+                    found.append({"score": "", "company": f"{site} alert", "title": title, "location": "",
+                                  "age": None, "link": link})
         for u in new:
             if u["id"] in old_unmatched:
                 u["done"] = old_unmatched[u["id"]].get("done", u["done"])
         replaced = {u["id"] for u in new}
         updates[:] = [u for u in updates if u["id"] not in replaced]   # a re-sorted mail replaces its old card
-        have, found = seen_links(), []
-        for link, title, site in alert_links(items):
-            if norm_link(link) not in have:
-                have.add(norm_link(link))
-                found.append({"score": "", "company": f"{site} alert", "title": title, "location": "", "age": None,
-                              "link": link})
         if found:
             save_found(found)
             log(f"   🔎 {len(found)} new job link(s) from job-alert emails (see Find jobs).")
-        for u in new:
-            u["gmail"] = gmail_link(ms["addr"], u["id"])
         if new:
             updates += new
             updates.sort(key=lambda u: u["date"], reverse=True)

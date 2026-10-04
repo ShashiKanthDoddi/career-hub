@@ -1,5 +1,5 @@
 """overview module of Career Hub. See MAP.md for what lives where."""
-from .gmail import TYPE_LABELS
+from .gmail import TYPE_LABELS, job_from_subject
 from .records import tracker_rows
 from .store import data
 
@@ -35,6 +35,9 @@ def jobs_overview():
     known = {(j["company"] or "").strip().lower() for j in jobs}
     loose = {}
     for u in updates:
+        sub_company, sub_title = job_from_subject(u.get("subject"))
+        if sub_company:                                  # older mail was stored under "LinkedIn": fix on the fly
+            u["company"], u["title"] = sub_company, u.get("title") or sub_title
         c = (u.get("company") or "").strip()
         if not u.get("link") and c and c.lower() not in known and u["type"] in MAIL_STAGE:
             loose.setdefault(c.lower(), []).append(u)

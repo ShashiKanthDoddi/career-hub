@@ -1,6 +1,11 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
 
-CHANGELOG = [{'version': '2.6.14',
+CHANGELOG = [{'version': '2.6.15',
+  'title': 'Each rejection gets its own card',
+  'new': ['You can add a second and third job Gmail in Settings, and the app reads all of them',
+          'Home shows a "See all emails" link, and the emails list shows 25 at a time with Show more'],
+  'fixed': ['LinkedIn "Not selected" emails now show as separate cards in My jobs, with the right company and job title, instead of one "LinkedIn" card']},
+ {'version': '2.6.14',
   'title': 'Only jobs where you can work',
   'new': [],
   'fixed': ['Find jobs no longer shows "remote" jobs tied to other countries, such as Germany remote or Remote in the US. Remote jobs open to India or anywhere still show']},

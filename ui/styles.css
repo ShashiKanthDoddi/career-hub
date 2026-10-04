@@ -309,3 +309,4 @@ main{height:100vh}
 .spinner{width:40px;height:40px;border-radius:50%;border:4px solid var(--line-2);border-top-color:var(--violet);animation:spin .8s linear infinite;margin-bottom:4px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .cols>.panel{margin-top:0}.cols .panel-head{min-height:34px}
+.feed-more{display:block;text-align:center;margin:10px auto 2px;font-size:13px}

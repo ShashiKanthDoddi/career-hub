@@ -1,5 +1,5 @@
 /* ===== my jobs ===== */
-let JVIEW = "board", JFILTER = "all";
+let JVIEW = "board", JFILTER = "all", UPD_SHOWN = 25;
 const COLS = ["Applied","Interview","Assessment","Offer","Rejected","Draft"];
 const COLNAME = {Applied:"Applied", Interview:"Interview", Assessment:"Test", Offer:"Offer", Rejected:"Not selected", Draft:"Draft"};
 async function loadJobs(filter){
@@ -38,7 +38,9 @@ function renderJobs(){
     $$("#jobsView tr[data-k]").forEach(tr => tr.onclick = () => openJob(tr.dataset.k));
   } else if (JVIEW === "updates"){
     const u = JOBS.updates.filter(hasQ);
-    v.innerHTML = u.length ? `<div class="panel">${u.map(x => itemHTML(x, false)).join("")}</div>` : `<div class="panel">${emptyHTML("inbox", "No job emails yet", "Connect your job Gmail in Settings.")}</div>`;
+    const shown = u.slice(0, UPD_SHOWN);
+    v.innerHTML = u.length ? `<div class="panel">${shown.map(x => itemHTML(x, false)).join("")}${u.length > shown.length ? `<button class="btn sm feed-more" id="updMore">Show more (${u.length - shown.length} left)</button>` : ""}</div>` : `<div class="panel">${emptyHTML("inbox", "No job emails yet", "Connect your job Gmail in Settings.")}</div>`;
+    $("#updMore") && ($("#updMore").onclick = () => { UPD_SHOWN += 25; renderJobs(); });
   } else {
     const rows = TABLES[JVIEW === "accounts" ? "accounts" : "found"] || [];
     if (rows.length < 2){ v.innerHTML = `<div class="panel">${emptyHTML(JVIEW === "accounts" ? "user" : "search", "Nothing here yet", JVIEW === "accounts" ? "Job-site logins appear here after the app signs you in." : "Jobs from Find jobs appear here.")}</div>`; return; }

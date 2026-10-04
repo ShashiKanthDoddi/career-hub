@@ -1,8 +1,19 @@
 {
- "version": "2.6.14",
+ "version": "2.6.15",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.6.15",
+   "title": "Each rejection gets its own card",
+   "new": [
+    "You can add a second and third job Gmail in Settings, and the app reads all of them",
+    "Home shows a \"See all emails\" link, and the emails list shows 25 at a time with Show more"
+   ],
+   "fixed": [
+    "LinkedIn \"Not selected\" emails now show as separate cards in My jobs, with the right company and job title, instead of one \"LinkedIn\" card"
+   ]
+  },
   {
    "version": "2.6.14",
    "title": "Only jobs where you can work",
@@ -65,16 +76,6 @@
     "My jobs: search now works on Emails, Accounts and Found, and a stage list narrows the Board and List"
    ],
    "fixed": []
-  },
-  {
-   "version": "2.6.7",
-   "title": "Fewer wrong interview emails",
-   "new": [
-    "New versions now download quietly in the background, so Update now finishes in a moment"
-   ],
-   "fixed": [
-    "Daily emails from Naukri, AmbitionBox and other job sites were wrongly shown as Interview. They are now ignored, and the ones already in your list are cleaned up"
-   ]
   }
  ],
  "files": [
@@ -96,7 +97,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "73315712e4aa9d2d74afa69c4f6ca3beb393aa4d1e5b4ff6ee9a56dd8e9d2d2d"
+   "sha256": "196c2098185861e87c1caf6edccd3e7f116e880223e7685e5f415118359b4d5a"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -112,11 +113,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "d81aa2c9ec558fc95c6089d83d8fa002578f487d98c3bc0a59e15b8130c6f000"
+   "sha256": "2bd396d10b0dc1e754394c2eeed3c0b81483b0fd7873d5d8fd94945003fac586"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "5f54508dc25e11479c1121af2a5bdde34374410449aa6c4edabaf92202a9353b"
+   "sha256": "3fe5bee7e618b5b019c29905b896b9b76c011f72cc95f102c14ce5b0eaeecbdf"
   },
   {
    "path": "careerhub/filler.py",
@@ -128,7 +129,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "52415fd1adc4d86c3026c53cd053a428e75575cd41cfba4bc95ed377a8580298"
+   "sha256": "a3055649870204961ca1d0492ea7bf2ef519213e66e2c43881890ab5c7bf87c6"
   },
   {
    "path": "careerhub/history.py",
@@ -152,7 +153,7 @@
   },
   {
    "path": "careerhub/overview.py",
-   "sha256": "4dfa012d056b54af1030a0ad22ca832f551485265029ff7bb940f951a081a96d"
+   "sha256": "389956ed69495df82b71871c9e14efb3d14df9b7fe4d9509d3957b1337ee8537"
   },
   {
    "path": "careerhub/page_js.py",
@@ -164,7 +165,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "c699c9abf8c3c758e91e1187bfb73bae811e133a7c915654743a5fc144e8684a"
+   "sha256": "fbca6c0db28f3048d026d0f59f7075c857156b6d51e5d54a228cf99d17e377ad"
   },
   {
    "path": "careerhub/records.py",
@@ -204,7 +205,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "3a3dd7ce573af51f8839bdf3c8b3a4ef6b50670a45c999059aad28fd59211317"
+   "sha256": "1324bf837b11094d5f44dcff46736577dd5767f2cbfeed3237e2b33d7dd46b38"
   },
   {
    "path": "ui/js/apply.js",
@@ -232,11 +233,11 @@
   },
   {
    "path": "ui/js/home.js",
-   "sha256": "54fceed0f0ce5ba832360da7321d9caf96cd7f1b862a785012b3bf2b0605125c"
+   "sha256": "286bf56ba903775c965dc7edc32658062af74399ee54e75a3c592e5f9b33d614"
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "08f94faf6c13eb70a4f38a4ffa86f70d519bc8c16147f89c59adf17a9e54b7a0"
+   "sha256": "940fae7f835965bb080b8a0fc73278fe99e3f579682207e9615f354cb5119c11"
   },
   {
    "path": "ui/js/palette.js",
@@ -272,11 +273,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "d5a97c34c8e17a971b6517cd9fd016241c3d0f05781e81458951db72bd072d60"
+   "sha256": "2b7babfbf7602e54cb927f1e07a8958892e98f70c8ed7c9c3fde24334373abbb"
   },
   {
    "path": "MAP.md",
-   "sha256": "eb0bbc6a813ab3a67f8f503e965add9b5b18aa697b7e33516ce97adbe284b46c"
+   "sha256": "229d540299605f2965089a8a424aa862c74f5778d3a1b05ec15a10fefcbe1dba"
   },
   {
    "path": "Setup (Mac).command",

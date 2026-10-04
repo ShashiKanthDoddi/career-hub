@@ -197,7 +197,7 @@ async def api_home():
                       "reply_rate": round(100 * replied / len(applied)) if applied else 0,
                       "drafts": sum(1 for j in jobs if j["stage"] == "Draft")},
             "attention": [u for u in updates if not u.get("done")][:10],
-            "feed": updates[:15], "mail_ready": bool(ms["addr"] and ms["pw"]), "mail_due": due,
+            "feed": updates[:15], "mail_total": len(updates), "mail_ready": bool(ms["addr"] and ms["pw"]), "mail_due": due,
             "mail_error": st.get("last_mail_error", ""),
             "last_mail_check": st.get("last_mail_check", ""), "list_count": len(read_jobs_file()),
             "events": planner.list_events(), "todos": data()["todos"], "cheer": cheer_due()}

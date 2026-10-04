@@ -3,7 +3,7 @@
 CHANGELOG = [{'version': '2.6.5',
   'title': 'Updates install again',
   'new': [],
-  'fixed': ['Updating failed with "didn't download correctly". Updates now install normally']},
+  'fixed': ["Updating failed with a 'didn't download correctly' message. Updates now install normally"]},
  {'version': '2.6.4',
   'title': 'Links open in your own browser',
   'new': [],

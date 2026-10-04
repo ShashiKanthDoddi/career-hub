@@ -13,11 +13,23 @@ from .store import backup_data, data
 from .updater import confirm_started
 
 UI_INDEX = BASE / "ui" / "index.html"
+UI_PREFIX = (BASE / "ui").as_uri().rstrip("/") + "/"
+
+
+def guarded(fn):
+    """Only our own window (file:// ui/) may call the api_* functions, never a web page that ends up in it."""
+    async def call(source, *args):
+        urls = [str(getattr(source.get(k), "url", "") or "") for k in ("page", "frame")]
+        if not all(u.startswith(UI_PREFIX) for u in urls):
+            log(f"⚠  Blocked a call to {fn.__name__} from outside the app window.")
+            raise PermissionError("not allowed")
+        return await fn(*args)
+    return call
 
 
 async def open_app_window(p):
     ctx = await launch_chrome(p, APP_WINDOW_DIR, args=[f"--app={UI_INDEX.as_uri()}", "--start-maximized",
-                                                        "--allow-file-access-from-files", "--enable-lcd-text", "--high-dpi-support=1"])
+                                                        "--enable-lcd-text", "--high-dpi-support=1"])
     try:  # Chrome may restore a saved smaller size for app windows: force maximised
         page = ctx.pages[0] if ctx.pages else await ctx.wait_for_event("page")
         cdp = await ctx.new_cdp_session(page)
@@ -73,7 +85,7 @@ async def main():
         app = await open_app_window(p)
         for name in dir(api):
             if name.startswith("api_"):
-                await app.expose_function(name, getattr(api, name))
+                await app.expose_binding(name, guarded(getattr(api, name)))
         page = app.pages[0] if app.pages else await app.new_page()
         await page.goto(UI_INDEX.as_uri())
         UI.page = page

@@ -165,6 +165,53 @@ def main():
           and a.lookup({"label": "Working since", "kind": "text"})[0] == "June 2023", "Joined current company: wordings found")
     check(to_iso_date("June 2023") == "2023-06-01" and to_iso_date("06/2023") == "2023-06-01", "month and year dates understood")
 
+    print("4b. security")
+    import base64
+    import secrets
+    from careerhub import sigcheck, updater
+    seed = secrets.token_bytes(32)
+    pub = sigcheck.public_key(seed).hex()
+    man = {"version": "9.9.9", "files": [{"path": "careerhub/config.py", "sha256": "ab"}]}
+    man["signature"] = base64.b64encode(sigcheck.sign(seed, sigcheck.canonical(man))).decode()
+    check(sigcheck.manifest_ok(man, pub), "signed release: signature accepted")
+    check(not sigcheck.manifest_ok({**man, "version": "9.9.8"}, pub) and not sigcheck.manifest_ok({k: v for k, v in man.items() if k != "signature"}, pub)
+          and not sigcheck.manifest_ok(man), "release changed, unsigned, or signed by another key: refused")
+    ok_src = []
+    for src in ("owner/repo", "https://github.com/owner/repo", "https://raw.githubusercontent.com/owner/repo/main/"):
+        updater.data = lambda s=src: {"profile": {"settings": {"update_source": s}}}
+        ok_src.append(updater.source_base().startswith("https://raw.githubusercontent.com/owner/repo/"))
+    bad_src = []
+    for src in ("http://evil.example/x/", "https://evil.example/", "http://raw.githubusercontent.com/o/r/main/"):
+        updater.data = lambda s=src: {"profile": {"settings": {"update_source": s}}}
+        bad_src.append(updater.source_base() == "")
+    check(all(ok_src) and all(bad_src), "update source: only GitHub over https is accepted")
+    try:
+        from playwright.async_api import async_playwright as _apw
+    except ImportError:
+        _apw = None
+    if _apw:
+        from careerhub.main import UI_INDEX, guarded
+
+        async def guard_test():
+            async def api_probe():
+                return "ran"
+            async with _apw() as p:
+                b = await p.chromium.launch()
+                ctx = await b.new_context()
+                await ctx.expose_binding("api_probe", guarded(api_probe))
+                res = []
+                for url in (UI_INDEX.as_uri(), "data:text/html,<p>x</p>"):
+                    pg = await ctx.new_page()
+                    await pg.goto(url)
+                    res.append(await pg.evaluate("window.api_probe().then(v => v, e => 'blocked')"))
+                await b.close()
+                return res
+        try:
+            got = asyncio.run(guard_test())
+            check(got == ["ran", "blocked"], f"app functions work from the app window only (got {got})")
+        except Exception as e:
+            check(False, f"window guard test failed: {str(e)[:150]}")
+
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

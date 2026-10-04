@@ -1,8 +1,18 @@
 {
- "version": "2.7.4",
+ "version": "2.7.5",
  "date": "2026-10-04",
  "urgent": false,
  "changelog": [
+  {
+   "version": "2.7.5",
+   "title": "Safer updates",
+   "new": [
+    "Updates are now checked against a signature from your helper before they install, so only genuine updates are accepted"
+   ],
+   "fixed": [
+    "The app window now only accepts commands from the app itself"
+   ]
+  },
   {
    "version": "2.7.4",
    "title": "See what happened to your reports",
@@ -62,14 +72,6 @@
    "fixed": [
     "When a report or idea cannot be sent to GitHub, the message now says why (for example no token, or the token is missing a permission)"
    ]
-  },
-  {
-   "version": "2.6.19",
-   "title": "Pictures in reports and ideas",
-   "new": [
-    "Report a problem and Suggest a feature let you add pictures: pick them or paste a screenshot with Ctrl+V"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -107,11 +109,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "58ed203c55bb5924af9d3763c9e32ab1fc08331e79b7b38320586d471a180d64"
+   "sha256": "592861b1df957f7cf3ea5725b63a3c0d9bde6f6dadaef83f55a5fbd5bbff9e6f"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "11be441adc9ac48336cae221a44b6c1f2aba8152e49b5ffc8ecc16c158285e23"
+   "sha256": "fa027287a319f691b802d61b8e1905f97a20d8f307bcb02ee45a3c817fe7c550"
   },
   {
    "path": "careerhub/filler.py",
@@ -139,7 +141,7 @@
   },
   {
    "path": "careerhub/main.py",
-   "sha256": "35126f8f118ffff786dda0d3368455c3d67a5855e817892a8cf1b2a719d71fbd"
+   "sha256": "789bce6fbc7127dda0aa2376c862748955eb3e905972e832129e85eca11efe15"
   },
   {
    "path": "careerhub/meetings.py",
@@ -174,6 +176,10 @@
    "sha256": "c3ead626177239e4996b1d9a29c96ea6433dabe991e8c245462557f62a6668d2"
   },
   {
+   "path": "careerhub/sigcheck.py",
+   "sha256": "09c01655972b6c22cf6f3115d6146c7fef4d7ee78634395ef9e46165df36333d"
+  },
+  {
    "path": "careerhub/state.py",
    "sha256": "5aeeb1d94e10cee0781594f49f1b6e8008ff21e3101dd2173ed8d3cd2dd4624c"
   },
@@ -187,7 +193,7 @@
   },
   {
    "path": "careerhub/updater.py",
-   "sha256": "1aa2e9982cbbc41d2112c6d48aa087b59c9e3d21a5f69848b86dd606e6e7450f"
+   "sha256": "bc11c2f3d9a5f389c389b470b7ef7017f48c097265f37be60dfdbac10202e992"
   },
   {
    "path": "careerhub/workday.py",
@@ -258,20 +264,24 @@
    "sha256": "2e6cb49094394a5779aa0bc62eb5e4dfd04ceb6d10bfff20cbf000ac61a05ea4"
   },
   {
+   "path": "tools/make_key.py",
+   "sha256": "96e988c99b7321d4e885f646a81e984ec02b6788cff162378ea09ee0bb40a2d4"
+  },
+  {
    "path": "tools/make_release.py",
-   "sha256": "89a00e5d60abc5426b21a57ef600e0916270cd24003fcf81e3e52ed926e11b48"
+   "sha256": "be35c2fe23cad6a4922be50d457fd82c24f8fe96a1eece0327fc77d25fd84d6f"
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "e2425ddae3c251c8b109bec8d75fb8a9c03c1fdaac195330c0bb5488b3eed84c"
+   "sha256": "7d6955ec977699c062e73c7f3b6e32830d47cf06c468534f8e692a1326c52fb9"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "5cefbf9907751dcb51beaea4ac9690edc0c964d54707fd52f713e881add972c9"
+   "sha256": "2e9291e74d497838ab213fceb2e25dd8c86f36e73f53ac2937051ec4f81799e3"
   },
   {
    "path": "MAP.md",
-   "sha256": "8e782c4fad12eb8734cff93c4bb9e7d73da2c7e0977aaee58b294b6f66f7bb1c"
+   "sha256": "6a37bdc091f8b6a93a345a32e9f2f60eb013123a64096c1e05bcdd625623aada"
   },
   {
    "path": "Setup (Mac).command",
@@ -289,5 +299,6 @@
    "path": "Open Career Hub (Windows).bat",
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
- ]
+ ],
+ "signature": "x5TOqMpUjI0gG5iNwx//y/R1DAYAlzyfEPySJ4Oiv20sMW6TYMnfF0RjG8+tH8pdpK5hU7WxW/nkECQghSa1AQ=="
 }

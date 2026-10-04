@@ -6,6 +6,7 @@ careerhub/changelog.py. This script runs the self-test, then writes release.json
 and a SHA-256 fingerprint of every app file). Then commit and push everything to GitHub; her app picks it
 up within an hour (or right away with Check for updates).
 """
+import base64
 import datetime
 import hashlib
 import json
@@ -56,6 +57,14 @@ def main():
                 files.append({"path": p.relative_to(ROOT).as_posix(), "sha256": hashlib.sha256(git_bytes(p)).hexdigest()})
     release = {"version": version, "date": datetime.date.today().isoformat(), "urgent": "--urgent" in args,
                "changelog": CHANGELOG[:8], "files": files}
+    from careerhub import sigcheck
+    keyfile = Path.home() / ".careerhub_release_key"
+    if not keyfile.exists():
+        sys.exit(f"Signing key not found: {keyfile}. Releases must be signed (the app refuses unsigned ones).")
+    seed = bytes.fromhex(keyfile.read_text().strip())
+    if sigcheck.public_key(seed).hex() != sigcheck.PUBLIC_KEY:
+        sys.exit("The signing key doesn't match PUBLIC_KEY in careerhub/sigcheck.py.")
+    release["signature"] = base64.b64encode(sigcheck.sign(seed, sigcheck.canonical(release))).decode("ascii")
     old.write_text(json.dumps(release, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"\nrelease.json written for version {version} ({len(files)} files).")
     print("Now publish it:\n  git add -A\n  git commit -m \"Release " + version + "\"\n  git push")

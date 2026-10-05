@@ -29,7 +29,7 @@ class Bridge:
             pass
 
     async def ask(self, title, message="", options=None, choices=None, text=False, placeholder="",
-                  table=None, kind="info", value="", questions=None, chrome=None):
+                  table=None, kind="info", value="", questions=None, chrome=None, ai=None):
         """Shows a question card. options = list of answers (buttons); choices = [(label, value, style)].
         chrome = the job page when she has to do something there first: that window comes to the front, with a sound."""
         if self.stop:
@@ -49,7 +49,7 @@ class Bridge:
         await self.emit({"type": "ask", "value": value, "questions": questions or [], "id": qid, "title": title, "message": message,
                          "options": options or [], "choices": [list(c) for c in (choices or [])],
                          "text": text, "placeholder": placeholder, "table": table or [], "kind": kind,
-                         "chrome": chrome is not None})
+                         "chrome": chrome is not None, "ai": ai})
         if chrome is not None:
             notify(title, "Look at the Chrome window, then answer in Career Hub.")
             await raise_window(chrome)

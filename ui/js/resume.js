@@ -126,7 +126,7 @@ $("#rsMatchBtn").onclick = async () => { const job = rsJob(); if (!job) return;
 $("#rsTailorBtn").onclick = async () => { const job = rsJob(); if (!job) return;
   const r = await busyBtn($("#rsTailorBtn"), "Thinking…", () => api_resume_tailor(job, RS ? RS.file : ""));
   if (!r.ok) return toast(r.error, true);
-  $("#rsMatch").innerHTML = `<div class="prep" style="margin-top:16px"><h3>Suggestions for this job</h3><p class="muted small">Written from your resume only. Change anything that isn't true, then edit your resume file.</p>
+  $("#rsMatch").innerHTML = `<div class="prep" style="margin-top:16px"><h3>Suggestions for this job</h3><p style="margin:0 0 6px">${aiBadge(r.ai)}</p><p class="muted small">Written from your resume only. Change anything that isn't true, then edit your resume file.</p>
     ${prepTipsHTML(r.text)}<button class="btn sm" id="rsCopy">Copy</button></div>`;
   $("#rsCopy").onclick = () => { const ta = document.createElement("textarea"); ta.value = r.text; document.body.appendChild(ta); ta.select();
     document.execCommand("copy"); ta.remove(); toast("Copied"); }; };

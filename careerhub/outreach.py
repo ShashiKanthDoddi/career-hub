@@ -11,7 +11,7 @@ import smtplib
 import time
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
-from .ai import ai_complete
+from .ai import ai_complete, ai_info
 from .config import OWNER
 from .gmail import mail_settings
 from .resume import resume_profile, resume_text
@@ -368,13 +368,15 @@ async def write_mail(db, company, site_text, prefs=None):
               "Mention one specific thing about the company taken from the company text, and only if the text really says it. "
               f"End with 'Regards,' then '{OWNER}'. Output only the email body, no subject, no preamble.\n\n"
               f"COMPANY TEXT:\n{site_text[:1800]}\n\nHER RESUME:\n{resume_text(db)[:6000]}\n")
+    used = True
     try:
         body = (await ai_complete(db, prompt, 600)).strip()
         if len(body) < 60 or "dear" not in body.lower()[:30]:
             raise ValueError("odd answer")
     except Exception:
-        body = template(db, company, site_text, prefs)
-    return {"subject": subject_for(company, prefs), "body": body.rstrip() + (FOOT if prefs["opt_out"] else "")}
+        body, used = template(db, company, site_text, prefs), False
+    return {"subject": subject_for(company, prefs), "body": body.rstrip() + (FOOT if prefs["opt_out"] else ""),
+            "ai": ai_info(db) if used else None}
 
 
 def build_message(addr, to, subject, body, resume: Path):

@@ -78,12 +78,13 @@ async def company_brief(company, refresh=False):
         text = clean_brief(await free_complete(prompt))
     except Exception:
         pass
+    by_ai = bool(text)
     if not text and facts:                                   # the AI failed: the plain facts are still useful
         text = "What they do\n- " + "\n- ".join(s.strip() for s in re.split(r"(?<=[.!?])\s+", facts)[:3] if s.strip())
     if not text:
         raise RuntimeError(f"Could not get anything about {company} right now. Try again later.")
     out = {"text": text, "source": f"Wikipedia: {title}" if facts else "AI general knowledge, check it on their website",
-           "date": datetime.date.today().isoformat()}
+           "date": datetime.date.today().isoformat(), "ai": by_ai}
     cache[key] = out
     for old in sorted(cache, key=lambda k: cache[k]["date"])[:-KEEP_BRIEFS]:
         del cache[old]

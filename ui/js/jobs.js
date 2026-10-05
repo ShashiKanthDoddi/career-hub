@@ -97,7 +97,7 @@ function openJob(key){
   $("#prepAi") && ($("#prepAi").onclick = async () => { const b = $("#prepAi"); b.disabled = true; b.textContent = "Thinking…";
     const r = await api_prep(j.company, j.title, j.stage === "Assessment" ? "test" : "interview");
     if (!r.ok){ b.disabled = false; b.textContent = "Get prep tips"; return toast(r.error, true); }
-    $("#prepTips").innerHTML = prepTipsHTML(r.text); b.remove();
+    $("#prepTips").innerHTML = `<p style="margin:0 0 6px">${aiBadge(r.ai)}</p>` + prepTipsHTML(r.text); b.remove();
     $("#prepToNotes").hidden = false; $("#prepToNotes").onclick = () => { const n = $("#jobNotes"); n.value = (n.value ? n.value + "\n\n" : "") + "Prep tips\n" + r.text; n.dispatchEvent(new Event("input")); toast("Added to notes"); }; });
   let t; $("#jobNotes").oninput = e => { clearTimeout(t); $("#noteState").textContent = "Saving"; t = setTimeout(async () => { j.notes = e.target.value;
     await api_set_note(j.key, j.stage, j.notes); $("#noteState").textContent = "Saved"; }, 600); };

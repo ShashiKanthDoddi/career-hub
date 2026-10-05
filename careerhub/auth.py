@@ -28,8 +28,29 @@ async def get_password(host, db):
     return p
 
 
+LOGIN_URL = re.compile(r"(?i)/(log-?in|sign-?in|signin|sso|authwall|uas/login|checkpoint|auth|session|account/login)(/|\?|$)|[?&]login|accounts\.")
+STEP_JS = """() => {
+  const vis = e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 4 && r.height > 4 && s.visibility !== 'hidden' && s.display !== 'none'; };
+  const ins = [...document.querySelectorAll('input,textarea,select')].filter(e => vis(e) && !['hidden','checkbox','radio','submit','button','image'].includes((e.type || '').toLowerCase()));
+  const em = ins.some(e => /email|username|user name|login|phone/i.test([e.type, e.name, e.id, e.autocomplete, e.placeholder, e.getAttribute('aria-label')].join(' ')));
+  return {n: ins.length, email: em, text: (document.body.innerText || '').slice(0, 800)};
+}"""
+
+
+async def login_step(page):
+    """The first, email-only step of a login page (the password box only comes after Continue). Returns its frame or None."""
+    for fr in page.frames:
+        try:
+            r = await fr.evaluate(STEP_JS)
+        except Exception:
+            continue
+        if r["email"] and r["n"] <= 2 and (LOGIN_URL.search(page.url) or re.search(r"(?i)sign in|log in|login|welcome back", r["text"])):
+            return fr
+    return None
+
+
 async def auth_state(page):
-    """Returns (frame, number_of_visible_password_boxes)."""
+    """Returns (frame, n): n is the number of visible password boxes, or -1 for an email-only login step."""
     for fr in page.frames:
         try:
             n = await fr.locator('input[type="password"]:visible').count()
@@ -37,7 +58,8 @@ async def auth_state(page):
             continue
         if n:
             return fr, n
-    return None, 0
+    fr = await login_step(page)
+    return (fr, -1) if fr else (None, 0)
 
 
 async def handle_auth(ctx, db, company):
@@ -59,6 +81,18 @@ async def handle_auth(ctx, db, company):
         if not n:
             return True
         signup = n >= 2
+        if n < 0:                                               # email first, password on the next screen
+            log(f"\nEntering your email on {host} ...")
+            try:
+                await fr.locator('input:visible:not([type="checkbox"]):not([type="radio"])').first.fill(email, timeout=3000)
+            except Exception:
+                return False
+            btn, _t = await find_clickable(page, SIGNIN_WORDS, SIGNIN_IDS)
+            if not btn:
+                return False
+            await safe_click(btn)
+            await settle(page)
+            continue
         log(f"\n🔑 {'Creating an account' if signup else 'Signing in'} on {host} with {email} ...")
         pw = await get_password(host, db)
 

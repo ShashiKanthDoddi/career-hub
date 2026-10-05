@@ -1,8 +1,23 @@
 {
- "version": "3.4.1",
+ "version": "3.4.2",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.4.2",
+   "title": "Clearer alert-email cards, better login detection",
+   "new": [
+    "Find jobs: alert-email cards have a title, company, a colour-coded match badge and the site. Older alert links get their company from your emails at the next check",
+    "Login pages that ask for your email first, then the password, are now recognised on job sites"
+   ],
+   "pages": [
+    "find"
+   ],
+   "fixed": [
+    "Home: the Calendar and To-do panels line up, and a long To-do list scrolls inside its panel",
+    "Find jobs: the \"jobs that do not match your job titles\" box now agrees with the match shown on each card"
+   ]
+  },
   {
    "version": "3.4.1",
    "title": "Alert-email jobs as cards with a match",
@@ -106,18 +121,6 @@
    "fixed": [
     "Pressing Check email while a check was already running no longer stops the progress from showing"
    ]
-  },
-  {
-   "version": "2.8.4",
-   "title": "Rejections and outside applications found",
-   "new": [
-    "Jobs you applied for outside the app (on LinkedIn or a company site) now get a card in My jobs from their \"application received\" email"
-   ],
-   "fixed": [
-    "Rejection emails sent through LinkedIn, Naukri or a company mailing system are now read, and no longer disappear after the next email check",
-    "Bank, loan and shopping emails (for example \"thank you for applying\" for a credit card) are not taken as jobs",
-    "Your older emails from the last 6 months are sorted again once, so missed rejections and jobs show up"
-   ]
   }
  ],
  "files": [
@@ -139,7 +142,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "f1bcc63169fbbdcd3a4cedb794ac4147b542aa508accd605fc68391f94d6eaff"
+   "sha256": "653754854012a7982e093e75f0d78289ce15580946cab11a0cf80562cd6e8520"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -147,7 +150,7 @@
   },
   {
    "path": "careerhub/auth.py",
-   "sha256": "da29e3c7e60277e5c08e2d71ccfd35e709ee898ea41bf4b9f5a052b9ab7ce640"
+   "sha256": "b323cca0f08fef2211978bf4023250ff4994340a30a54a572db6062d9fe9a6ba"
   },
   {
    "path": "careerhub/bridge.py",
@@ -155,11 +158,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "f25beec95706ca6e569b0658c38ea8d9f62cf0964581153761710a8049259050"
+   "sha256": "f9b6c6106605a1f03cd4da610eb75e242a80a76d2aee2ef78b006552bdb2ff20"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "f246dd46691f31d333a175a2f091e031a81af2b786b585a1d7e8ea8688d8f1e2"
+   "sha256": "3463cc03e5ad3616c8e1f025aed2db6e3f6818e67cd37f2afaca963e0358bfde"
   },
   {
    "path": "careerhub/filler.py",
@@ -171,7 +174,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "588c4d957d9c82de0c6140d3f3c0d641d4770476b02098aeee4266023b21643c"
+   "sha256": "316495cd736a8a135ec1122d23e4e0db0e92e8872a5620c9a1836d583e19de2d"
   },
   {
    "path": "careerhub/history.py",
@@ -255,11 +258,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "644c863062d6734da143baee10d40baec01bdc0d1c67ad60ae80b6aa72f415d8"
+   "sha256": "c27a5ccd976fce285f10e6d43be0c0f4c96feecd85e8690651a1f6fff700fc6a"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "6b5392dd130cbd618527addd06f9e7e64d139aacfb252e341d99026ecb59c6a5"
+   "sha256": "55847e1c4a8628fb329dd4524d2bd4382c014e5a61f50ddf48cd6bc8de37eb37"
   },
   {
    "path": "ui/js/apply.js",
@@ -275,7 +278,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "9265054a58c8ade51b0cc9faaa66aca4de56821a85f6f888bed1c7043636ced2"
+   "sha256": "a54553cf6360189850aeeef2171bafc61b6bbd65fa69fe46cce99a005c6904d3"
   },
   {
    "path": "ui/js/forms.js",
@@ -358,5 +361,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "hrW9dxjS/iRWWth0e+KyExM3leSJTQYGqcsPH5M4rfLVczr9DZQdozl5DILoSIyRX4Ko3X0/XxPFyCgXBlrZCA=="
+ "signature": "XylPxP7C74639oMNynjfgZUfcBdMRvdAb3z8QSIYsOlT89C1FR+jOCwGOKxUxfbjj5lLP/fjJe1hctQ0gKrKCA=="
 }

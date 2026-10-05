@@ -10,7 +10,7 @@ from .apply_run import run_apply
 from .bridge import UI, log, os_open
 from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
-from .finder import location_ok, match_score, relevant_title, run_find
+from .finder import location_ok, match_score, run_find
 from .gmail import check_mail, mail_settings
 from . import history, planner
 from .overview import jobs_overview
@@ -597,8 +597,8 @@ async def api_found():
             continue                                   # also hides jobs saved before the location filter existed
         seen.add(k)
         is_alert = bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert")
-        title_fit = is_alert and relevant_title(j.get("Job title") or "", aprof)
-        out.append({"score": match_score(j.get("Job title") or "", "", aprof) if is_alert else j.get("Match %"), "off": is_alert and not title_fit, "title": j.get("Job title"), "company": j.get("Company"),
+        ascore = match_score(j.get("Job title") or "", "", aprof) if is_alert else None
+        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and ascore < 55,   # 55+: the title has one of her roles or "marketing" "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
                     "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert"),
                     "site": j.get("Alert site") or (str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else ""),

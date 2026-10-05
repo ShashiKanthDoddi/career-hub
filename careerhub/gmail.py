@@ -421,6 +421,8 @@ async def check_mail(manual=False):
             last = datetime.datetime.now() - datetime.timedelta(days=60)
         if st.get("label_scan") != 8:                   # one wider pass so labelled mail from before label reading is sorted
             last = min(last, datetime.datetime.now() - datetime.timedelta(days=180))
+        if st.get("alert_scan") != 1:                   # one wider pass so older alert links get their company and city
+            last = min(last, datetime.datetime.now() - datetime.timedelta(days=45))
         rows = list(reversed(tracker_rows()))
         tracked = {norm(r.get("Company")) for r in rows}
         for u in sorted(updates, key=lambda x: x.get("date", ""), reverse=True):
@@ -433,7 +435,7 @@ async def check_mail(manual=False):
         MAIL["progress"] = "Starting…"
         UI._send({"type": "mail_start"})                 # also for the hourly check: the button waits and the box shows it
         names = [r.get("Company", "") for r in rows]
-        have, found, new, reread = seen_links(), [], [], set()
+        have, found, new, reread, filled = seen_links(), [], [], set(), 0
         loop = asyncio.get_running_loop()
 
         def show_progress(what, done, total):
@@ -456,6 +458,12 @@ async def check_mail(manual=False):
                 u["gmail"] = gmail_link(addr, u["id"])
             new += box_new
             for link, title, site, company, place in alert_links(items):
+                if norm_link(link) in have and company:        # a link saved earlier without its company: fill it in
+                    for fj in data()["found_jobs"]:
+                        if norm_link(fj.get("Link")) == norm_link(link) and str(fj.get("Company") or "").endswith(" alert"):
+                            fj["Company"], fj["Location"] = company, fj.get("Location") or place
+                            fj["Alert site"] = site
+                            filled += 1
                 if norm_link(link) not in have:
                     have.add(norm_link(link))
                     found.append({"score": "", "company": company or f"{site} alert", "title": title, "location": place,
@@ -466,6 +474,9 @@ async def check_mail(manual=False):
         kept = [u for i, u in old_unmatched.items() if i not in reread]  # too old to re-read this time: keep the card
         replaced = {u["id"] for u in new}
         updates[:] = [u for u in updates if u["id"] not in replaced]   # a re-sorted mail replaces its old card
+        if filled:
+            save_data()
+            log(f"   🔎 Added the company to {filled} job link(s) from job-alert emails.")
         if found:
             save_found(found)
             log(f"   🔎 {len(found)} new job link(s) from job-alert emails (see Find jobs).")
@@ -480,7 +491,7 @@ async def check_mail(manual=False):
         if booked:
             log(f"   📅 {booked} interview(s) from your emails added to the calendar.")
         save_app_state(last_mail_check=datetime.datetime.now().isoformat(timespec="seconds"), last_mail_error="",
-                       label_scan=8)
+                       label_scan=8, alert_scan=1)
         counts = {}
         for u in new:
             counts[u["type"]] = counts.get(u["type"], 0) + 1

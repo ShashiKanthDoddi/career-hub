@@ -2,7 +2,14 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.1',
+CHANGELOG = [{'version': '3.4.2',
+  'title': 'Clearer alert-email cards, better login detection',
+  'new': ['Find jobs: alert-email cards have a title, company, a colour-coded match badge and the site. Older alert links get their company from your emails at the next check',
+          'Login pages that ask for your email first, then the password, are now recognised on job sites'],
+  'pages': ['find'],
+  'fixed': ['Home: the Calendar and To-do panels line up, and a long To-do list scrolls inside its panel',
+            'Find jobs: the "jobs that do not match your job titles" box now agrees with the match shown on each card']},
+ {'version': '3.4.1',
   'title': 'Alert-email jobs as cards with a match',
   'new': ['Find jobs: jobs from alert emails are now small cards with a match percentage (from the job title) and the company and city when the email has them. Kinds of role you do not look for are tucked away',
           'The Alert emails choice always offers LinkedIn, Indeed and Naukri',

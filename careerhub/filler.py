@@ -78,7 +78,7 @@ async def plan_field(f, db, page):
         path, is_cover = ans, "cover" in norm(f["label"])
         if src == "profile" and not is_cover:
             path = resume_for_job(db) or path
-        if is_cover and db.ai_key and truthy(db.settings.get("ai_cover_letters") or ""):
+        if is_cover and db.ai_on and truthy(db.settings.get("ai_cover_letters") or ""):
             made = await ai_cover_letter_flow(db)
             if made:
                 return {"action": "fill", "value": made, "src": "AI cover letter"}
@@ -109,7 +109,7 @@ async def ask_batch(db, asks):
     """One card with every unknown question on the page. Saves the answers. Returns {index: value}."""
     qs = []
     for i, (f, p) in enumerate(asks):
-        qs.append({**p["q"], "qid": i, "ai": bool(db.ai_key) and p["q"]["kind"] in ("text", "textarea")})
+        qs.append({**p["q"], "qid": i, "ai": db.ai_on and p["q"]["kind"] in ("text", "textarea")})
     n = len(qs)
     res = await UI.ask(title=f"{n} new question{'s' if n > 1 else ''} on this page",
                        message="Answer what you can; anything left empty is skipped. Your answers are remembered.",

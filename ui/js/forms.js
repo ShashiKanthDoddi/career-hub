@@ -3,14 +3,14 @@ const SETTINGS_SECTIONS = {"Job email (Gmail)":"set-email", "Job-site accounts":
 const SETTINGS_TITLES = {"Job email (Gmail)":"Job email", "Job-site accounts":"Job-site logins", "Applying":"Applying", "Finding jobs":"Finding jobs", "AI helper (optional)":"AI helper"};
 const SETTINGS_INTRO = {"Job email (Gmail)":"Reads your job Gmail for replies from companies. It never sends from, deletes or changes your emails.",
   "Job-site accounts":"The password the app uses when it creates a new account on a job site. Use one that's only for job sites.",
-  "Applying":"", "Finding jobs":"Used by Find jobs to decide what fits.", "AI helper (optional)":"With a Claude API key, the app can draft written answers and tailored cover letters. You always review them first."};
+  "Applying":"", "Finding jobs":"Used by Find jobs to decide what fits.", "AI helper (optional)":"The app can draft written answers and tailored cover letters, with a free AI or with your own paid Claude key. You always review them first."};
 let DIRTY = {profile:false, settings:false};
 const SWITCHES = ["pause_after_each_page", "review_before_fill", "ai_cover_letters", "gmail_auto"];
 function fieldHTML(f, i){
   let input;
   if (f.type === "switch" || SWITCHES.includes(f.key))
     return `<div class="field ${f.label.length > 46 ? "wide" : ""}"><label>${esc(f.label)}</label><label class="switch" style="margin-top:6px"><input type="checkbox" data-i="${i}" ${/^no/i.test(f.value) ? "" : f.value || f.type === "switch" ? "checked" : ""}> <span class="muted small">${/^no/i.test(f.value) ? "Off" : "On"}</span></label>${f.hint ? `<div class="hint">${esc(f.hint)}</div>` : ""}</div>`;
-  if (f.type === "choice") input = `<select data-i="${i}"><option value="">Ask me each time</option>${f.options.map(o => `<option ${f.value === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+  if (f.type === "choice") input = `<select data-i="${i}"><option value="">${esc(f.blank || "Ask me each time")}</option>${f.options.map(o => `<option ${f.value === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
   else if (f.type === "yesno") input = `<select data-i="${i}"><option value="">Ask me each time</option>${["Yes","No"].map(o => `<option ${f.value === o ? "selected" : ""}>${o}</option>`).join("")}</select>`;
   else if (f.type === "file"){ const files = [...new Set([...(STATE.files || []), f.value].filter(Boolean))];
     input = `<select data-i="${i}"><option value="">None</option>${files.map(o => `<option ${f.value === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`; }
@@ -145,7 +145,7 @@ function showNews(){ const v = STATE.changelog[0];
   $("#layer").innerHTML = `<div class="modal"><div class="sheet" style="--k:var(--hi)"><div class="sh"><div class="kind" style="color:var(--hi-ink)">Updated to version ${esc(v.version)}</div><h2>${esc(v.title)}</h2></div>
     <div class="sb"><ul style="padding-left:18px;margin:0 0 6px;color:var(--ink-2)">${v.new.map(x => `<li style="margin:4px 0">${esc(x)}</li>`).join("")}${v.fixed.map(x => `<li class="muted" style="margin:4px 0">Fixed: ${esc(x)}</li>`).join("")}</ul>
     <div class="row" style="margin-top:16px"><button class="btn primary" id="newsOk">Got it</button><button class="btn ghost" id="newsAll">See every version</button></div></div></div></div>`;
-  const done = () => { $("#layer").innerHTML = ""; api_seen_version(); $("#navNew").hidden = true; };
+  const done = () => { $("#layer").innerHTML = ""; api_seen_version(); };
   $("#newsOk").onclick = done; $("#newsAll").onclick = () => { done(); go("settings"); setTimeout(() => $("#set-news").scrollIntoView({behavior:"smooth"}), 80); }; }
 $("#checkUpdBtn").onclick = () => checkUpdates(true);
 $("#zipBtn").onclick = () => $("#zipFile").click();

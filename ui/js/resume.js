@@ -23,7 +23,7 @@ async function loadResumePage(name){
   $("#rsName").textContent = r.file;
   $("#rsText").innerHTML = r.text ? resumeHTML(r.text, (r.ats && r.ats.skills) || [])
     : emptyHTML("file", "No text could be read", "Job sites can't read this file either. Save it again as a PDF from Word or Google Docs.");
-  $("#rsTailorBtn").title = r.ai ? "" : "Needs your Claude key in Settings, AI helper";
+  $("#rsTailorBtn").title = r.ai ? "" : "Needs the free AI or your Claude key: Settings, AI helper";
   renderSummary(); renderAts(r.ats); renderSkills(); setRsTab(RS_TAB);
   await showResumeFile(r);
 }

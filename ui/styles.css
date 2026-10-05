@@ -22,7 +22,12 @@
   --ink:#EEEAF7; --ink-2:#C4BDD8; --muted:#958DAE;
   --hi-soft:#3A3115; --hi-ink:#FFE38A; --teal-soft:#143331; --green-soft:#16301F; --rose-soft:#3A1A22;
   --amber-soft:#36270F; --violet-soft:#2A2350; --shadow-1:none; --shadow-2:0 14px 40px rgba(0,0,0,.5);
+  --teal:#4FD1C5; --green:#5FD68D; --rose:#FF8AA0; --amber:#FFB74D;
 }
+/* dark mode: bright accents and a calm tint of each accent over the card colour (the pastel tints looked muddy) */
+:root[data-mode=dark] .stagebox{--tint:var(--c)}
+:root[data-mode=dark] .stagebox.k-saved{--c:var(--ink-2);--tint:#9AA3B5}
+:root[data-mode=dark] .stagebox.k-applied,:root[data-mode=dark] .stagebox.k-heard,:root[data-mode=dark] .stagebox.k-int,:root[data-mode=dark] .stagebox.k-offer,:root[data-mode=dark] .stagebox.k-saved{background:color-mix(in srgb,var(--tint) 10%,var(--surface));border-color:color-mix(in srgb,var(--tint) 28%,var(--line))}
 :root[data-theme=emerald]{ --paper:#0E1915; --surface:#15251F; --surface-2:#1A2E27; --ink:#E8F3EE; --ink-2:#B7CFC5; --muted:#7FA093;
   --line:#243B33; --line-2:#2F4B41; --plum:#0A120F; --plum-2:#173028; --violet:#3DD9A0; --violet-soft:#12392D; --hi:#F2C14E; }
 :root[data-theme=mint]{ --paper:#DDEBE6; --surface:#F2FAF7; --surface-2:#E8F4EF; --ink:#12302B; --ink-2:#3A5A53; --muted:#4F6B64;
@@ -61,6 +66,7 @@ aside.side{background:linear-gradient(180deg,var(--plum),color-mix(in srgb,var(-
 .nav .count{margin-left:auto;background:var(--hi);color:var(--plum);font-size:11.5px;font-weight:800;border-radius:99px;padding:0 7px;min-width:20px;text-align:center}
 .nav kbd{margin-left:auto;font:600 11px var(--font);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.22);border-radius:5px;padding:0 5px}
 .side .grow{flex:1}
+.nav .newtag{margin-left:auto}.nav .newtag + .count{margin-left:6px}
 .nav .chev{margin-left:auto;width:16px;height:16px;transition:transform .15s}.nav .count + .chev{margin-left:8px}
 #moreBtn[aria-expanded=true] .chev{transform:rotate(180deg)}
 .more{display:flex;flex-direction:column;gap:2px;padding-left:10px}.more[hidden]{display:none}
@@ -156,7 +162,7 @@ tbody tr:hover td{background:var(--surface-2)}
 .nextup.soon .nu-k{color:var(--amber)}.nextup h2{margin:2px 0 0;font-size:20px}.nextup .nu-sub{font-size:14px;color:var(--ink-2);margin-top:2px}
 .nextup .nu-acts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}.nextup .nu-brief{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
 .nextup .nu-brief h4{margin:8px 0 4px;font-size:14px}.nextup .nu-brief ul{margin:0 0 6px;padding-left:18px;color:var(--ink-2);font-size:14px}.nextup .nu-src{font-size:12px;color:var(--muted)}
-.weeksum{margin:16px 0}.weeksum .ws-top{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end}
+.weeksum{margin:16px 0}.weeksum .ws-top{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start}
 .weeksum .ws-n{font:var(--head-w) 26px/1 var(--font-head);color:var(--ink)}.weeksum .ws-l{font-size:13px;color:var(--muted);margin-top:4px}
 .weeksum .ws-d{font-size:12px;color:var(--muted)}.weeksum .ws-bars{display:flex;gap:6px;align-items:flex-end;height:56px;margin-left:auto}
 .weeksum .ws-bars i{display:block;width:16px;min-height:3px;border-radius:4px 4px 0 0;background:var(--line-2)}.weeksum .ws-bars i.now{background:var(--violet)}
@@ -197,6 +203,12 @@ tbody tr:hover td{background:var(--surface-2)}
 .skillcloud{display:flex;flex-wrap:wrap;gap:6px}
 .result{display:grid;grid-template-columns:auto 52px 1fr auto;gap:14px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line)}
 .result:last-child{border-bottom:0}
+.result.compact{grid-template-columns:auto 1fr auto auto;padding:7px 6px;gap:12px}.result.compact b{font-weight:600;font-size:14px}
+.al-tag{font-size:12px!important;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:1px 9px}
+.al-box{margin-top:14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface-2);overflow:hidden}
+.al-box .result{background:var(--surface);padding-left:12px;padding-right:12px}
+.al-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;width:100%;text-align:left;padding:12px 14px;background:none;border:0;color:var(--ink);cursor:pointer;font:inherit}
+.al-head span{color:var(--muted);font-size:13px;flex:1}.al-head .al-act{flex:none;color:var(--violet);font-weight:700}
 .result b{display:block}.result span{color:var(--muted);font-size:13px}
 .ring{--p:0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;
   background:radial-gradient(closest-side,var(--surface) 76%,transparent 78%),conic-gradient(var(--teal) calc(var(--p)*1%),var(--line) 0)}
@@ -309,7 +321,7 @@ main{height:100vh}
 .muted{color:var(--muted)}
 
 /* home: calendar + to-do */
-.cal-nav{display:flex;align-items:center;gap:6px;margin-bottom:8px}.cal-nav b{flex:1;text-align:center}
+.cal-nav{display:flex;align-items:center;gap:6px;margin-bottom:8px}.cal-nav b{flex:1;order:-1;text-align:left;font-size:16px}.cal-nav .btn{min-width:36px;justify-content:center;line-height:1}#calPrev,#calFwd{font-size:20px}#calToday{margin-left:4px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .cal .dow{text-align:center;font-size:12px;color:var(--muted);padding:2px 0}
 .cal .day{position:relative;border:1px solid transparent;background:none;border-radius:10px;padding:8px 0;font-size:14px;cursor:pointer;transition:background .12s}

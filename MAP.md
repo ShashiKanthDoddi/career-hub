@@ -2,7 +2,7 @@
 
 Read this first, then open only the file you need. Each Python module is small and focused.
 
-Docs updated: 2026-10-04 (3.3)
+Docs updated: 2026-10-05 (3.4)
 
 ## Start and launchers
 
@@ -31,7 +31,7 @@ Docs updated: 2026-10-04 (3.3)
 | `answers.py` | 89 | Answers.lookup(): finds an answer from memory/profile. FIELD_ALIASES (extra wordings per profile field) and COMPUTED answers. | `Answers`, `FIELD_ALIASES`, `COMPUTED` |
 | `resume.py` | 92 | Reads the resume PDF (`pdf_text` for any version); skills/titles/years; picks 2nd/3rd resume by job title. | `resume_for_job`, `resume_text`, `read_resume`, `resume_profile`, `resume_info`, `MKT_SKILLS`, `ROLE_PHRASES` |
 | `resume_tools.py` | 208 | Resume page logic, pure text functions: `ats_check` (score + plain-words tips), `keyword_match` (job words in / missing, lowercased before `norm` so HubSpot stays one word), `skill_gaps` / `target_roles` (ROLE_SKILLS with free COURSES), `html_to_text`. | `ats_check`, `keyword_match`, `skill_gaps`, `target_roles`, `ROLE_SKILLS`, `COURSES` |
-| `ai.py` | 108 | Claude API calls: drafts for questions, interview prep tips (`ai_prep`), tailored cover letters (PDF). `free_complete`: a keyless free AI (Pollinations) for public text only, never her resume. | `ai_complete`, `free_complete`, `ai_context`, `ai_answer`, `ai_prep`, `text_to_pdf`, `ai_cover_letter_flow` |
+| `ai.py` | 108 | AI calls (`Answers.ai_paid` / `ai_nvidia` / `ai_on` pick Free Pollinations, NVIDIA `nvidia_complete`, or Claude from setting `ai_mode`): drafts for questions, interview prep tips (`ai_prep`), tailored cover letters (PDF). `free_complete`: keyless Pollinations (the default AI). | `ai_complete`, `free_complete`, `ai_context`, `ai_answer`, `ai_prep`, `text_to_pdf`, `ai_cover_letter_flow` |
 | `filler.py` | 400 | Fills one page: plan_field -> ask_batch (one card for all unknowns) -> `review_before_fill` (3.3: one card with every answer about to be typed, setting `review_before_fill`) -> fill_field. Next/Submit button detection. | `click_check`, `popup_options`, `plan_field`, `ask_batch`, `fill_field`, `scan`, `fill_page`, `find_buttons`, `settle`, `SUCCESS_RE` … |
 | `auth.py` | 146 | Gets from job posting to the form: clicks Apply, signs in / creates accounts. | `get_password`, `auth_state`, `handle_auth`, `get_to_form` |
 | `apply_run.py` | 310 | Runs a list of jobs: apply_one (page loop, summary, submit), run_apply, job browser. | `save_draft`, `open_browser`, `table_rows`, `apply_one`, `job_browser`, `run_apply` |
@@ -66,7 +66,7 @@ Docs updated: 2026-10-04 (3.3)
 | `ui/js/run.js` | 27 | Run bar while applying/finding; end-of-run results. |
 | `ui/js/resume.js` | 118 | Resume page: summary tiles (`renderSummary`), PDF preview from a blob (`api_resume_pdf`) or the read text with keywords highlighted (`resumeHTML`), tabs Health / Fit / Skills / Files (`setRsTab`); Files is the moved Your files form (`renderFileForm` in forms.js). | `loadResumePage`, `setRsTab` |
 | `ui/js/questions.js` | 62 | Question cards from Python: single questions and the all-at-once form (showForm). `askYes` is the in-app Yes/Cancel: never use confirm(), Playwright closes it at once. |
-| `ui/js/find.js` | 99 | Find jobs: resume tags, one search choice (`setFindMode`: Find jobs for me / Only companies I choose), results list with filters (text, posted, match, sort), only the last search by default (`ONLY_LAST`, `last` from state `last_found`), unreadable companies (`diag.missing`), dismiss. |
+| `ui/js/find.js` | 99 | Find jobs: resume tags, one search choice (`setFindMode`: Find jobs for me / Only companies I choose), results list with filters (text, posted, match, sort), only the last search by default (`ONLY_LAST`, `last` from state `last_found`), unreadable companies (`diag.missing`), dismiss. Alert-email jobs (`alert`, `site` from api_found) sit in a folded box (`ALERTS_OPEN`), start unticked, and the `fAlerts` choice (state `alert_show`) shows all, one site or none. |
 | `ui/js/jobs.js` | 115 | Interview 'Get ready' card in the drawer (`prepHTML`, `api_prep`). My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
 | `ui/js/forms.js` | 156 | Profile and Settings forms, the Your files form on the Resume page (`renderFileForm`, autosave `saveFileFields`), saved answers, themes, What's new, zip install. |
 | `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |

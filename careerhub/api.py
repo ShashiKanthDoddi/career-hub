@@ -37,6 +37,32 @@ def start_task(coro):
     t.add_done_callback(TASKS.discard)
 
 
+def _vkey(v):
+    return tuple(int(x) if x.isdigit() else 0 for x in str(v).split("."))
+
+
+NEW_PAGES = None                                # decided once per launch
+
+
+def _new_pages():
+    """Pages that got a new feature or improvement (bug fixes don't count), shown with a "new" tag only on the
+    first launch after an update; later launches show none. A page leaves the list when she opens it."""
+    global NEW_PAGES
+    if NEW_PAGES is None:
+        seen = app_state().get("pages_version")
+        NEW_PAGES = [] if seen is None else sorted({p for e in CHANGELOG if _vkey(e["version"]) > _vkey(seen)
+                                                    for p in e.get("pages", [])}) if seen != APP_VERSION else []
+        if seen != APP_VERSION:
+            save_app_state(pages_version=APP_VERSION)
+    return NEW_PAGES
+
+
+async def api_page_seen(page):
+    if page in _new_pages():
+        NEW_PAGES.remove(page)
+    return True
+
+
 async def api_state():
     try:
         profile = profile_values()
@@ -57,7 +83,7 @@ async def api_state():
                 t for t in st.get("find_tokens", []) if t != "auto"), "find_auto": "auto" in st.get("find_tokens", ["auto"]),
             "profile": profile, "profile_error": err, "files": folder_files(),
             "jobs_text": "\n".join(read_jobs_file()), "app_name": APP_NAME, "owner": OWNER,
-            "theme": st.get("theme", "clean"), "font": st.get("font", "classic"), "calm": bool(st.get("calm")), "changelog": CHANGELOG,
+            "theme": st.get("theme", "clean"), "font": st.get("font", "classic"), "calm": bool(st.get("calm")), "alert_show": st.get("alert_show", ""), "new_pages": _new_pages(), "changelog": CHANGELOG,
             "whats_new": st.get("last_seen_version") not in (None, APP_VERSION),
             "first_run": st.get("last_seen_version") is None,
             "needs_profile": (not email) or "example.com" in email, "busy": UI.busy,
@@ -453,7 +479,7 @@ async def api_resume_page(name=""):
     roles = target_roles(app_state().get("find_roles", ""), resume_profile(text)["roles"] if text else [])
     return {"ok": True, "versions": versions, "file": info["file"], "text": text[:20000],
             "ats": ats_check(text) if info["exists"] and info["pdf"] else None,
-            "gaps": skill_gaps(text, roles), "ai": bool(db.ai_key)}
+            "gaps": skill_gaps(text, roles), "ai": db.ai_on}
 
 
 async def api_resume_pdf(name=""):
@@ -518,8 +544,8 @@ async def api_resume_tailor(job, name=""):
     """Rewrite suggestions from Claude for one job (needs the Claude key in Settings)."""
     from .ai import ai_tailor
     db = Answers()
-    if not db.ai_key:
-        return {"ok": False, "error": "Add your Claude key in Settings, AI helper, to get rewrite suggestions."}
+    if not db.ai_on:
+        return {"ok": False, "error": "Add your Claude key in Settings, AI helper, or choose another AI, to get rewrite suggestions."}
     text = await _job_text(job)
     if not text:
         return {"ok": False, "error": "I couldn't read that job page. Copy the job text and paste it here instead."}
@@ -533,8 +559,8 @@ async def api_resume_tailor(job, name=""):
 async def api_prep(company, title, kind):
     """Interview prep tips for the job drawer. Needs the Claude key from Settings."""
     db = Answers()
-    if not db.ai_key:
-        return {"ok": False, "error": "Add your Claude key in Settings to get prep tips."}
+    if not db.ai_on:
+        return {"ok": False, "error": "Add your Claude key in Settings, AI helper, or choose another AI, to get prep tips."}
     try:
         return {"ok": True, "text": await ai_prep(db, company, title, kind)}
     except Exception as e:
@@ -571,9 +597,12 @@ async def api_found():
         seen.add(k)
         out.append({"score": j.get("Match %"), "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
-                    "link": j.get("Link"), "date": j.get("Date found"), "last": k in last,
+                    "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": str(j.get("Company") or "").endswith(" alert"),
+                    "site": str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else "",
                     "dup": same_job.get((norm(j.get("Company")), norm(j.get("Job title")))) if len(norm(j.get("Job title"))) >= 6 else None})
-    return out[:150]
+    real = [x for x in out if not x["alert"]][:150]           # alert-email links must not push real finds off the list
+    keep = {id(x) for x in real} | {id(x) for x in out if x["alert"]}
+    return [x for x in out if id(x) in keep][:300]
 
 
 async def api_site_limits():
@@ -645,6 +674,12 @@ async def api_set_theme(theme):
 
 async def api_set_font(font):
     save_app_state(font=font if font in FONTS else "classic")
+    return True
+
+
+async def api_set_alert_show(choice):
+    """Which alert-email jobs Find jobs lists: "" (all), "none", or one site name such as LinkedIn."""
+    save_app_state(alert_show=str(choice or "")[:30])
     return True
 
 

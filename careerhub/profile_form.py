@@ -75,17 +75,24 @@ PROFILE_FORM = [
     ("Job email (Gmail)", "Check this inbox automatically", "settings", "gmail_auto", "switch"),
     ("Help", "Send problem reports to (email)", "settings", "helper_email", "text"),
     ("Help", "GitHub token for reports and ideas (optional)", "settings", "github_token", "secret"),
+    ("AI helper (optional)", "Which AI to use", "settings", "ai_mode", "choice:NVIDIA (free key)|Claude (paid, needs a key)"),
+    ("AI helper (optional)", "NVIDIA API key (free, from build.nvidia.com)", "settings", "nvidia_api_key", "secret"),
+    ("AI helper (optional)", "NVIDIA model (leave empty for the best one)", "settings", "nvidia_model", "text"),
     ("AI helper (optional)", "Claude API key (from console.anthropic.com)", "settings", "claude_api_key", "secret"),
     ("AI helper (optional)", "Write a tailored cover letter for every job", "settings", "ai_cover_letters", "switch"),
 ]
 
 
+BLANK_LABELS = {"ai_mode": "Free (no key needed)"}
 FORM_HINTS = {
     "gmail_app_password": "Not the normal Gmail password: a 16-letter app password. The guide shows how to make one.",
     "gmail_address_2": "Optional: Career Hub reads this inbox too. It needs its own 16-letter app password.",
     "helper_email": "Problem reports go here, e.g. the person who set this up for you.",
     "github_token": "Optional. With it, a report or idea becomes a GitHub issue straight away. Needs permission to write issues.",
-    "claude_api_key": "Optional. Enables ✨ AI drafts and cover letters.",
+    "nvidia_api_key": "Only for NVIDIA. Sign in free at build.nvidia.com, open any model, and choose Get API key. No card needed.",
+    "nvidia_model": "Optional. Needs a model name from build.nvidia.com; if it fails the app tries other good ones.",
+    "ai_mode": "Free needs no key. NVIDIA is better and also free, with a key. Both send the job text and your resume text to an online AI service. Claude is paid.",
+    "claude_api_key": "Only for Claude. Enables ✨ AI drafts and cover letters.",
     "resume|cv|upload|attach|select files|file": "Not in the list? Drop the file into the box above, then pick it here.",
 }
 
@@ -100,5 +107,5 @@ def profile_values():
         tab = "settings" if (where == "settings" and section != "Files") else "profile"
         opts = typ.split(":", 1)[1].split("|") if typ.startswith("choice:") else []
         out.append({"section": section, "label": label, "where": where, "key": key, "type": typ.split(":")[0], "options": opts,
-                    "value": "" if v is None else str(v), "hint": FORM_HINTS.get(key, ""), "tab": tab})
+                    "value": "" if v is None else str(v), "hint": FORM_HINTS.get(key, ""), "blank": BLANK_LABELS.get(key, ""), "tab": tab})
     return out

@@ -8,7 +8,42 @@ from .state import CURRENT_JOB, PW
 from .textutil import slug
 
 
+NVIDIA_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+NVIDIA_MODELS = ["deepseek-ai/deepseek-v3.2", "moonshotai/kimi-k2.5", "meta/llama-3.3-70b-instruct"]   # tried in turn, model names change
+
+
+async def nvidia_complete(db, prompt, max_tokens=900):
+    """NVIDIA's free hosted models (build.nvidia.com, free key). Her own model name first, then the fallbacks."""
+    own = str(db.settings.get("nvidia_model") or "").strip()
+    err = "no model answered"
+    req = await PW["p"].request.new_context()
+    try:
+        for model in ([own] if own else []) + [m for m in NVIDIA_MODELS if m != own]:
+            r = await req.post(NVIDIA_URL, timeout=120000,
+                               headers={"Authorization": f"Bearer {db.nvidia_key}", "content-type": "application/json"},
+                               data={"model": model, "max_tokens": max_tokens, "temperature": 0.6,
+                                     "messages": [{"role": "user", "content": prompt}]})
+            if r.status in (401, 403):
+                raise RuntimeError("NVIDIA did not accept the key. Check it in Settings, AI helper.")
+            if r.status == 429:
+                raise RuntimeError("NVIDIA's free limit was reached for now. Wait a minute and try again.")
+            if not r.ok:
+                err = f"{model}: error {r.status}"
+                continue
+            d = await r.json()
+            text = ((d.get("choices") or [{}])[0].get("message") or {}).get("content") or ""
+            if text.strip():
+                return text.strip()
+        raise RuntimeError(err)
+    finally:
+        await req.dispose()
+
+
 async def ai_complete(db, prompt, max_tokens=900):
+    if db.ai_nvidia:
+        return await nvidia_complete(db, prompt, max_tokens)
+    if not db.ai_paid:
+        return await free_complete(prompt)
     model = str(db.settings.get("ai_model") or "claude-sonnet-5-5")
     req = await PW["p"].request.new_context()
     try:

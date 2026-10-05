@@ -48,41 +48,58 @@ function diagText(d){
 let ONLY_LAST = false;                           // right after a search: show only what that search found
 async function loadFound(diag){ showFound(await api_found(), diag); }
 function showFound(jobs, diag){
-  FOUND = jobs; OFF.clear(); jobs.forEach((j, i) => { if (j.dup) OFF.add(i); }); $("#foundPanel").hidden = false;   // jobs she already applied to start unticked
+  FOUND = jobs; OFF.clear(); jobs.forEach((j, i) => { if (j.dup || j.alert) OFF.add(i); }); $("#foundPanel").hidden = false;   // jobs she already applied to start unticked
   if (diag !== undefined) ONLY_LAST = !!(diag && diag.fetched !== undefined);       // a dismiss reloads without diag: keep the view
   $("#findDiag").textContent = diagText(diag || STATE.find_diag);
-  $("#foundFilters").hidden = !jobs.length; drawFound();
+  fillAlerts(); $("#foundFilters").hidden = !jobs.length; drawFound();
   const fresh = jobs.filter(j => j.last).length;
   if (PAGE !== "find" && diag && fresh){ setCount("#navFound", fresh); toast(`${fresh} new job${fresh > 1 ? "s" : ""} that fit you`); }
 }
 const OFF = new Set();                          // jobs she unticked: kept when the filters change
 function foundView(){
   const q = $("#fQ").value.trim().toLowerCase(), age = +$("#fAge").value, min = +$("#fMin").value, sort = $("#fSort").value;
-  const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!ONLY_LAST || j.last) && (!q ||`${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
+  const rows = FOUND.map((j, i) => [j, i]).filter(([j]) => (!ONLY_LAST || j.last) && alertOk(j) && (!q ||`${j.title} ${j.company} ${j.location || ""}`.toLowerCase().includes(q)) &&
     (!age || j.age == null || +j.age < age + (age === 1 ? 1 : 0)) && (!min || j.score >= min));
   if (sort === "new") rows.sort((a, b) => (a[0].age ?? 999) - (b[0].age ?? 999));
   else if (sort === "co") rows.sort((a, b) => a[0].company.localeCompare(b[0].company));
   return rows;
 }
 let FOUND_SHOWN = 60;                            // long lists are drawn 60 at a time so the page stays quick
+let ALERTS_OPEN = false, ALERT_SHOWN = 60;       // alert-email links sit in their own folded box under the real jobs
+function jobRow(j, i){
+  const ext = `<span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
+      <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span>`;
+  return j.alert ? `<label class="result compact"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
+      <div><b>${esc(j.title)}</b></div><span class="al-tag">${esc(j.site)}</span>${ext}</label>`
+    : `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
+      <div class="ring" style="--p:${j.score}">${j.score}</div>
+      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>${ext}</label>`;
+}
 function drawFound(more){
-  if (more !== true) FOUND_SHOWN = 60;
+  if (more !== true){ FOUND_SHOWN = 60; ALERT_SHOWN = 60; }
   const jobs = FOUND, all = foundView(), rows = all.slice(0, FOUND_SHOWN);
   const lastN = FOUND.filter(j => j.last).length, earlier = FOUND.length - lastN, s = n => n > 1 ? "s" : "";
   $("#foundTitle").textContent = ONLY_LAST ? (lastN ? `${lastN} new job${s(lastN)} from this search` : "No new jobs from this search")
     : FOUND.length ? `${FOUND.length} job${s(FOUND.length)} that fit you` : "No matching jobs yet";
+  const nAl = FOUND.filter(j => !alertOk(j)).length;
+  if (nAl) $("#foundTitle").textContent += ` (${nAl} from alert emails hidden)`;
   $("#foundScope")?.remove();
   if (ONLY_LAST ? earlier : lastN && earlier) $("#findDiag").insertAdjacentHTML("beforeend", ` <a href="#" id="foundScope">${ONLY_LAST ? `Show ${earlier} job${s(earlier)} found before` : "Show only the last search"}</a>`);
   $("#foundScope") && ($("#foundScope").onclick = e => { e.preventDefault(); ONLY_LAST = !ONLY_LAST; drawFound(); });
-  $("#foundList").innerHTML = rows.length ? rows.map(([j, i]) => `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
-      <div class="ring" style="--p:${j.score}">${j.score}</div>
-      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>
-      <span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
-      <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></label>`).join("") +
-      (all.length > rows.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${all.length - rows.length} left)</button>` : "")
-    : ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
+  const real = all.filter(([j]) => !j.alert), al = all.filter(([j]) => j.alert), shown = real.slice(0, FOUND_SHOWN);
+  const open = ALERTS_OPEN || (!real.length && al.length), alShown = al.slice(0, ALERT_SHOWN);
+  let html = shown.map(([j, i]) => jobRow(j, i)).join("") +
+    (real.length > shown.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${real.length - shown.length} left)</button>` : "");
+  if (al.length) html += `<div class="al-box"><button class="al-head" id="alToggle" aria-expanded="${open}"><b>From job alert emails</b>
+      <span>${al.length} link${al.length > 1 ? "s" : ""} from ${[...new Set(al.map(([j]) => j.site))].join(", ")}. No match score: open one to check it.</span>
+      <span class="al-act">${open ? "Hide" : "Show"}</span></button>` +
+    (open ? alShown.map(([j, i]) => jobRow(j, i)).join("") + (al.length > alShown.length ? `<button class="btn sm feed-more" id="alMore">Show more (${al.length - alShown.length} left)</button>` : "") : "") + `</div>`;
+  $("#foundList").innerHTML = html ||
+    (ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
-    : emptyHTML("search", "Nothing here yet", "Choose where to search above and press Find jobs. A lower minimum match in Settings shows more.");
+    : emptyHTML("search", "Nothing here yet", "Choose where to search above and press Find jobs. A lower minimum match in Settings shows more."));
+  $("#alToggle") && ($("#alToggle").onclick = () => { ALERTS_OPEN = !open; drawFound(true); });
+  $("#alMore") && ($("#alMore").onclick = () => { ALERT_SHOWN += 60; drawFound(true); });
   $("#bulk").hidden = !jobs.length; updateBulk();
   $("#foundMore") && ($("#foundMore").onclick = () => { FOUND_SHOWN += 60; drawFound(true); });
   $$(".fj").forEach(c => c.onchange = () => { c.checked ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); updateBulk(); });
@@ -90,6 +107,15 @@ function drawFound(more){
     await api_dismiss_found(FOUND[+b.dataset.dis].link); loadFound(); });
 }
 $("#fQ").oninput = debounce(() => drawFound()); $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = () => drawFound();
+function alertOk(j){ const a = STATE.alert_show || ""; return !j.alert || !a || (a !== "none" && j.site === a); }
+function fillAlerts(){                           // "Alert emails": all, one site (LinkedIn, Indeed...) or none
+  const sites = [...new Set(FOUND.filter(j => j.alert).map(j => j.site))].sort(), cur = STATE.alert_show || "";
+  $("#fAlerts").hidden = !sites.length;
+  $("#fAlerts").innerHTML = `<option value="">Alert emails: all</option>` + sites.map(x => `<option value="${esc(x)}">Alert emails: ${esc(x)} only</option>`).join("") + `<option value="none">Alert emails: hide all</option>`;
+  $("#fAlerts").value = cur;
+  if ($("#fAlerts").value !== cur){ $("#fAlerts").value = ""; STATE.alert_show = ""; }
+}
+$("#fAlerts").onchange = () => { STATE.alert_show = $("#fAlerts").value; api_set_alert_show(STATE.alert_show); drawFound(); };
 function picked(){ return foundView().filter(([, i]) => !OFF.has(i)).map(([j]) => j.link); }     // every shown-by-filter job, also those not drawn yet
 function updateBulk(){ const n = picked().length; $("#bulkText").textContent = `${n} selected`; }
 function selectShown(on){ foundView().forEach(([, i]) => on ? OFF.delete(i) : OFF.add(i)); $$(".fj").forEach(c => c.checked = on); updateBulk(); }

@@ -1,14 +1,35 @@
 {
- "version": "3.3",
- "date": "2026-10-04",
+ "version": "3.4",
+ "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.4",
+   "title": "Tidier job list, free AI choices",
+   "new": [
+    "Find jobs: links from job alert emails now sit in their own folded box under your real jobs, so they no longer fill the list. A new Alert emails choice shows all, one site (LinkedIn, Indeed...) or none",
+    "Settings, AI helper: choose Free (no key), NVIDIA (free key) or Claude (paid). Free is now the default, so answers, cover letters and prep tips work without a key",
+    "A small \"new\" tag appears in the left pane on a page that got a new feature, only on the first start after an update",
+    "Dark mode: calmer, brighter colours on the Home boxes"
+   ],
+   "pages": [
+    "find",
+    "settings",
+    "resume"
+   ],
+   "fixed": [
+    "The Last 7 days numbers and the calendar header line up better"
+   ]
+  },
   {
    "version": "3.3",
    "title": "Check your answers before they are filled in",
    "new": [
     "Before each page is filled, a card lists every answer the app is about to type. Change anything that is wrong (it is remembered), or tick Leave empty to skip one",
     "You can turn this off in Settings, Applying"
+   ],
+   "pages": [
+    "settings"
    ],
    "fixed": []
   },
@@ -91,19 +112,6 @@
    "fixed": [
     "Check for updates now finds a new version as soon as it is published (before, it could say \"no new updates\" for a few minutes)"
    ]
-  },
-  {
-   "version": "2.8.2",
-   "title": "Smarter email sorting",
-   "new": [
-    "Cards in \"Needs you\" have a new ✕ button, \"Not a job email\": it hides the card and stops showing emails from that sender"
-   ],
-   "fixed": [
-    "Newsletters and adverts (for example \"interview tips\" or \"practice test\" emails) are no longer shown as interviews",
-    "Emails in Gmail's Promotions and Social tabs are skipped, so checking email is quicker",
-    "Older cards are sorted again once with the new rules, and wrong ones are removed",
-    "Pasting a screenshot into Report a problem adds it only once"
-   ]
   }
  ],
  "files": [
@@ -117,15 +125,15 @@
   },
   {
    "path": "careerhub/ai.py",
-   "sha256": "ba0cc928f7e4d5ca94c36c768a94b2084b9b2b61187cff659ed6d3cc665c75c1"
+   "sha256": "6b87f6eefe4326f5d331e0e5b14332ca8ef2621893da61c14a94f96e363dd796"
   },
   {
    "path": "careerhub/answers.py",
-   "sha256": "0fce20026902984d7310dc381e3597b0531167f17c85b4b8d0b4e2dc4347b01c"
+   "sha256": "342bd855a673795f7bfac2c602ea2eca3b0d6dbcb5a6d9953cf8c5ecb8001631"
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "79e4beba2afe5e6d630c8fc3560b4fd30b6d42fcfecb8d11af82e2ba8526fcdf"
+   "sha256": "88d2c61708b2fc6bea7718cf905a3177f605e066a46d648b098b0df1f64ee01b"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -141,15 +149,15 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "ce2cc5d7d0aef656e8388924da79f361dc1de7751fd8e5a3c1cee0abe592099d"
+   "sha256": "7452146d95d5ddff0878efba3c1dfcb9c965ecdb551e3604085fc0f9286125af"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "a6db9703dfe70da6f7f4cbde770c755400a5fd711c816d5354e7b32c5beb649e"
+   "sha256": "d4152a3579a77dc99b3973c03ca8822b910585c0884fc7e0f5b8692bc2ba6157"
   },
   {
    "path": "careerhub/filler.py",
-   "sha256": "fe68b6cc37439257eac5379c1767b79e3a87f8698957cf7272fed6b03f7b78b5"
+   "sha256": "21100d839aa163616659b6d1b413c74cb2ddc6fa14cbf4488185e06535b0b21d"
   },
   {
    "path": "careerhub/finder.py",
@@ -193,7 +201,7 @@
   },
   {
    "path": "careerhub/profile_form.py",
-   "sha256": "f226ebdf00a51a28ecab0a27c327b8aeddc0a788fb5b769dd53d26934233125f"
+   "sha256": "77dc4ba01dce42c514578b09c76b3fc0571c9f1642b0270af22e9d2b583531a3"
   },
   {
    "path": "careerhub/records.py",
@@ -241,11 +249,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "0075ea5813b65095f3e7d7a45cb2a7c2084784a16c74ede31360ad216e5ca494"
+   "sha256": "644c863062d6734da143baee10d40baec01bdc0d1c67ad60ae80b6aa72f415d8"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "9ac622343763168ebc250c6fd16171189ee89a53397238c1ce4d3eff27f0257b"
+   "sha256": "e1005156e62c6a33ae610ed980001dfbb482d2187241bd3ce7cfb742cab60224"
   },
   {
    "path": "ui/js/apply.js",
@@ -253,7 +261,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "2d80c90d13e7d21a5068bd27693ff1056fc0d27da77bde698491d33ef544fca2"
+   "sha256": "03cf346befee84dcda641550dc4fe92551fd10c544aa01f3c4caaac747d4abab"
   },
   {
    "path": "ui/js/events.js",
@@ -261,11 +269,11 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "7396d7dc19c108a30ffef7ec30d88fda196d885375f7a9d59efe245bba516a06"
+   "sha256": "c51921517f878c92aed9ad887b5578140011a2ec9817977d7aa0618da8c538e7"
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "ffaf91304fa19bb6935b1a198596bd1eb5f609baacc370b2abe94eb429da11d4"
+   "sha256": "ee32ca7df9f63d58b88dcff0fdc4884706593de322d2d1a84e58b0435c6decc3"
   },
   {
    "path": "ui/js/history.js",
@@ -293,7 +301,7 @@
   },
   {
    "path": "ui/js/resume.js",
-   "sha256": "be88e31fb33ea43ed725f2eae9ffcf193d148e5307933ff65bdcc67dba739364"
+   "sha256": "cd9f0a7d316fa7bdf4f41564eb8ff91f2536fdf4388458a7a913f0d88ad51e85"
   },
   {
    "path": "ui/js/run.js",
@@ -321,11 +329,11 @@
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "45815f20be7b8f6b1e816885c39f44efa35dd6500583ddde55fa3facb00b72f6"
+   "sha256": "32def07db34a897f2c17e4c3d52944b6bc9781cb044380714151e446a24ca1e5"
   },
   {
    "path": "MAP.md",
-   "sha256": "25c774b24304b3e840731d529702fa02546dc487da3fc1723db3b304a598aa25"
+   "sha256": "2bf62abae5eb3b26ae8c180fd2dae4f9e3ab49893a79e76a8518fd06752e177f"
   },
   {
    "path": "Setup (Mac).command",
@@ -344,5 +352,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "PBcZ3eeWpYHlzC+xO8N6jjj5kLAgHZl30Tlzaz4jS8teXRXc8XdvOgfL6ZJlJ/+mvWUzh01VJn80T2rb6rClDQ=="
+ "signature": "+Z29Vzn3RpnaiWQxuNlt8k0/DwFpRPfXYsBqTc/9WMjKgXlKzuU8d1mq8eUQOhPG/OH0JiXhFjw0KMvgYj1GBQ=="
 }

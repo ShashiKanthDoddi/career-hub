@@ -19,6 +19,11 @@ class Answers:
         self.site_password = str(settings.get("job_site_password") or "").strip()
         self.memory = dict(data()["answers"])
         self.ai_key = str(settings.get("claude_api_key") or "").strip()
+        mode = str(settings.get("ai_mode") or "").strip().lower()
+        self.nvidia_key = str(settings.get("nvidia_api_key") or "").strip()
+        self.ai_nvidia = mode.startswith("nvidia")
+        self.ai_paid = mode.startswith("claude") or (not mode and bool(self.ai_key))   # a saved Claude key with no choice keeps Claude; otherwise free
+        self.ai_on = bool(self.nvidia_key) if self.ai_nvidia else bool(self.ai_key) if self.ai_paid else True
 
     def _experience_part(self, unit):
         """Years or months out of her total experience ('3', '3.5', '3 years 6 months')."""

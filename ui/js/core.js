@@ -32,6 +32,7 @@ function go(p, opts={}){
   $$(".nav[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === p));
   PAGES.forEach(x => { const el = $("#p-" + x); el.hidden = x !== p; if (x === p){ el.classList.remove("fade-in"); void el.offsetWidth; el.classList.add("fade-in"); } });
   $("#main").scrollTop = 0;
+  if ((STATE.new_pages || []).includes(p)){ STATE.new_pages = STATE.new_pages.filter(x => x !== p); api_page_seen(p); drawNewTag(p); }
   if ((p === "profile" || p === "settings") && FORMS_STALE) drawForms();
   if (p === "home") loadHome();
   if (p === "jobs") loadJobs(opts.filter || "all");     // from the sidebar: never keep an old stage filter (it looked like an empty board)
@@ -41,6 +42,12 @@ function go(p, opts={}){
   if (p === "profile"){ loadAnswers(); loadHistory(); }
 }
 $$(".nav[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+function drawNewTag(p){                        // "new" in the left pane: a page got a new feature or improvement (not for bug fixes)
+  const b = $(`.nav[data-go="${p}"]`); if (!b) return;
+  let t = b.querySelector(".newtag"), on = (STATE.new_pages || []).includes(p) && PAGE !== p;
+  if (on && !t){ t = document.createElement("span"); t.className = "count newtag"; t.textContent = "new"; b.querySelector("span").after(t); }
+  if (!on && t) t.remove();
+}
 $$("[data-open]").forEach(b => b.onclick = () => api_open(b.dataset.open));
 
 /* ===== state ===== */
@@ -54,7 +61,7 @@ async function loadState(){
   if (!COMPS.length && STATE.find_companies) STATE.find_companies.split(",").map(s => s.trim()).filter(Boolean).forEach(c => addTag("comp", c));
   if (STATE.find_roles && !ROLES.length) STATE.find_roles.split(",").map(s => s.trim()).filter(Boolean).forEach(r => addTag("role", r));
   FORMS_STALE = true; if (PAGE === "profile" || PAGE === "settings") drawForms();   // the big forms are only drawn when she opens them
-  $("#navNew").hidden = !STATE.whats_new;
+  $$(".nav[data-go]").forEach(b => drawNewTag(b.dataset.go));
 }
 let FORMS_STALE = true;
 function drawForms(){ renderForms(); renderThemes(); renderChangelog(); renderUpdateInfo(); FORMS_STALE = false; }

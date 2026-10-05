@@ -1,9 +1,20 @@
-"""changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release."""
+"""changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release.
+Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
+each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.3',
+CHANGELOG = [{'version': '3.4',
+  'title': 'Tidier job list, free AI choices',
+  'new': ['Find jobs: links from job alert emails now sit in their own folded box under your real jobs, so they no longer fill the list. A new Alert emails choice shows all, one site (LinkedIn, Indeed...) or none',
+          'Settings, AI helper: choose Free (no key), NVIDIA (free key) or Claude (paid). Free is now the default, so answers, cover letters and prep tips work without a key',
+          'A small "new" tag appears in the left pane on a page that got a new feature, only on the first start after an update',
+          'Dark mode: calmer, brighter colours on the Home boxes'],
+  'pages': ['find', 'settings', 'resume'],
+  'fixed': ['The Last 7 days numbers and the calendar header line up better']},
+ {'version': '3.3',
   'title': 'Check your answers before they are filled in',
   'new': ['Before each page is filled, a card lists every answer the app is about to type. Change anything that is wrong (it is remembered), or tick Leave empty to skip one',
           'You can turn this off in Settings, Applying'],
+  'pages': ['settings'],
   'fixed': []},
  {'version': '3.2',
   'title': 'Resume page: files first, skills for each job',

@@ -1,8 +1,21 @@
 {
- "version": "3.4.6",
+ "version": "3.4.7",
  "date": "2026-10-05",
- "urgent": false,
+ "urgent": true,
  "changelog": [
+  {
+   "version": "3.4.7",
+   "title": "Rate alert-email jobs by pasting the text",
+   "new": [
+    "Find jobs: Rate it on an alert-email card. LinkedIn does not let the app read its job pages, so you paste the job description and the app rates it against your resume. Indeed and Naukri pages are read when the site allows it"
+   ],
+   "pages": [
+    "find"
+   ],
+   "fixed": [
+    "Pressing Check in 3.4.6 could make the app rest from LinkedIn for the day for applying too. It no longer does, and any rest it caused is cleared"
+   ]
+  },
   {
    "version": "3.4.6",
    "title": "A real match for every job",
@@ -89,18 +102,6 @@
    "fixed": [
     "The Last 7 days numbers and the calendar header line up better"
    ]
-  },
-  {
-   "version": "3.3",
-   "title": "Check your answers before they are filled in",
-   "new": [
-    "Before each page is filled, a card lists every answer the app is about to type. Change anything that is wrong (it is remembered), or tick Leave empty to skip one",
-    "You can turn this off in Settings, Applying"
-   ],
-   "pages": [
-    "settings"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -122,7 +123,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "85a7741023c518dd1e859aeaaaaa8474ed85616b55f1d1cf8aa2689e90e1def1"
+   "sha256": "450589b76ea6f8130e2e084fe5c738671dc637029fe8f9a68d9365041cf67eb2"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -138,11 +139,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "98cc582b4697cd7d3cecb6a28d4c3e191a434d2fccb85dc9436694ca63beb524"
+   "sha256": "65aea5cd658c64492dd3e9653ca24f50b78ed6ac1ad5b6cbaadcebec2ad88c0a"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "b3dda5b85d018945d58fc8fe248ab3dab12348be3bcf22624529d53ccccbda1a"
+   "sha256": "df7d79fa9b94b21b56475edcc2162108198265f4a70756001b150f3b973deaad"
   },
   {
    "path": "careerhub/filler.py",
@@ -246,7 +247,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "c0e23554283e6dee94742a872d30e3c70d49904c9482ff40a7962908f111bf31"
+   "sha256": "957dd43b2067aa533b98fcd9c68250421e44e78816e25eb82fdd95aed0330efe"
   },
   {
    "path": "ui/js/apply.js",
@@ -262,7 +263,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "49fd397efed19c0b9307b292f9981a92b865b495da651523ba7021df573c949c"
+   "sha256": "ed6269fe54aac483641c2dc07f0437f6d4c4fc2f78ee79b477f3a5e76aa55d1b"
   },
   {
    "path": "ui/js/forms.js",
@@ -290,7 +291,7 @@
   },
   {
    "path": "ui/js/questions.js",
-   "sha256": "3c5994ae51714f686c5a57b455e8610490b5a455bb07fd00fe8cf720eb0f4e4e"
+   "sha256": "97759ddc4709976e214675feba6f53c1e3cc906e9ef041d974d6f0ef5a8a0bf9"
   },
   {
    "path": "ui/js/resume.js",
@@ -345,5 +346,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "KOaKp2uFsFcdiha8dRwiwSOTprEmMPgLaWY7sQcnZBmJhjdm3YRdouJ2KvmuX5iqVi1pfQTAOw8BPzZMg4YLAA=="
+ "signature": "CvKXJyRulMn7MdfwDnUiYhqOzwnmD1FsLREzNcZIX0p8g6qqA9GRHl7acWbVeoHAZwyQhe26cbRiKRtN6pqPAQ=="
 }

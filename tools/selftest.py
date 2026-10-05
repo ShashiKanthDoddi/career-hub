@@ -107,6 +107,8 @@ def main():
     check(jobsites.alert_jobs('<a href="https://www.naukri.com/job-listings-seo-manager-acme-123?src=m">SEO Manager</a>'
                               '<a href="https://www.naukri.com/jobs">More</a>') ==
           [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
+    check(jobsites.alert_details('<a href="https://www.linkedin.com/jobs/view/123456789">SEO Lead</a><p>Acme Corp</p><p>Pune, India</p><p>2 days ago</p>')
+          == [("https://www.linkedin.com/jobs/view/123456789", "SEO Lead", "Acme Corp", "Pune, India")], "Alert email: company and city read after the job link")
     from careerhub.finder import location_ok
     check(location_ok("Remote, India", ["bengaluru", "remote"]) and location_ok("Remote", ["remote"])
           and not location_ok("Munich, Germany remote", ["bengaluru", "remote"]) and not location_ok("Remote in the US", ["remote"]),

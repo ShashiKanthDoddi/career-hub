@@ -65,18 +65,24 @@ function foundView(){
   return rows;
 }
 let FOUND_SHOWN = 60;                            // long lists are drawn 60 at a time so the page stays quick
-let ALERTS_OPEN = false, ALERT_SHOWN = 60;       // alert-email links sit in their own folded box under the real jobs
-function jobRow(j, i){
-  const ext = `<span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
+let ALERTS_OPEN = false, OFFROLE_OPEN = false, ALERT_SHOWN = 30;       // alert-email links sit in their own folded box under the real jobs
+function jobBtns(j, i){
+  return `<span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
       <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span>`;
-  return j.alert ? `<label class="result compact"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
-      <div><b>${esc(j.title)}</b></div><span class="al-tag">${esc(j.site)}</span>${ext}</label>`
-    : `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
+}
+function jobCard(j, i){                          // an alert-email job as a small card
+  const place = (/ alert$/.test(j.company) ? "" : j.company) + (j.location ? (/ alert$/.test(j.company) ? "" : ", ") + j.location : "");
+  return `<label class="al-card"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
+      <div class="ring" style="--p:${j.score}" title="From the job title only">${j.score}</div>
+      <div class="al-txt"><b>${esc(j.title)}</b><span>${place ? esc(place) : "Company shown on the job page"}</span><em>${esc(j.site)}</em></div>${jobBtns(j, i)}</label>`;
+}
+function jobRow(j, i){
+  return `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
       <div class="ring" style="--p:${j.score}">${j.score}</div>
-      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>${ext}</label>`;
+      <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>${jobBtns(j, i)}</label>`;
 }
 function drawFound(more){
-  if (more !== true){ FOUND_SHOWN = 60; ALERT_SHOWN = 60; }
+  if (more !== true){ FOUND_SHOWN = 60; ALERT_SHOWN = 30; }
   const jobs = FOUND, all = foundView(), rows = all.slice(0, FOUND_SHOWN);
   const lastN = FOUND.filter(j => j.last).length, earlier = FOUND.length - lastN, s = n => n > 1 ? "s" : "";
   $("#foundTitle").textContent = ONLY_LAST ? (lastN ? `${lastN} new job${s(lastN)} from this search` : "No new jobs from this search")
@@ -87,19 +93,25 @@ function drawFound(more){
   if (ONLY_LAST ? earlier : lastN && earlier) $("#findDiag").insertAdjacentHTML("beforeend", ` <a href="#" id="foundScope">${ONLY_LAST ? `Show ${earlier} job${s(earlier)} found before` : "Show only the last search"}</a>`);
   $("#foundScope") && ($("#foundScope").onclick = e => { e.preventDefault(); ONLY_LAST = !ONLY_LAST; drawFound(); });
   const real = all.filter(([j]) => !j.alert), al = all.filter(([j]) => j.alert), shown = real.slice(0, FOUND_SHOWN);
-  const open = ALERTS_OPEN || (!real.length && al.length), alShown = al.slice(0, ALERT_SHOWN);
+  const open = ALERTS_OPEN || (!real.length && al.length);
+  const fit = al.filter(([j]) => !j.off).sort((a, b) => b[0].score - a[0].score), off = al.filter(([j]) => j.off);
+  const alShown = fit.slice(0, ALERT_SHOWN), offShown = OFFROLE_OPEN ? off.slice(0, ALERT_SHOWN) : [];
+  const grid = list => `<div class="al-grid">${list.map(([j, i]) => jobCard(j, i)).join("")}</div>`;
   let html = shown.map(([j, i]) => jobRow(j, i)).join("") +
     (real.length > shown.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${real.length - shown.length} left)</button>` : "");
   if (al.length) html += `<div class="al-box"><button class="al-head" id="alToggle" aria-expanded="${open}"><b>From job alert emails</b>
-      <span>${al.length} link${al.length > 1 ? "s" : ""} from ${[...new Set(al.map(([j]) => j.site))].join(", ")}. No match score: open one to check it.</span>
+      <span>${al.length} link${al.length > 1 ? "s" : ""} from ${[...new Set(al.map(([j]) => j.site))].join(", ")}. The match is from the job title only.</span>
       <span class="al-act">${open ? "Hide" : "Show"}</span></button>` +
-    (open ? alShown.map(([j, i]) => jobRow(j, i)).join("") + (al.length > alShown.length ? `<button class="btn sm feed-more" id="alMore">Show more (${al.length - alShown.length} left)</button>` : "") : "") + `</div>`;
+    (open ? `<div class="al-body">${fit.length ? grid(alShown) : `<p class="small muted">None of these look like your kind of role.</p>`}` +
+      (fit.length > alShown.length ? `<button class="btn sm feed-more" id="alMore">Show more (${fit.length - alShown.length} left)</button>` : "") +
+      (off.length ? `<button class="btn sm ghost feed-more" id="offToggle">${OFFROLE_OPEN ? "Hide" : "Show"} ${off.length} other kind${off.length > 1 ? "s" : ""} of role</button>${OFFROLE_OPEN ? grid(offShown) : ""}` : "") + `</div>` : "") + `</div>`;
   $("#foundList").innerHTML = html ||
     (ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
     : emptyHTML("search", "Nothing here yet", "Choose where to search above and press Find jobs. A lower minimum match in Settings shows more."));
   $("#alToggle") && ($("#alToggle").onclick = () => { ALERTS_OPEN = !open; drawFound(true); });
-  $("#alMore") && ($("#alMore").onclick = () => { ALERT_SHOWN += 60; drawFound(true); });
+  $("#alMore") && ($("#alMore").onclick = () => { ALERT_SHOWN += 30; drawFound(true); });
+  $("#offToggle") && ($("#offToggle").onclick = () => { OFFROLE_OPEN = !OFFROLE_OPEN; drawFound(true); });
   $("#bulk").hidden = !jobs.length; updateBulk();
   $("#foundMore") && ($("#foundMore").onclick = () => { FOUND_SHOWN += 60; drawFound(true); });
   $$(".fj").forEach(c => c.onchange = () => { c.checked ? OFF.delete(+c.dataset.i) : OFF.add(+c.dataset.i); updateBulk(); });
@@ -109,9 +121,9 @@ function drawFound(more){
 $("#fQ").oninput = debounce(() => drawFound()); $("#fAge").onchange = $("#fMin").onchange = $("#fSort").onchange = () => drawFound();
 function alertOk(j){ const a = STATE.alert_show || ""; return !j.alert || !a || (a !== "none" && j.site === a); }
 function fillAlerts(){                           // "Alert emails": all, one site (LinkedIn, Indeed...) or none
-  const sites = [...new Set(FOUND.filter(j => j.alert).map(j => j.site))].sort(), cur = STATE.alert_show || "";
-  $("#fAlerts").hidden = !sites.length;
-  $("#fAlerts").innerHTML = `<option value="">Alert emails: all</option>` + sites.map(x => `<option value="${esc(x)}">Alert emails: ${esc(x)} only</option>`).join("") + `<option value="none">Alert emails: hide all</option>`;
+  const sites = [...new Set(["LinkedIn", "Indeed", "Naukri", ...FOUND.filter(j => j.alert).map(j => j.site)])], cnt = x => FOUND.filter(j => j.site === x).length, cur = STATE.alert_show || "";
+  $("#fAlerts").hidden = !FOUND.some(j => j.alert);
+  $("#fAlerts").innerHTML = `<option value="">Alert emails: all</option>` + sites.map(x => `<option value="${esc(x)}">Alert emails: ${esc(x)} only (${cnt(x)})</option>`).join("") + `<option value="none">Alert emails: hide all</option>`;
   $("#fAlerts").value = cur;
   if ($("#fAlerts").value !== cur){ $("#fAlerts").value = ""; STATE.alert_show = ""; }
 }

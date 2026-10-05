@@ -10,7 +10,7 @@ from .apply_run import run_apply
 from .bridge import UI, log, os_open
 from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
-from .finder import location_ok, run_find
+from .finder import location_ok, match_score, relevant_title, run_find
 from .gmail import check_mail, mail_settings
 from . import history, planner
 from .overview import jobs_overview
@@ -590,15 +590,18 @@ async def api_found():
     out, seen = [], set()
     wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
     last = set(app_state().get("last_found", []))               # found by the newest search
+    aprof = {"skills": [], "roles": [norm(r) for r in split_list(app_state().get("find_roles", ""))] or ["marketing"], "years": None}
     for j in reversed(data()["found_jobs"]):
         k = norm_link(j.get("Link"))
         if k in applied or k in seen or j.get("Dismissed") or not location_ok(j.get("Location"), wanted):
             continue                                   # also hides jobs saved before the location filter existed
         seen.add(k)
-        out.append({"score": j.get("Match %"), "title": j.get("Job title"), "company": j.get("Company"),
+        is_alert = bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert")
+        title_fit = is_alert and relevant_title(j.get("Job title") or "", aprof)
+        out.append({"score": match_score(j.get("Job title") or "", "", aprof) if is_alert else j.get("Match %"), "off": is_alert and not title_fit, "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
-                    "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": str(j.get("Company") or "").endswith(" alert"),
-                    "site": str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else "",
+                    "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert"),
+                    "site": j.get("Alert site") or (str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else ""),
                     "dup": same_job.get((norm(j.get("Company")), norm(j.get("Job title")))) if len(norm(j.get("Job title"))) >= 6 else None})
     real = [x for x in out if not x["alert"]][:150]           # alert-email links must not push real finds off the list
     keep = {id(x) for x in real} | {id(x) for x in out if x["alert"]}

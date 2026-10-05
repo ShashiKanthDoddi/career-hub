@@ -2,7 +2,14 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4',
+CHANGELOG = [{'version': '3.4.1',
+  'title': 'Alert-email jobs as cards with a match',
+  'new': ['Find jobs: jobs from alert emails are now small cards with a match percentage (from the job title) and the company and city when the email has them. Kinds of role you do not look for are tucked away',
+          'The Alert emails choice always offers LinkedIn, Indeed and Naukri',
+          'Settings, AI helper shows only the boxes of the AI you choose'],
+  'pages': ['find', 'settings'],
+  'fixed': []},
+ {'version': '3.4',
   'title': 'Tidier job list, free AI choices',
   'new': ['Find jobs: links from job alert emails now sit in their own folded box under your real jobs, so they no longer fill the list. A new Alert emails choice shows all, one site (LinkedIn, Indeed...) or none',
           'Settings, AI helper: choose Free (no key), NVIDIA (free key) or Claude (paid). Free is now the default, so answers, cover letters and prep tips work without a key',

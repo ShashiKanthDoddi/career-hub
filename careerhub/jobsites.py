@@ -3,6 +3,7 @@ from urllib.parse import parse_qs, urlparse
 import asyncio
 import datetime
 import random
+import html
 import re
 from .bridge import check_stop, log
 from .records import tracker_rows
@@ -92,13 +93,33 @@ def clean_job_link(url):
     return None
 
 
+ALERT_NOISE = re.compile(r"(?i)apply|view|ago\b|applicant|actively|promoted|salary|hiring|alert|see all|unsubscribe|\d+\s*(?:day|hour|week)|[\u20b9$]|^new$|^\W*$")
+
+
 def alert_jobs(htm):
     """[(link, title)] from the HTML of a job-alert email."""
+    return [(l, t) for l, t, _c, _loc in alert_details(htm)]
+
+
+def alert_details(htm):
+    """[(link, title, company, location)] from a job-alert email. The company and city are read from the text
+    that follows each job link (the first short line, then the next); they are empty when they can't be told."""
+    htm = htm or ""
+    anchors = list(re.finditer(r'(?is)<a\s[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', htm))
     out, seen = [], set()
-    for href, inner in re.findall(r'(?is)<a\s[^>]*href=["\']([^"\']+)["\'][^>]*>(.*?)</a>', htm or ""):
-        link = clean_job_link(re.sub(r"&amp;", "&", href))
-        title = re.sub(r"\s+", " ", re.sub(r"(?s)<[^>]+>", " ", inner)).strip()
-        if link and link not in seen and 4 <= len(title) <= 120 and not re.search(r"(?i)^(view|apply|see)\b", title):
-            seen.add(link)
-            out.append((link, title))
+    for n, m in enumerate(anchors):
+        link = clean_job_link(re.sub(r"&amp;", "&", m.group(1)))
+        title = re.sub(r"\s+", " ", re.sub(r"(?s)<[^>]+>", " ", m.group(2))).strip()
+        if not (link and link not in seen and 4 <= len(title) <= 120 and not re.search(r"(?i)^(view|apply|see)\b", title)):
+            continue
+        seen.add(link)
+        end = anchors[n + 1].start() if n + 1 < len(anchors) else len(htm)
+        chunks = []
+        for c in re.split(r"(?s)<[^>]+>", htm[m.end():min(end, m.end() + 700)]):
+            c = html.unescape(re.sub(r"\s+", " ", c)).strip()
+            for piece in re.split(r"\s[\u00b7\u2022|]\s", c):
+                piece = piece.strip()
+                if piece and piece.lower() != title.lower() and len(piece) <= 70 and not ALERT_NOISE.search(piece):
+                    chunks.append(piece)
+        out.append((link, title, chunks[0] if chunks else "", chunks[1] if len(chunks) > 1 else ""))
     return out

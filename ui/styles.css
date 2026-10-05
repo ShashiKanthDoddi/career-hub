@@ -203,10 +203,17 @@ tbody tr:hover td{background:var(--surface-2)}
 .skillcloud{display:flex;flex-wrap:wrap;gap:6px}
 .result{display:grid;grid-template-columns:auto 52px 1fr auto;gap:14px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line)}
 .result:last-child{border-bottom:0}
-.result.compact{grid-template-columns:auto 1fr auto auto;padding:7px 6px;gap:12px}.result.compact b{font-weight:600;font-size:14px}
+.result.compact{grid-template-columns:auto 1fr auto auto;padding:7px 6px;gap:12px}.result.compact b{font-weight:600;font-size:14px}.result.compact span{font-size:12.5px}
 .al-tag{font-size:12px!important;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:1px 9px}
 .al-box{margin-top:14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface-2);overflow:hidden}
 .al-box .result{background:var(--surface);padding-left:12px;padding-right:12px}
+.al-body{padding:6px 12px 12px}
+.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:6px}
+.al-card{display:grid;grid-template-columns:auto 44px 1fr auto;gap:10px;align-items:center;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);cursor:pointer}
+.al-card:hover{border-color:var(--line-2)}
+.al-card .ring{width:44px;height:44px;font-size:13px}
+.al-txt{min-width:0}.al-txt b{display:block;font-size:14px;line-height:1.3}.al-txt span{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.al-txt em{font-style:normal;font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:0 8px;display:inline-block;margin-top:4px}
 .al-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;width:100%;text-align:left;padding:12px 14px;background:none;border:0;color:var(--ink);cursor:pointer;font:inherit}
 .al-head span{color:var(--muted);font-size:13px;flex:1}.al-head .al-act{flex:none;color:var(--violet);font-weight:700}
 .result b{display:block}.result span{color:var(--muted);font-size:13px}

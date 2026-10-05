@@ -8,7 +8,7 @@ import imaplib
 import re
 from . import planner
 from .bridge import UI, log, notify
-from .jobsites import ALERT_SENDERS, alert_jobs
+from .jobsites import ALERT_SENDERS, alert_details
 from .meetings import find_change, find_meeting
 from .records import save_found, seen_links, tracker_rows
 from .state import MAIL
@@ -283,7 +283,7 @@ def process_mail(items, rows, known_ids):
 
 
 def alert_links(items):
-    """Job links from LinkedIn / Indeed / Naukri alert emails: [(link, title, site)]."""
+    """Job links from LinkedIn / Indeed / Naukri alert emails: [(link, title, site, company, location)]."""
     out = []
     for _gid, raw in items:
         msg = email.message_from_bytes(raw)
@@ -297,7 +297,7 @@ def alert_links(items):
                     htm = (part.get_payload(decode=True) or b"").decode(part.get_content_charset() or "utf-8", "replace")
                 except Exception:
                     continue
-                out += [(l, t, site.title()) for l, t in alert_jobs(htm)]
+                out += [(l, t, site.title(), c, loc) for l, t, c, loc in alert_details(htm)]
     return out
 
 
@@ -455,11 +455,11 @@ async def check_mail(manual=False):
             for u in box_new:
                 u["gmail"] = gmail_link(addr, u["id"])
             new += box_new
-            for link, title, site in alert_links(items):
+            for link, title, site, company, place in alert_links(items):
                 if norm_link(link) not in have:
                     have.add(norm_link(link))
-                    found.append({"score": "", "company": f"{site} alert", "title": title, "location": "",
-                                  "age": None, "link": link})
+                    found.append({"score": "", "company": company or f"{site} alert", "title": title, "location": place,
+                                  "age": None, "link": link, "alert_site": site})
         for u in new:
             if u["id"] in old_unmatched:
                 u["done"] = old_unmatched[u["id"]].get("done", u["done"])

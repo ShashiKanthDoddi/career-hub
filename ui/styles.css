@@ -207,7 +207,7 @@ tbody tr:hover td{background:var(--surface-2)}
 .al-tag{font-size:12px!important;background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:1px 9px}
 .al-box{margin-top:14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface-2);overflow:hidden}
 .al-box .result{background:var(--surface);padding-left:12px;padding-right:12px}
-.al-body{padding:6px 12px 12px}
+.al-body{padding:6px 12px 12px}.al-tools{display:flex;align-items:center;gap:12px;padding:4px 14px 10px}
 .al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:8px}
 .al-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:14px 14px 10px 40px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);cursor:pointer;transition:border-color .12s,transform .12s}
 .al-card:hover{border-color:var(--line-2);transform:translateY(-1px)}

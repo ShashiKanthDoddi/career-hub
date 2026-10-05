@@ -7,6 +7,7 @@ import html
 import re
 from .answers import Answers
 from .bridge import StopRun, UI, check_stop, log
+from .match import score_job
 from .records import save_found, seen_links
 from .resume import resume_info
 from .state import FIND_DIAG, PW
@@ -115,40 +116,9 @@ def relevant_title(title, prof):
     return any(has_phrase(w, t) for w in STRONG_TITLE_WORDS + prof["roles"])
 
 
-def match_score(title, desc, prof):
-    t = norm(title)
-    if any(has_phrase(r, t) for r in prof["roles"] if r != "marketing"):
-        s = 55
-    elif "marketing" in t:
-        s = 40
-    else:
-        s = 25
-    d = norm(desc)
-    if d and prof["skills"]:
-        s += min(45, 6 * sum(1 for k in prof["skills"] if has_phrase(k, d)))
-    elif not d:
-        s += 15
-    return min(s, 100)
-
-
-LEVELS = [(0, r"intern|apprentice|trainee|fresher|graduate"), (1, r"junior|jr|associate|entry|assistant| i"),
-          (3, r"senior|sr| iii|iv"), (4, r"lead|principal|staff|manager|head"), (5, r"director|vp|vice president|chief")]
-
-
-def title_score(title, prof, years=None):
-    """A finer match for a job known only by its title (alert emails): her role words, resume skills in the title,
-    and how the level (intern, senior, director...) fits her years of experience. 5 to 95."""
-    t = norm(title)
-    s = match_score(title, "", prof)
-    s += min(15, 5 * sum(1 for k in prof.get("skills", []) if has_phrase(k, t)))
-    s -= min(8, max(0, len(t.split()) - 3) * 2)                      # very long titles are usually less specific
-    level = next((lv for lv, pat in LEVELS if re.search(rf"(?:^| )(?:{pat})(?: |$)", f" {t} ")), 2 if re.search(r"(?:^| )ii(?: |$)", t) else None)
-    if level is not None:                                            # years unknown: assume a middle level and judge more gently
-        want = 2 if years is None else 0 if years < 1 else 1 if years < 3 else 2 if years < 6 else 3 if years < 9 else 4 if years < 14 else 5
-        s -= min(28, (4 if years is None else 7) * abs(level - want))
-    if t in [norm(r) for r in prof.get("roles", [])]:                # the title is exactly one of her roles
-        s += 5
-    return max(5, min(95, s))
+def match_score(title, desc, prof, location=None, wanted=None):
+    """0-100 from the job text, her resume, roles, years and cities; None when there is not enough to judge (see match.py)."""
+    return score_job(title, desc, location, prof, wanted, location_ok)["score"]
 
 
 async def get_json(req, url, data=None):
@@ -379,13 +349,13 @@ async def search_jobs(p, db, roles, tokens, all_openings=False):
             if j["age"] is not None and j["age"] > max_age:
                 diag["old"] += 1
                 continue
-        j["score"] = match_score(j["title"], j["desc"], prof)
-        if all_openings or j["score"] >= min_score:
+        j["score"] = match_score(j["title"], j["desc"], prof, j["location"], locations)
+        if all_openings or j["score"] is None or j["score"] >= min_score:     # no number = not enough text to judge: keep it, unrated
             matches.append(j)
             done.add(norm_link(j["link"]))
         else:
             diag["match"] += 1
-    matches.sort(key=lambda j: (-j["score"], j["age"] if j["age"] is not None else 99))
+    matches.sort(key=lambda j: (-(j["score"] if j["score"] is not None else -1), j["age"] if j["age"] is not None else 99))
     if matches:
         save_found(matches)
     diag["new"] = len(matches)

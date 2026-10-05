@@ -112,7 +112,7 @@ def seen_links():
 
 def save_found(jobs):
     for j in jobs:
-        data()["found_jobs"].append({"Date found": datetime.datetime.now().strftime("%Y-%m-%d"), "Match %": j["score"],
+        data()["found_jobs"].append({"Date found": datetime.datetime.now().strftime("%Y-%m-%d"), "Match %": "" if j["score"] is None else j["score"],
                                      "Company": j["company"], "Job title": j["title"], "Location": j["location"],
                                      "Posted (days ago)": "" if j["age"] is None else j["age"], "Link": j["link"],
                                      **({"Alert site": j["alert_site"]} if j.get("alert_site") else {})})

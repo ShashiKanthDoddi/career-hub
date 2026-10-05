@@ -1,8 +1,21 @@
 {
- "version": "3.4.5",
+ "version": "3.4.6",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.4.6",
+   "title": "A real match for every job",
+   "new": [
+    "A new way to rate jobs: the match now compares the skills and words in the job text with your resume, your job titles, the years the job asks for, the level in the title and the city",
+    "No more made-up numbers: a job with too little text to judge shows \"Not rated yet\" instead of a percentage",
+    "Find jobs: each alert-email card has a Check button that opens the job page, reads the company, city and text, and rates it. \"Check the first 10 jobs\" does this slowly. Sites that need a login can not be read, and the app stops for the day if a site asks for a security check"
+   ],
+   "pages": [
+    "find"
+   ],
+   "fixed": []
+  },
   {
    "version": "3.4.5",
    "title": "Alert-email match no longer all the same",
@@ -88,17 +101,6 @@
     "settings"
    ],
    "fixed": []
-  },
-  {
-   "version": "3.2",
-   "title": "Resume page: files first, skills for each job",
-   "new": [
-    "After you check a job on the Resume page, Skills to build shows the skills for that job compared with your resume, each missing one with a free course",
-    "Your files are now the first tab on the Resume page"
-   ],
-   "fixed": [
-    "Your resume preview fills the width and no longer shows the small page strip"
-   ]
   }
  ],
  "files": [
@@ -120,7 +122,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "4639312676585437ed211456e03d6c7369eada02e3621df89a8805c661972e5c"
+   "sha256": "85a7741023c518dd1e859aeaaaaa8474ed85616b55f1d1cf8aa2689e90e1def1"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -136,11 +138,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "570d0725de9676e06a46e18ce63dcf7e9a4d1f91acc7630537b81fc1fe0c3d7f"
+   "sha256": "98cc582b4697cd7d3cecb6a28d4c3e191a434d2fccb85dc9436694ca63beb524"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "1117a245e8d57c2d1971986d5454f55881ed537eb9eef73f09ab40db5fbf8281"
+   "sha256": "b3dda5b85d018945d58fc8fe248ab3dab12348be3bcf22624529d53ccccbda1a"
   },
   {
    "path": "careerhub/filler.py",
@@ -148,7 +150,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "cc71ab5beeb2aea65a85b5fc7553b9a5cc645082c1113f23a890c5dd986737fa"
+   "sha256": "fe3dacfc1eb395c43587f37fbfab63fe97f24e548f1a63ad1293a075dbaf004f"
   },
   {
    "path": "careerhub/gmail.py",
@@ -160,7 +162,7 @@
   },
   {
    "path": "careerhub/jobsites.py",
-   "sha256": "af0dfd25d100c4b926aed5ea8fd03764297d5893aabf83819c0eab49e498c906"
+   "sha256": "c826fd5f456d3e023994962bb5f6420c9d1ee8de19f73abf09acaa4b5255a94d"
   },
   {
    "path": "careerhub/launch.py",
@@ -169,6 +171,10 @@
   {
    "path": "careerhub/main.py",
    "sha256": "639913dede094576d9b9a47f0c69e4a9610da9ce73eb06892027c777bfbcc9d4"
+  },
+  {
+   "path": "careerhub/match.py",
+   "sha256": "b519c0cbf18f87977ba8a16440ddbe5dc89a9d7dd37db383da47d37a8dbe90af"
   },
   {
    "path": "careerhub/meetings.py",
@@ -192,7 +198,7 @@
   },
   {
    "path": "careerhub/records.py",
-   "sha256": "c1c5741cfdb67426cb5d8baab0499e48c195dc690bcd56b189f9a72af6dc5914"
+   "sha256": "bae52d0414354e45e7aa16aa216026872edafcb651cd98b004e989d76b6585fe"
   },
   {
    "path": "careerhub/reports.py",
@@ -204,7 +210,7 @@
   },
   {
    "path": "careerhub/resume.py",
-   "sha256": "36b023f4a8780db99e6b3ff321fd922b2bec36d54f190bb75cbd5be0a3e1b549"
+   "sha256": "07743b31fee4671ac86b5699fb5923b20b3f1de4e932e24cf58967df2efe4833"
   },
   {
    "path": "careerhub/resume_tools.py",
@@ -240,7 +246,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "55847e1c4a8628fb329dd4524d2bd4382c014e5a61f50ddf48cd6bc8de37eb37"
+   "sha256": "c0e23554283e6dee94742a872d30e3c70d49904c9482ff40a7962908f111bf31"
   },
   {
    "path": "ui/js/apply.js",
@@ -256,7 +262,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "a54553cf6360189850aeeef2171bafc61b6bbd65fa69fe46cce99a005c6904d3"
+   "sha256": "49fd397efed19c0b9307b292f9981a92b865b495da651523ba7021df573c949c"
   },
   {
    "path": "ui/js/forms.js",
@@ -312,7 +318,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "e4a4508ee304c40c876ffc338ff66637f559b370edc10e8743b69ea964e648eb"
+   "sha256": "cedebca1d0f4c7154f848f469da4c33b4daf05330a8a835fe332e2a65faf97e4"
   },
   {
    "path": "CLAUDE.md",
@@ -339,5 +345,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "inlztXc2cPYlMv1R+srj6ZIJtzzPHA0yJE++Lsd97pIxVGRQlXF8vU3gsfLFuHVKRRZBbEmRFDLzIJ+HrXw3Bg=="
+ "signature": "KOaKp2uFsFcdiha8dRwiwSOTprEmMPgLaWY7sQcnZBmJhjdm3YRdouJ2KvmuX5iqVi1pfQTAOw8BPzZMg4YLAA=="
 }

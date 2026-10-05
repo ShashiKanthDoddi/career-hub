@@ -10,7 +10,8 @@ from .apply_run import run_apply
 from .bridge import UI, log, os_open
 from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
-from .finder import location_ok, match_score, run_find, title_score
+from .finder import location_ok, run_find
+from .match import role_fit, score_job
 from .gmail import check_mail, mail_settings
 from . import history, planner
 from .overview import jobs_overview
@@ -590,20 +591,19 @@ async def api_found():
     out, seen = [], set()
     wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
     last = set(app_state().get("last_found", []))               # found by the newest search
-    try:
-        from .resume import resume_profile, resume_text
-        rp = resume_profile(resume_text(Answers()))
-    except Exception:
-        rp = {"skills": [], "years": None}
-    aprof = {"skills": rp.get("skills", []), "years": rp.get("years"), "roles": [norm(r) for r in split_list(app_state().get("find_roles", ""))] or ["marketing"]}
+    aroles = [norm(r) for r in split_list(app_state().get("find_roles", ""))]
     for j in reversed(data()["found_jobs"]):
         k = norm_link(j.get("Link"))
         if k in applied or k in seen or j.get("Dismissed") or not location_ok(j.get("Location"), wanted):
             continue                                   # also hides jobs saved before the location filter existed
         seen.add(k)
         is_alert = bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert")
-        ascore = title_score(j.get("Job title") or "", aprof, aprof.get("years")) if is_alert else None
-        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and match_score(j.get("Job title") or "", "", aprof) < 55, "title": j.get("Job title"), "company": j.get("Company"),   # off: below 55 = no role of hers in the title
+        checked = bool(j.get("Checked"))
+        fit = role_fit(j.get("Job title") or "", aroles) if is_alert else None
+        raw = j.get("Match %")
+        score = raw if isinstance(raw, (int, float)) and (checked or not is_alert) else None     # no number when the job text was not read
+        out.append({"score": score, "off": is_alert and not checked and fit is not None and fit < 0.3, "checked": checked,
+                    "title": j.get("Job title"), "company": j.get("Company"),
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
                     "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert"),
                     "site": j.get("Alert site") or (str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else ""),
@@ -611,6 +611,53 @@ async def api_found():
     real = [x for x in out if not x["alert"]][:150]           # alert-email links must not push real finds off the list
     keep = {id(x) for x in real} | {id(x) for x in out if x["alert"]}
     return [x for x in out if id(x) in keep][:300]
+
+
+async def api_check_alert(link):
+    """Opens one alert-email job's public page (one at a time, she pressed Check) and fills in the company, city and a
+    match from the full job text. Stops for the day if the site shows a robot check."""
+    import random
+    from .jobsites import CHALLENGE_RE, cooling_off, read_job_page, site_of, start_cooling_off
+    from .state import PW
+    site = site_of(link)
+    if site and cooling_off(site):
+        return {"ok": False, "error": f"{site} showed a security check earlier today, so the app is resting from it until tomorrow. Open the job yourself instead."}
+    row = next((j for j in data()["found_jobs"] if norm_link(j.get("Link")) == norm_link(link)), None)
+    if not row:
+        return {"ok": False, "error": "I can't find that job any more."}
+    await asyncio.sleep(random.uniform(1.5, 4))                 # never faster than a person clicking
+    req = await PW["p"].request.new_context(extra_http_headers={"Accept-Language": "en-US,en;q=0.9"})
+    try:
+        r = await req.get(link, timeout=20000)
+        htm = await r.text() if r.status == 200 else ""
+        blocked = r.status in (429, 999) or bool(CHALLENGE_RE.search(htm[:3000]))
+    except Exception:
+        htm, blocked = "", False
+    finally:
+        await req.dispose()
+    if blocked and site:
+        start_cooling_off(site)
+        return {"ok": False, "error": f"{site} asked for a security check, so I stopped. Open the job yourself instead."}
+    title, company, place, desc = read_job_page(htm)
+    if not (company or desc):
+        return {"ok": False, "error": "This site wants a login to show the job. Open it with the arrow instead."}
+    try:
+        from .resume import resume_profile, resume_text
+        rp = resume_profile(resume_text(Answers()))
+    except Exception:
+        return {"ok": False, "error": "I can't read your resume, so I can't rate this job. Check Resume, Your files."}
+    rp["roles"] = [norm(x) for x in split_list(app_state().get("find_roles", ""))] or rp.get("roles", [])
+    wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
+    res = score_job(row.get("Job title") or title, desc, row.get("Location") or place, rp, wanted, location_ok)
+    if res["score"] is None:
+        return {"ok": False, "error": "The job page didn't have enough text to rate it. Open it with the arrow instead."}
+    row["Match %"] = res["score"]
+    if company:
+        row["Company"] = company
+    row["Location"] = row.get("Location") or place
+    row["Checked"] = 1
+    save_data()
+    return {"ok": True}
 
 
 async def api_site_limits():

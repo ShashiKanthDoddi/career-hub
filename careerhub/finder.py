@@ -131,6 +131,24 @@ def match_score(title, desc, prof):
     return min(s, 100)
 
 
+LEVELS = [(0, r"intern|apprentice|trainee|fresher|graduate"), (1, r"junior|jr|associate|entry|assistant| i"),
+          (3, r"senior|sr| iii|iv"), (4, r"lead|principal|staff|manager|head"), (5, r"director|vp|vice president|chief")]
+
+
+def title_score(title, prof, years=None):
+    """A finer match for a job known only by its title (alert emails): her role words, resume skills in the title,
+    and how the level (intern, senior, director...) fits her years of experience. 5 to 95."""
+    t = norm(title)
+    s = match_score(title, "", prof)
+    s += min(15, 5 * sum(1 for k in prof.get("skills", []) if has_phrase(k, t)))
+    s -= min(8, max(0, len(t.split()) - 3) * 2)                      # very long titles are usually less specific
+    level = next((lv for lv, pat in LEVELS if re.search(rf"(?:^| )(?:{pat})(?: |$)", f" {t} ")), 2 if re.search(r"(?:^| )ii(?: |$)", t) else None)
+    if years is not None and level is not None:
+        want = 0 if years < 1 else 1 if years < 3 else 2 if years < 6 else 3 if years < 9 else 4 if years < 14 else 5
+        s -= min(28, 7 * abs(level - want))
+    return max(5, min(95, s))
+
+
 async def get_json(req, url, data=None):
     try:
         if data is None:

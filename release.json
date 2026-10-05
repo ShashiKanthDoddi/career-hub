@@ -1,8 +1,22 @@
 {
- "version": "3.4",
+ "version": "3.4.1",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.4.1",
+   "title": "Alert-email jobs as cards with a match",
+   "new": [
+    "Find jobs: jobs from alert emails are now small cards with a match percentage (from the job title) and the company and city when the email has them. Kinds of role you do not look for are tucked away",
+    "The Alert emails choice always offers LinkedIn, Indeed and Naukri",
+    "Settings, AI helper shows only the boxes of the AI you choose"
+   ],
+   "pages": [
+    "find",
+    "settings"
+   ],
+   "fixed": []
+  },
   {
    "version": "3.4",
    "title": "Tidier job list, free AI choices",
@@ -104,14 +118,6 @@
     "Bank, loan and shopping emails (for example \"thank you for applying\" for a credit card) are not taken as jobs",
     "Your older emails from the last 6 months are sorted again once, so missed rejections and jobs show up"
    ]
-  },
-  {
-   "version": "2.8.3",
-   "title": "Updates found right away",
-   "new": [],
-   "fixed": [
-    "Check for updates now finds a new version as soon as it is published (before, it could say \"no new updates\" for a few minutes)"
-   ]
   }
  ],
  "files": [
@@ -133,7 +139,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "88d2c61708b2fc6bea7718cf905a3177f605e066a46d648b098b0df1f64ee01b"
+   "sha256": "f1bcc63169fbbdcd3a4cedb794ac4147b542aa508accd605fc68391f94d6eaff"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -149,11 +155,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "7452146d95d5ddff0878efba3c1dfcb9c965ecdb551e3604085fc0f9286125af"
+   "sha256": "f25beec95706ca6e569b0658c38ea8d9f62cf0964581153761710a8049259050"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "d4152a3579a77dc99b3973c03ca8822b910585c0884fc7e0f5b8692bc2ba6157"
+   "sha256": "f246dd46691f31d333a175a2f091e031a81af2b786b585a1d7e8ea8688d8f1e2"
   },
   {
    "path": "careerhub/filler.py",
@@ -165,7 +171,7 @@
   },
   {
    "path": "careerhub/gmail.py",
-   "sha256": "1cfef9952096169e6248ed4323f00af5dbe0339a3eac2a8363338f84f8493a8a"
+   "sha256": "588c4d957d9c82de0c6140d3f3c0d641d4770476b02098aeee4266023b21643c"
   },
   {
    "path": "careerhub/history.py",
@@ -173,7 +179,7 @@
   },
   {
    "path": "careerhub/jobsites.py",
-   "sha256": "ecbb947ce4e2db32e1665e270f29d467f78e2387e346d3a1f61bb6cdddbf6396"
+   "sha256": "af0dfd25d100c4b926aed5ea8fd03764297d5893aabf83819c0eab49e498c906"
   },
   {
    "path": "careerhub/launch.py",
@@ -205,7 +211,7 @@
   },
   {
    "path": "careerhub/records.py",
-   "sha256": "2847c8488471e2e35cd7242880eed137d393ade4abeb59c448af6bd5798be73d"
+   "sha256": "c1c5741cfdb67426cb5d8baab0499e48c195dc690bcd56b189f9a72af6dc5914"
   },
   {
    "path": "careerhub/reports.py",
@@ -253,7 +259,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "e1005156e62c6a33ae610ed980001dfbb482d2187241bd3ce7cfb742cab60224"
+   "sha256": "6b5392dd130cbd618527addd06f9e7e64d139aacfb252e341d99026ecb59c6a5"
   },
   {
    "path": "ui/js/apply.js",
@@ -269,11 +275,11 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "c51921517f878c92aed9ad887b5578140011a2ec9817977d7aa0618da8c538e7"
+   "sha256": "9265054a58c8ade51b0cc9faaa66aca4de56821a85f6f888bed1c7043636ced2"
   },
   {
    "path": "ui/js/forms.js",
-   "sha256": "ee32ca7df9f63d58b88dcff0fdc4884706593de322d2d1a84e58b0435c6decc3"
+   "sha256": "d4b343053efb9266650a29f91404e218a3e751a999be1fe4d17152e3dba1c367"
   },
   {
    "path": "ui/js/history.js",
@@ -325,7 +331,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "92042bb585f89f5030690348d732733b8d26bac92b879611a248cd9b8ef40a28"
+   "sha256": "e2df47d17d2c7a7af19a2ae8eddbc4d85d1f5cbf28e3eefc699320e974dcf509"
   },
   {
    "path": "CLAUDE.md",
@@ -352,5 +358,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "+Z29Vzn3RpnaiWQxuNlt8k0/DwFpRPfXYsBqTc/9WMjKgXlKzuU8d1mq8eUQOhPG/OH0JiXhFjw0KMvgYj1GBQ=="
+ "signature": "hrW9dxjS/iRWWth0e+KyExM3leSJTQYGqcsPH5M4rfLVczr9DZQdozl5DILoSIyRX4Ko3X0/XxPFyCgXBlrZCA=="
 }

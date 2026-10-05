@@ -16,7 +16,7 @@ function fieldHTML(f, i){
     input = `<select data-i="${i}"><option value="">None</option>${files.map(o => `<option ${f.value === o ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`; }
   else { const t = f.type === "number" ? "number" : f.type === "secret" ? "password" : "text";
     input = `<input type="${t}" data-i="${i}" value="${esc(f.value)}" ${f.type === "secret" ? 'autocomplete="off" data-secret="1"' : ""}>`; }
-  return `<div class="field ${f.label.length > 46 ? "wide" : ""}"><label>${esc(f.label)}</label>${input}${f.hint ? `<div class="hint">${esc(f.hint)}</div>` : ""}</div>`;
+  return `<div class="field ${f.label.length > 46 ? "wide" : ""}" data-key="${esc(f.key)}"><label>${esc(f.label)}</label>${input}${f.hint ? `<div class="hint">${esc(f.hint)}</div>` : ""}</div>`;
 }
 function renderForms(){
   $("#profileErr").hidden = !STATE.profile_error; $("#profileErr").textContent = STATE.profile_error || "";
@@ -43,7 +43,18 @@ function renderForms(){
   $$('.switch input[data-i]').forEach(el => el.addEventListener("change", () => { const s = el.parentElement.querySelector("span"); if (s) s.textContent = el.checked ? "On" : "Off"; }));
   $$("[data-secret]").forEach(el => { el.onfocus = () => el.type = "text"; el.onblur = () => el.type = "password"; });
   $("#testMailBtn") && ($("#testMailBtn").onclick = async () => { if (DIRTY.settings) await saveForm("settings"); const r = await api_test_mail(); r.ok ? toast("Gmail connected") : toast(r.error, true); });
+  const aiSel = document.querySelector('#settingsForm [data-key="ai_mode"] select');
+  if (aiSel){
+    const ck = document.querySelector('#settingsForm [data-key="claude_api_key"] input');
+    if (!aiSel.value && ck && ck.value) aiSel.value = [...aiSel.options].find(o => /^claude/i.test(o.value))?.value || "";   // a saved key means Claude is in use
+    aiSel.addEventListener("change", syncAiFields); syncAiFields();
+  }
   renderFileForm(); renderFiles(); DIRTY = {profile:false, settings:false}; $("#saveBar").hidden = $("#saveBar2").hidden = true;
+}
+function syncAiFields(){                         // AI helper: show only the boxes of the chosen AI (hidden boxes keep their values)
+  const mode = (document.querySelector('#settingsForm [data-key="ai_mode"] select')?.value || "").toLowerCase();
+  const show = {nvidia_api_key: mode.startsWith("nvidia"), nvidia_model: mode.startsWith("nvidia"), claude_api_key: mode.startsWith("claude")};
+  for (const [k, on] of Object.entries(show)) { const el = document.querySelector(`#settingsForm [data-key="${k}"]`); if (el) el.hidden = !on; }
 }
 function markDirty(which){ DIRTY[which] = true; $(which === "profile" ? "#saveBar" : "#saveBar2").hidden = false; }
 async function saveForm(which){

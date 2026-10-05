@@ -2,7 +2,11 @@
 Optional 'pages': pages (home, apply, find, reach, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.5.0',
+CHANGELOG = [{'version': '3.5.2',
+  'title': 'Clear when AI wrote it',
+  'new': ['Everything written by AI now says "Drafted with AI", with a small i that shows which AI, which model and what was sent to it'],
+  'fixed': []},
+ {'version': '3.5.0',
   'title': 'Reach out to companies and agencies',
   'new': ['New page, Reach out: paste company websites or email addresses, and the app finds the hiring email, writes a personal mail with your resume attached, and lets you read it first, save it as a Gmail draft or send it',
           'Set the tone, length, roles, what to always include and never include, and the subject line, and see a sample mail first',

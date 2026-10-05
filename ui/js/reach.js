@@ -55,7 +55,7 @@ $("#rcWrite").onclick = async () => {
     $("#rcProg").textContent = `Writing mail ${i + 1} of ${rows.length}…`;
     const w = await api_reach_write(rows[i].company, rows[i].text);
     if (!w.ok){ toast(w.error, true); continue; }
-    RMAILS.push({text:rows[i].text, company:rows[i].company, site:rows[i].site, email:rows[i].email, subject:w.subject, body:w.body, on:true, status:""});
+    RMAILS.push({text:rows[i].text, company:rows[i].company, site:rows[i].site, email:rows[i].email, subject:w.subject, body:w.body, ai:w.ai, on:true, status:""});
     drawMails(); $("#rcMails").hidden = false;
   }
   $("#rcProg").textContent = ""; rcBusy(false);
@@ -68,12 +68,12 @@ $("#rcWrite").onclick = async () => {
 };
 function drawMails(){
   $("#rcMailList").innerHTML = RMAILS.map((m, i) => `<div class="panel" style="margin-bottom:10px;padding:12px">
-    <div class="row"><input type="checkbox" data-mon="${i}"${m.on ? " checked" : ""}><b class="grow">${esc(m.company)} <span class="muted small">to ${esc(m.email)}</span></b>
+    <div class="row"><input type="checkbox" data-mon="${i}"${m.on ? " checked" : ""}><b class="grow">${esc(m.company)} <span class="muted small">to ${esc(m.email)}</span> ${aiBadge(m.ai)}</b>
     <button class="btn sm ghost" data-mre="${i}">Write again</button><span class="tag" id="mst${i}">${esc(m.status)}</span></div>
     <input type="text" data-msub="${i}" value="${esc(m.subject)}" style="margin:8px 0"><textarea data-mbody="${i}" rows="8">${esc(m.body)}</textarea></div>`).join("");
   $$("#rcMailList [data-mre]").forEach(b => b.onclick = async () => { const i = +b.dataset.mre, m = RMAILS[i]; if (m.status) return;
     b.disabled = true; b.textContent = "Writing…"; const w = await api_reach_write(m.company, m.text || "");
-    if (w.ok){ m.body = w.body; m.subject = w.subject; drawMails(); } else { toast(w.error, true); b.disabled = false; b.textContent = "Write again"; } });
+    if (w.ok){ m.body = w.body; m.subject = w.subject; m.ai = w.ai; drawMails(); } else { toast(w.error, true); b.disabled = false; b.textContent = "Write again"; } });
   $$("#rcMailList [data-mon]").forEach(b => b.onchange = () => RMAILS[+b.dataset.mon].on = b.checked);
   $$("#rcMailList [data-msub]").forEach(b => b.oninput = () => RMAILS[+b.dataset.msub].subject = b.value);
   $$("#rcMailList [data-mbody]").forEach(b => b.oninput = () => RMAILS[+b.dataset.mbody].body = b.value);
@@ -124,7 +124,7 @@ $("#rpSample").onclick = async () => {
   const w = await api_reach_write("Acme Marketing", "A digital marketing agency that helps brands with social media, content and email campaigns.");
   $("#rpSample").disabled = false; $("#rpSampleNote").textContent = "A made-up company, only so you can hear the tone.";
   if (!w.ok) return toast(w.error, true);
-  $("#rpSampleText").hidden = false; $("#rpSampleText").value = "Subject: " + w.subject.replace("your company", "Acme Marketing") + "\n\n" + w.body;
+  $("#rpSampleNote").innerHTML = aiBadge(w.ai) + " A made-up company, only so you can hear the tone."; $("#rpSampleText").hidden = false; $("#rpSampleText").value = "Subject: " + w.subject.replace("your company", "Acme Marketing") + "\n\n" + w.body;
 };
 
 let RSUM = null;

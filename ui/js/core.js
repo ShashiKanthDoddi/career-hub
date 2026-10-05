@@ -20,6 +20,25 @@ function links(t){ return [...new Set((t || "").split(/\s+/).filter(l => /^https
 function countUp(el, to){ if (reduce || !to){ el.textContent = to; return; } const t0 = performance.now();
   const step = t => { const k = Math.min(1, (t - t0) / 700); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
 
+/* "Drafted with AI" label with a small i that says which AI wrote it (info = ai_info from Python; none = not written by AI) */
+function aiBadge(info, label = "Drafted with AI"){
+  if (!info) return "";
+  return `<span class="aibadge">${icon("sparkle")}<span>${esc(label)}</span><button type="button" class="aii" data-aiinfo="${esc(JSON.stringify(info))}" aria-label="About this AI" title="About this AI">i</button></span>`;
+}
+document.addEventListener("click", e => {
+  document.getElementById("aipop")?.remove();
+  const b = e.target.closest?.(".aii"); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  let d = {}; try { d = JSON.parse(b.dataset.aiinfo); } catch (_) { return; }
+  const p = document.createElement("div"); p.id = "aipop"; p.className = "aipop";
+  p.innerHTML = `<b>Written by AI</b><dl><dt>AI</dt><dd>${esc(d.provider)}</dd><dt>Model</dt><dd>${esc(d.model)}</dd><dt>Setting</dt><dd>${esc(d.mode)} (Settings, AI helper)</dd>
+    <dt>Sent to it</dt><dd>${esc(d.sends)}, through ${esc(d.where)}</dd></dl><p>AI can make mistakes. Read it and change anything that isn't true before you use it.</p>`;
+  document.body.appendChild(p);
+  const r = b.getBoundingClientRect();
+  p.style.top = Math.min(r.bottom + 6, innerHeight - p.offsetHeight - 8) + "px";
+  p.style.left = Math.max(8, Math.min(r.left - 20, innerWidth - p.offsetWidth - 8)) + "px";
+}, true);
+
 /* a soft ripple where a button is clicked (styles.css .btn.rip); none in calm mode */
 document.addEventListener("pointerdown", e => { const b = e.target.closest?.(".btn"); if (!b || reduce || STATE.calm) return;
   const r = b.getBoundingClientRect(); b.style.setProperty("--rx", (e.clientX - r.left) + "px"); b.style.setProperty("--ry", (e.clientY - r.top) + "px");

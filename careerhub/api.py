@@ -65,6 +65,12 @@ async def api_page_seen(page):
 
 
 async def api_state():
+    st0 = data()["state"]
+    if not st0.get("pause_reset_347"):                 # 3.4.6 Check set the apply pause for a site by mistake: clear today's
+        today = datetime.date.today().isoformat()
+        st0["jobsite_pause"] = {k: v for k, v in (st0.get("jobsite_pause") or {}).items() if v != today}
+        st0["pause_reset_347"] = True
+        save_data()
     try:
         profile = profile_values()
         err = ""
@@ -613,19 +619,41 @@ async def api_found():
     return [x for x in out if id(x) in keep][:300]
 
 
+def _alert_row(link):
+    return next((j for j in data()["found_jobs"] if norm_link(j.get("Link")) == norm_link(link)), None)
+
+
+def _rate_row(row, desc, place=""):
+    """Scores one saved alert job from its full text. Returns an error text, or "" when saved."""
+    try:
+        from .resume import resume_profile, resume_text
+        rp = resume_profile(resume_text(Answers()))
+    except Exception:
+        return "I can't read your resume, so I can't rate this job. Check Resume, Your files."
+    rp["roles"] = [norm(x) for x in split_list(app_state().get("find_roles", ""))] or rp.get("roles", [])
+    wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
+    res = score_job(row.get("Job title") or "", desc, row.get("Location") or place, rp, wanted, location_ok)
+    if res["score"] is None:
+        return "There isn't enough job text to rate it. Paste the whole job description."
+    row["Match %"] = res["score"]
+    row["Checked"] = 1
+    save_data()
+    return ""
+
+
 async def api_check_alert(link):
-    """Opens one alert-email job's public page (one at a time, she pressed Check) and fills in the company, city and a
-    match from the full job text. Stops for the day if the site shows a robot check."""
+    """Reads one alert-email job's public page (only when she presses Rate it, never LinkedIn) and rates it. Its own pause
+    (not the apply pause) stops further checks for the day if a site shows a robot check."""
     import random
-    from .jobsites import CHALLENGE_RE, cooling_off, read_job_page, site_of, start_cooling_off
+    from .jobsites import CHALLENGE_RE, read_job_page, site_of
     from .state import PW
     site = site_of(link)
-    if site and cooling_off(site):
-        return {"ok": False, "error": f"{site} showed a security check earlier today, so the app is resting from it until tomorrow. Open the job yourself instead."}
-    row = next((j for j in data()["found_jobs"] if norm_link(j.get("Link")) == norm_link(link)), None)
+    row = _alert_row(link)
     if not row:
         return {"ok": False, "error": "I can't find that job any more."}
-    await asyncio.sleep(random.uniform(1.5, 4))                 # never faster than a person clicking
+    if site == "LinkedIn" or data()["state"].get("check_pause", {}).get(site) == datetime.date.today().isoformat():
+        return {"ok": False, "paste": True}                     # LinkedIn does not allow reading its job pages
+    await asyncio.sleep(random.uniform(1.5, 4))
     req = await PW["p"].request.new_context(extra_http_headers={"Accept-Language": "en-US,en;q=0.9"})
     try:
         r = await req.get(link, timeout=20000)
@@ -635,29 +663,30 @@ async def api_check_alert(link):
         htm, blocked = "", False
     finally:
         await req.dispose()
-    if blocked and site:
-        start_cooling_off(site)
-        return {"ok": False, "error": f"{site} asked for a security check, so I stopped. Open the job yourself instead."}
+    if blocked:
+        data()["state"].setdefault("check_pause", {})[site] = datetime.date.today().isoformat()
+        save_data()
+        return {"ok": False, "paste": True}
     title, company, place, desc = read_job_page(htm)
     if not (company or desc):
-        return {"ok": False, "error": "This site wants a login to show the job. Open it with the arrow instead."}
-    try:
-        from .resume import resume_profile, resume_text
-        rp = resume_profile(resume_text(Answers()))
-    except Exception:
-        return {"ok": False, "error": "I can't read your resume, so I can't rate this job. Check Resume, Your files."}
-    rp["roles"] = [norm(x) for x in split_list(app_state().get("find_roles", ""))] or rp.get("roles", [])
-    wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
-    res = score_job(row.get("Job title") or title, desc, row.get("Location") or place, rp, wanted, location_ok)
-    if res["score"] is None:
-        return {"ok": False, "error": "The job page didn't have enough text to rate it. Open it with the arrow instead."}
-    row["Match %"] = res["score"]
+        return {"ok": False, "paste": True}
+    err = _rate_row(row, desc, place)
+    if err:
+        return {"ok": False, "error": err}
     if company:
         row["Company"] = company
     row["Location"] = row.get("Location") or place
-    row["Checked"] = 1
     save_data()
     return {"ok": True}
+
+
+async def api_rate_pasted(link, text):
+    """Rates one alert-email job from job text she pasted (works for LinkedIn, which the app cannot read)."""
+    row = _alert_row(link)
+    if not row:
+        return {"ok": False, "error": "I can't find that job any more."}
+    err = _rate_row(row, str(text or ""))
+    return {"ok": not err, "error": err}
 
 
 async def api_site_limits():

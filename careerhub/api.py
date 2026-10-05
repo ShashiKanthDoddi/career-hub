@@ -10,7 +10,7 @@ from .apply_run import run_apply
 from .bridge import UI, log, os_open
 from .changelog import CHANGELOG
 from .config import APP_NAME, APP_VERSION, BACKUP_DIR, DATA, DRAFT_DIR, FILES_DIR, LOG_DIR, OWNER, REPORT_DIR, SKIP
-from .finder import location_ok, match_score, run_find
+from .finder import location_ok, match_score, run_find, title_score
 from .gmail import check_mail, mail_settings
 from . import history, planner
 from .overview import jobs_overview
@@ -590,15 +590,20 @@ async def api_found():
     out, seen = [], set()
     wanted = split_list((load_profile().get("settings") or {}).get("job_locations"))
     last = set(app_state().get("last_found", []))               # found by the newest search
-    aprof = {"skills": [], "roles": [norm(r) for r in split_list(app_state().get("find_roles", ""))] or ["marketing"], "years": None}
+    try:
+        from .resume import resume_profile, resume_text
+        rp = resume_profile(resume_text(Answers()))
+    except Exception:
+        rp = {"skills": [], "years": None}
+    aprof = {"skills": rp.get("skills", []), "years": rp.get("years"), "roles": [norm(r) for r in split_list(app_state().get("find_roles", ""))] or ["marketing"]}
     for j in reversed(data()["found_jobs"]):
         k = norm_link(j.get("Link"))
         if k in applied or k in seen or j.get("Dismissed") or not location_ok(j.get("Location"), wanted):
             continue                                   # also hides jobs saved before the location filter existed
         seen.add(k)
         is_alert = bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert")
-        ascore = match_score(j.get("Job title") or "", "", aprof) if is_alert else None
-        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and ascore < 55, "title": j.get("Job title"), "company": j.get("Company"),   # off: below 55 = no role of hers in the title
+        ascore = title_score(j.get("Job title") or "", aprof, aprof.get("years")) if is_alert else None
+        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and match_score(j.get("Job title") or "", "", aprof) < 55, "title": j.get("Job title"), "company": j.get("Company"),   # off: below 55 = no role of hers in the title
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
                     "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert"),
                     "site": j.get("Alert site") or (str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else ""),

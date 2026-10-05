@@ -2,7 +2,12 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.3',
+CHANGELOG = [{'version': '3.4.4',
+  'title': 'A finer match for alert-email jobs',
+  'new': ['Find jobs: the match for jobs from alert emails now also looks at the skills from your resume found in the title and at whether the level (intern, senior, director...) fits your years of experience, so they are no longer all 70'],
+  'pages': ['find'],
+  'fixed': []},
+ {'version': '3.4.3',
   'title': 'Job titles back in Find jobs',
   'new': [],
   'fixed': ['Find jobs: job titles and company names were missing from the list in 3.4.2. They are back']},

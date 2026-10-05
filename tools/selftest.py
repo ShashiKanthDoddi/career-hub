@@ -109,6 +109,12 @@ def main():
           [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
     check(jobsites.alert_details('<a href="https://www.linkedin.com/jobs/view/123456789">SEO Lead</a><p>Acme Corp</p><p>Pune, India</p><p>2 days ago</p>')
           == [("https://www.linkedin.com/jobs/view/123456789", "SEO Lead", "Acme Corp", "Pune, India")], "Alert email: company and city read after the job link")
+    from careerhub.finder import title_score
+    _tp = {"skills": ["seo"], "roles": ["marketing"]}
+    check(title_score("SEO Marketing Manager", _tp, 2) < title_score("SEO Marketing Executive", _tp, 2)
+          and title_score("Marketing Intern", _tp, 6) < title_score("Senior Marketing Specialist", _tp, 6)
+          and len({title_score(t, _tp, 4) for t in ("Marketing", "Marketing Director", "Junior SEO Marketing", "Sales Lead")}) == 4,
+          "Alert-email title match varies with skills, level and years")
     from careerhub.finder import location_ok
     check(location_ok("Remote, India", ["bengaluru", "remote"]) and location_ok("Remote", ["remote"])
           and not location_ok("Munich, Germany remote", ["bengaluru", "remote"]) and not location_ok("Remote in the US", ["remote"]),

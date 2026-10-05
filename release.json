@@ -1,8 +1,21 @@
 {
- "version": "3.5.0",
+ "version": "3.5.1",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.5.1",
+   "title": "Reach out: replies in one place",
+   "new": [
+    "Reach out: the Replies box now counts replies by email and anyone who reached out another way. Click it to see everyone in one list"
+   ],
+   "pages": [
+    "reach"
+   ],
+   "fixed": [
+    "Reach out: smaller boxes and buttons so the page fits, the date box matches dark mode, and Who to write to is now at the top"
+   ]
+  },
   {
    "version": "3.5.0",
    "title": "Reach out to companies and agencies",
@@ -82,21 +95,6 @@
    "fixed": [
     "Find jobs: job titles and company names were missing from the list in 3.4.2. They are back"
    ]
-  },
-  {
-   "version": "3.4.2",
-   "title": "Clearer alert-email cards, better login detection",
-   "new": [
-    "Find jobs: alert-email cards have a title, company, a colour-coded match badge and the site. Older alert links get their company from your emails at the next check",
-    "Login pages that ask for your email first, then the password, are now recognised on job sites"
-   ],
-   "pages": [
-    "find"
-   ],
-   "fixed": [
-    "Home: the Calendar and To-do panels line up, and a long To-do list scrolls inside its panel",
-    "Find jobs: the \"jobs that do not match your job titles\" box now agrees with the match shown on each card"
-   ]
   }
  ],
  "files": [
@@ -134,11 +132,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "3c5b0ab6be5890b4d9dc8a7ad194e6ee26290b8ab337638cb071907f0ff84870"
+   "sha256": "b7221adbfdc342fdacf0e1afb45299cf7ccd60fc4a66304b6a25a67c43940713"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "32b3bc5634171b4516d0c5cb3efc3c006d8ab8819c16d2966c15308176e2da2b"
+   "sha256": "8450b052e102fe638306359142e2b65c02560e13988b6889314cdf0edde11db4"
   },
   {
    "path": "careerhub/filler.py",
@@ -242,11 +240,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "bcac56939fd41bfc045e9e15812a7f2c059ec11543698dcfe9238e0a5150e4bb"
+   "sha256": "c81565e5262abe089814c157faea3f149409cdfbf44e274518649dc276267b07"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "11e5f92c0456e9ba3072f9062fce4becd270a46bab3b9b6019e1e76305aa31bc"
+   "sha256": "ec0dc61edda46b81c4082fce403d59da49dd6431add14b82ad130983a7b00cc9"
   },
   {
    "path": "ui/js/apply.js",
@@ -294,7 +292,7 @@
   },
   {
    "path": "ui/js/reach.js",
-   "sha256": "8d26da99ed6b55fd2e3ea19de1908e601715fb23869a0af68db694a0f59e017f"
+   "sha256": "a280a50dd700074ab17908daa7f6a34420edb7e4ee93393ba561f7f3253b59b4"
   },
   {
    "path": "ui/js/resume.js",
@@ -349,5 +347,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "KAN1Xe5J5sgi2W941u4jM5xbeBWVt37O/+tEOA3f7Mg4jWe7Lokoztwk1PPGsRYl3oyvbniFIOZ857/cLRfuCw=="
+ "signature": "mIYypjSAxL+BhNfG8OT5u1UF2G1uOl5GV1sYdO1YkXJGmYIax0Jr1ZOGCqdeOts/4qYQWs2C8HKzHNODI5T4Cg=="
 }

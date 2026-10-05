@@ -2,7 +2,12 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.6',
+CHANGELOG = [{'version': '3.4.7',
+  'title': 'Rate alert-email jobs by pasting the text',
+  'new': ['Find jobs: Rate it on an alert-email card. LinkedIn does not let the app read its job pages, so you paste the job description and the app rates it against your resume. Indeed and Naukri pages are read when the site allows it'],
+  'pages': ['find'],
+  'fixed': ['Pressing Check in 3.4.6 could make the app rest from LinkedIn for the day for applying too. It no longer does, and any rest it caused is cleared']},
+ {'version': '3.4.6',
   'title': 'A real match for every job',
   'new': ['A new way to rate jobs: the match now compares the skills and words in the job text with your resume, your job titles, the years the job asks for, the level in the title and the city',
           'No more made-up numbers: a job with too little text to judge shows "Not rated yet" instead of a percentage',

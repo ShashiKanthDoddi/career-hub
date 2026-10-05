@@ -143,9 +143,11 @@ def title_score(title, prof, years=None):
     s += min(15, 5 * sum(1 for k in prof.get("skills", []) if has_phrase(k, t)))
     s -= min(8, max(0, len(t.split()) - 3) * 2)                      # very long titles are usually less specific
     level = next((lv for lv, pat in LEVELS if re.search(rf"(?:^| )(?:{pat})(?: |$)", f" {t} ")), 2 if re.search(r"(?:^| )ii(?: |$)", t) else None)
-    if years is not None and level is not None:
-        want = 0 if years < 1 else 1 if years < 3 else 2 if years < 6 else 3 if years < 9 else 4 if years < 14 else 5
-        s -= min(28, 7 * abs(level - want))
+    if level is not None:                                            # years unknown: assume a middle level and judge more gently
+        want = 2 if years is None else 0 if years < 1 else 1 if years < 3 else 2 if years < 6 else 3 if years < 9 else 4 if years < 14 else 5
+        s -= min(28, (4 if years is None else 7) * abs(level - want))
+    if t in [norm(r) for r in prof.get("roles", [])]:                # the title is exactly one of her roles
+        s += 5
     return max(5, min(95, s))
 
 

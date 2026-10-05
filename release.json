@@ -1,8 +1,16 @@
 {
- "version": "3.4.4",
+ "version": "3.4.5",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.4.5",
+   "title": "Alert-email match no longer all the same",
+   "new": [],
+   "fixed": [
+    "Find jobs: alert-email jobs now get a different match for senior, junior or staff titles even when your years of experience are not in your resume or profile, and a title that is exactly one of your roles scores a little higher"
+   ]
+  },
   {
    "version": "3.4.4",
    "title": "A finer match for alert-email jobs",
@@ -91,21 +99,6 @@
    "fixed": [
     "Your resume preview fills the width and no longer shows the small page strip"
    ]
-  },
-  {
-   "version": "3.1",
-   "title": "A Resume page",
-   "new": [
-    "A new Resume page: your resume on the left, the way it looks or the way job sites read it (with marketing keywords highlighted)",
-    "Resume health: a score out of 100 and a short list of what to fix so job sites read it well",
-    "Fit to a job: paste a job link or text and see which of its words your resume is missing; with a Claude key, get rewrite suggestions",
-    "Skills to build for the roles you look for, each with a free course",
-    "Your files (resumes and cover letter) moved from Profile to the Resume page, and they save by themselves"
-   ],
-   "fixed": [
-    "The app no longer clicks a job site's search filter thinking it is the Next button",
-    "After you pick a different resume, the app uses it straight away"
-   ]
   }
  ],
  "files": [
@@ -143,11 +136,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "d2bf6e00dc5164c2686ca41d19c0db68cf0215b71ce5873bab6952c77f3bf4e7"
+   "sha256": "570d0725de9676e06a46e18ce63dcf7e9a4d1f91acc7630537b81fc1fe0c3d7f"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "030d2e08f6d5b8e9a89a7aa74342c20a8d7ccc188074025a20a68f42249fccfd"
+   "sha256": "1117a245e8d57c2d1971986d5454f55881ed537eb9eef73f09ab40db5fbf8281"
   },
   {
    "path": "careerhub/filler.py",
@@ -155,7 +148,7 @@
   },
   {
    "path": "careerhub/finder.py",
-   "sha256": "6d19ac22dd8d60068e2db1a260a43ba2505ef6c2dd59837cf69fcdad94d93298"
+   "sha256": "cc71ab5beeb2aea65a85b5fc7553b9a5cc645082c1113f23a890c5dd986737fa"
   },
   {
    "path": "careerhub/gmail.py",
@@ -346,5 +339,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "1l+k32z4G7TO574idMPPL1ck57V3z4Gr4uNX9FzVXtDllMn9daVgbSUdJu5s6t9wteomcFZZzQ0hJKSDlprMCQ=="
+ "signature": "inlztXc2cPYlMv1R+srj6ZIJtzzPHA0yJE++Lsd97pIxVGRQlXF8vU3gsfLFuHVKRRZBbEmRFDLzIJ+HrXw3Bg=="
 }

@@ -1,8 +1,16 @@
 {
- "version": "3.4.2",
+ "version": "3.4.3",
  "date": "2026-10-05",
- "urgent": false,
+ "urgent": true,
  "changelog": [
+  {
+   "version": "3.4.3",
+   "title": "Job titles back in Find jobs",
+   "new": [],
+   "fixed": [
+    "Find jobs: job titles and company names were missing from the list in 3.4.2. They are back"
+   ]
+  },
   {
    "version": "3.4.2",
    "title": "Clearer alert-email cards, better login detection",
@@ -111,16 +119,6 @@
     "\"Your last 7 days\" now says how many you sent the week before, instead of \"up 9\"",
     "The black window now closes by itself when you close the app"
    ]
-  },
-  {
-   "version": "2.8.5",
-   "title": "See the email check as it runs",
-   "new": [
-    "When the app checks your email by itself, Home shows it too: the Check email button waits, and the inbox box and the Activity log count the emails as they are read"
-   ],
-   "fixed": [
-    "Pressing Check email while a check was already running no longer stops the progress from showing"
-   ]
   }
  ],
  "files": [
@@ -142,7 +140,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "653754854012a7982e093e75f0d78289ce15580946cab11a0cf80562cd6e8520"
+   "sha256": "994aed2e5dc016eca94075126deca89c991d4ad5eb64075fd97a8389f0b3af96"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -158,11 +156,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "f9b6c6106605a1f03cd4da610eb75e242a80a76d2aee2ef78b006552bdb2ff20"
+   "sha256": "3da41bd350715c1b83fd59879121bd4f60a6bf29c275ede91223748adc6e3e5e"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "3463cc03e5ad3616c8e1f025aed2db6e3f6818e67cd37f2afaca963e0358bfde"
+   "sha256": "6feb087efae8b7a914286fe2fc25245f79bc765a4c6844367ad37a86e6f99787"
   },
   {
    "path": "careerhub/filler.py",
@@ -334,7 +332,7 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "e2df47d17d2c7a7af19a2ae8eddbc4d85d1f5cbf28e3eefc699320e974dcf509"
+   "sha256": "dcf5b326b76faf4a6156585e0387e6afc6bfe98f89714fb2accc6127b20e95f3"
   },
   {
    "path": "CLAUDE.md",
@@ -361,5 +359,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "XylPxP7C74639oMNynjfgZUfcBdMRvdAb3z8QSIYsOlT89C1FR+jOCwGOKxUxfbjj5lLP/fjJe1hctQ0gKrKCA=="
+ "signature": "XS3ll5d8aE3UsFB1Yokg9WpDoQkFISKlKjyaT373TbjcxtvRB33buU+kyuTKqjqO/90e4pOqpMAe06WdC+lpDg=="
 }

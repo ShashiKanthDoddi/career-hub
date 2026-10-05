@@ -2,7 +2,7 @@
 
 Read this first, then open only the file you need. Each Python module is small and focused.
 
-Docs updated: 2026-10-05 (3.4)
+Docs updated: 2026-10-05 (3.5.0)
 
 ## Start and launchers
 
@@ -39,6 +39,7 @@ Docs updated: 2026-10-05 (3.4)
 | `finder.py` | 363 | Find jobs: hiring-system APIs (Workday, Greenhouse, Lever, Ashby, SmartRecruiters), web discovery plus `DEFAULT_BOARDS` (verified built-in boards, used when search engines refuse us), title-only search without a resume, `all_openings` (every opening at named companies, no filters), filters, scoring, diagnostics. | `boards_in`, `board_label`, `seniority_excludes`, `location_ok` (remote only if not tied to another country), `relevant_title`, `match_score`, `get_json`, `fetch_board`, `web_search`, `UA`, `STRONG_TITLE_WORDS`, `TECH_WORDS`, `CITY_ALIASES` … |
 | `jobsites.py` | 100 | LinkedIn / Indeed / Naukri safety: daily limit, pacing between jobs, robot-check detection, rest-for-the-day, job links from alert emails. | `site_of`, `allowed`, `pace`, `challenged`, `alert_jobs`, `clean_job_link` |
 | `gmail.py` | 450 | Reads the job Gmail (IMAP, read-only; up to 3 inboxes via `mail_settings()['boxes']`), skips Gmail Promotions/Social and blocked senders (`BLOCKED`, from `mail_blocked`), sorts mail in tiers (label → bulk/board subject only → tied to her applications → strict) and scores types (`type_scores`, `NOT_INVITE`, `is_bulk`), `job_from_subject` reads company and title from LinkedIn-style subjects, friendly errors. `imap_fetch` fetches bodies 25 at a time and reports progress (`mail_progress` event, shown in the Home inbox spinner). | `mail_settings`, `classify_mail`, `dec`, `mail_body`, `company_from_sender`, `match_application`, `process_mail`, `imap_fetch`, `gmail_link`, `MONTHS`, `MAIL_TYPES`, `MAIL_SKIP`, `JOB_WORDS`, `BOARD_SENDERS`, `MAIL_LABELS`, `label_kind`, `COMPANY_WORDS` … |
+| `outreach.py` | 330 | Reach out: `find_site` (hiring emails from a website: quick read, then a real browser if none; `emails_in` decodes [at], &#64; and Cloudflare-protected addresses; `rank_emails`), `gmail_contacts` (people who wrote to her / she wrote to, headers only), `reach_summary` (replies by address or company domain, others who wrote in 60 days), `write_mail` (AI with her prefs, `template` fallback), `build_message`, `_smtp` / `_draft` (IMAP append to Gmail Drafts), `DAILY_LIMIT` 20, history in data `outreach`, manual other-channel log in `outreach_other` (schema 8), prefs in state `reach_prefs`. | `find_site`, `write_mail`, `gmail_contacts`, `reach_summary`, `get_prefs`, `add_other` |
 | `research.py` | 91 | Company brief for Home's Next up (`api_company_brief`): Wikipedia facts, rewritten by `free_complete`; kept 30 days in state `research`. Only the company name and public text leave the computer. | `company_brief` |
 | `reports.py` | 94 | Problem reports (zip of log + screenshots) emailed to the helper. With a `github_token` setting, reports and feature ideas (`send_suggestion`, `my_issues` (lists them for Settings → Your reports and ideas: Open / Done / Won't do)) are created as GitHub issues (labels bug / enhancement) in the private `ISSUES_SOURCE` repo, with the log and pictures saved on its `issue-files` branch; without a token reports go by email and ideas are refused. | `make_report`, `smtp_send`, `send_report`, `send_suggestion`, `file_issue` |
 | `planner.py` | 163 | Home calendar events and to-do list (data keys `events`, `todos`); events from interview emails (with `link`, `who`, `round`) and from cards moved to Interview/Test; a reschedule moves the entry and clears `reminded`, a cancel removes it. `due_reminders` / `reminder_text`: one pop-up an hour before (08:00 if no time). | `add_event`, `set_job_event`, `events_from_mail`, `due_reminders`, `reminder_text`, `add_todo` |
@@ -68,6 +69,7 @@ Docs updated: 2026-10-05 (3.4)
 | `ui/js/questions.js` | 62 | Question cards from Python: single questions and the all-at-once form (showForm). `askYes` is the in-app Yes/Cancel: never use confirm(), Playwright closes it at once. |
 | `ui/js/find.js` | 99 | Find jobs: resume tags, one search choice (`setFindMode`: Find jobs for me / Only companies I choose), results list with filters (text, posted, match, sort), only the last search by default (`ONLY_LAST`, `last` from state `last_found`), unreadable companies (`diag.missing`), dismiss. Alert-email jobs (`alert`, `site` from api_found) sit in a folded box (`ALERTS_OPEN`), start unticked, and the `fAlerts` choice (state `alert_show`) shows all, one site or none. |
 | `ui/js/jobs.js` | 115 | Interview 'Get ready' card in the drawer (`prepHTML`, `api_prep`). My jobs board (drag and drop, stage and search filters on every tab), list, emails, accounts, found, job drawer. |
+| `ui/js/reach.js` | 150 | Reach out page: how-it-is-going tiles and replies (`checkReplies`), other-channel log, mail style, find emails (links, emails, Gmail), write mails, review / Gmail drafts / send straight (`sendAll`, pause 25-45 s between sends, Stop). Page key is last in `PAGES` so keys 1-7 stay put. |
 | `ui/js/forms.js` | 156 | Profile and Settings forms, the Your files form on the Resume page (`renderFileForm`, autosave `saveFileFields`), saved answers, themes, What's new, zip install. |
 | `ui/js/palette.js` | 57 | Activity drawer, More menu in the sidebar, Report a problem, Quick actions (Ctrl/Cmd+K), keyboard shortcuts. |
 | `ui/js/events.js` | 68 | window.onPy event handling, filled-fields pop-up, update modal, startup sequence. |
@@ -89,6 +91,7 @@ Docs updated: 2026-10-05 (3.4)
 | Interview date not read from an email | `careerhub/meetings.py` (then add a case to `tools/selftest.py`) |
 | Email sorted wrongly | `careerhub/gmail.py` MAIL_TYPES, NOT_INVITE, `process_mail` tiers |
 | Job search | `careerhub/finder.py` |
+| Reach out: emails not found, mail wording, replies | `careerhub/outreach.py` (`find_site`, `write_mail`, `reach_summary`), `ui/js/reach.js` |
 | Store new data | `careerhub/store.py` `Store.upgrade()` + bump SCHEMA |
 | A page's look or behaviour | the matching `ui/js/<page>.js` and `ui/styles.css` |
 | New button that calls Python | add `api_xxx` in `careerhub/api.py` (auto-exposed), call `api_xxx()` from JS |

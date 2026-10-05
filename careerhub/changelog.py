@@ -1,8 +1,16 @@
 """changelog: shown in What's new and copied into release.json. Newest first; add an entry with every release.
-Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
+Optional 'pages': pages (home, apply, find, reach, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.8',
+CHANGELOG = [{'version': '3.5.0',
+  'title': 'Reach out to companies and agencies',
+  'new': ['New page, Reach out: paste company websites or email addresses, and the app finds the hiring email, writes a personal mail with your resume attached, and lets you read it first, save it as a Gmail draft or send it',
+          'Set the tone, length, roles, what to always include and never include, and the subject line, and see a sample mail first',
+          'Add contacts from your own Gmail: people who wrote to you and people you wrote to before',
+          'See how many mails you sent, who replied, who else wrote to you, and note down anyone who reached out by WhatsApp, LinkedIn or phone'],
+  'pages': ['reach'],
+  'fixed': []},
+ {'version': '3.4.8',
   'title': 'Calmer cards',
   'new': ['Find jobs: alert-email cards are tidier, with the title and icons on top, the site and place under it, and the rating and the Rate it button at the bottom'],
   'pages': ['find'],

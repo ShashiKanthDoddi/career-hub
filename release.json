@@ -1,8 +1,22 @@
 {
- "version": "3.4.8",
+ "version": "3.5.0",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.5.0",
+   "title": "Reach out to companies and agencies",
+   "new": [
+    "New page, Reach out: paste company websites or email addresses, and the app finds the hiring email, writes a personal mail with your resume attached, and lets you read it first, save it as a Gmail draft or send it",
+    "Set the tone, length, roles, what to always include and never include, and the subject line, and see a sample mail first",
+    "Add contacts from your own Gmail: people who wrote to you and people you wrote to before",
+    "See how many mails you sent, who replied, who else wrote to you, and note down anyone who reached out by WhatsApp, LinkedIn or phone"
+   ],
+   "pages": [
+    "reach"
+   ],
+   "fixed": []
+  },
   {
    "version": "3.4.8",
    "title": "Calmer cards",
@@ -83,20 +97,6 @@
     "Home: the Calendar and To-do panels line up, and a long To-do list scrolls inside its panel",
     "Find jobs: the \"jobs that do not match your job titles\" box now agrees with the match shown on each card"
    ]
-  },
-  {
-   "version": "3.4.1",
-   "title": "Alert-email jobs as cards with a match",
-   "new": [
-    "Find jobs: jobs from alert emails are now small cards with a match percentage (from the job title) and the company and city when the email has them. Kinds of role you do not look for are tucked away",
-    "The Alert emails choice always offers LinkedIn, Indeed and Naukri",
-    "Settings, AI helper shows only the boxes of the AI you choose"
-   ],
-   "pages": [
-    "find",
-    "settings"
-   ],
-   "fixed": []
   }
  ],
  "files": [
@@ -118,7 +118,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "450589b76ea6f8130e2e084fe5c738671dc637029fe8f9a68d9365041cf67eb2"
+   "sha256": "7d15686a2af82231a5fea4d121087a6e35dc3948f0f8c7f49c9884dc93be4fe1"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -134,11 +134,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "8725584346df916489f53323511a184826befc4481b563e79330305df5ffb80c"
+   "sha256": "3c5b0ab6be5890b4d9dc8a7ad194e6ee26290b8ab337638cb071907f0ff84870"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "931dba73cacce7d20e6cbb5a13bbf0530dc66c0e04d4b33ed1d0984d4b8e82f7"
+   "sha256": "32b3bc5634171b4516d0c5cb3efc3c006d8ab8819c16d2966c15308176e2da2b"
   },
   {
    "path": "careerhub/filler.py",
@@ -175,6 +175,10 @@
   {
    "path": "careerhub/meetings.py",
    "sha256": "e30d01fe6a2c587bef9864e6689f7d767711a80196b6bcd97083daf4e4522c60"
+  },
+  {
+   "path": "careerhub/outreach.py",
+   "sha256": "8755dff6ab34da9460c11479dca3a279925726d77fe3b1f3feadf0d214b9df53"
   },
   {
    "path": "careerhub/overview.py",
@@ -222,7 +226,7 @@
   },
   {
    "path": "careerhub/store.py",
-   "sha256": "1625c0da7a6becf50f473b0fe21e45f7d6577e151dda109554da28309b49f734"
+   "sha256": "fa98796a713036319b9c77de6ffdd9215d676efc8e5ba927332f4f8a947ad9c0"
   },
   {
    "path": "careerhub/textutil.py",
@@ -238,7 +242,7 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "c27a5ccd976fce285f10e6d43be0c0f4c96feecd85e8690651a1f6fff700fc6a"
+   "sha256": "bcac56939fd41bfc045e9e15812a7f2c059ec11543698dcfe9238e0a5150e4bb"
   },
   {
    "path": "ui/styles.css",
@@ -250,7 +254,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "03cf346befee84dcda641550dc4fe92551fd10c544aa01f3c4caaac747d4abab"
+   "sha256": "c4ff26fb08d8b9d99181cc213c4e7052cc2f6a56c564aa9c1d29fbd03b2b1902"
   },
   {
    "path": "ui/js/events.js",
@@ -289,6 +293,10 @@
    "sha256": "97759ddc4709976e214675feba6f53c1e3cc906e9ef041d974d6f0ef5a8a0bf9"
   },
   {
+   "path": "ui/js/reach.js",
+   "sha256": "8d26da99ed6b55fd2e3ea19de1908e601715fb23869a0af68db694a0f59e017f"
+  },
+  {
    "path": "ui/js/resume.js",
    "sha256": "cd9f0a7d316fa7bdf4f41564eb8ff91f2536fdf4388458a7a913f0d88ad51e85"
   },
@@ -314,15 +322,15 @@
   },
   {
    "path": "tools/selftest.py",
-   "sha256": "cedebca1d0f4c7154f848f469da4c33b4daf05330a8a835fe332e2a65faf97e4"
+   "sha256": "25eba8e54f2db056cff92878a2812119eb442c6cbcd4bfe7e7f728fbffc36354"
   },
   {
    "path": "CLAUDE.md",
-   "sha256": "32def07db34a897f2c17e4c3d52944b6bc9781cb044380714151e446a24ca1e5"
+   "sha256": "cf88d6ddec50eb6906ac2fe0e2e4dc3e169204149c64583c45470b6acb2c175a"
   },
   {
    "path": "MAP.md",
-   "sha256": "2bf62abae5eb3b26ae8c180fd2dae4f9e3ab49893a79e76a8518fd06752e177f"
+   "sha256": "0ad3fcaa65570f554c7c97d0cba3081060ce6a81e7e694e66c462a481aa3791e"
   },
   {
    "path": "Setup (Mac).command",
@@ -341,5 +349,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "yhjI5isJZ8qqWaaGAwPjzZ/w06rtawNubPfgI49EHqFqGDY+pIKRc4rml2aIiMpRmobeJFptQ4hs70rHkmO3DQ=="
+ "signature": "KAN1Xe5J5sgi2W941u4jM5xbeBWVt37O/+tEOA3f7Mg4jWe7Lokoztwk1PPGsRYl3oyvbniFIOZ857/cLRfuCw=="
 }

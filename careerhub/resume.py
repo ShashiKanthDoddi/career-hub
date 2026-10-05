@@ -81,7 +81,7 @@ def resume_profile(text):
     roles = [r for r in ROLE_PHRASES if has_phrase(r, t)]
     roles = [r for r in roles if r not in ("growth", "brand", "marketing")][:3] or ["marketing"]
     yrs = [int(m) for m in re.findall(r"(\d{1,2})\s*\+?\s*(?:years|yrs)", text.lower()) if 0 < int(m) < 40]
-    return {"skills": skills, "roles": roles, "years": max(yrs) if yrs else None}
+    return {"skills": skills, "roles": roles, "years": max(yrs) if yrs else None, "text": t}
 
 
 def resume_info(db):

@@ -2,7 +2,14 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.5',
+CHANGELOG = [{'version': '3.4.6',
+  'title': 'A real match for every job',
+  'new': ['A new way to rate jobs: the match now compares the skills and words in the job text with your resume, your job titles, the years the job asks for, the level in the title and the city',
+          'No more made-up numbers: a job with too little text to judge shows "Not rated yet" instead of a percentage',
+          'Find jobs: each alert-email card has a Check button that opens the job page, reads the company, city and text, and rates it. "Check the first 10 jobs" does this slowly. Sites that need a login can not be read, and the app stops for the day if a site asks for a security check'],
+  'pages': ['find'],
+  'fixed': []},
+ {'version': '3.4.5',
   'title': 'Alert-email match no longer all the same',
   'new': [],
   'fixed': ['Find jobs: alert-email jobs now get a different match for senior, junior or staff titles even when your years of experience are not in your resume or profile, and a title that is exactly one of your roles scores a little higher']},

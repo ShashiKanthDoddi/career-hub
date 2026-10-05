@@ -123,3 +123,33 @@ def alert_details(htm):
                     chunks.append(piece)
         out.append((link, title, chunks[0] if chunks else "", chunks[1] if len(chunks) > 1 else ""))
     return out
+
+
+def read_job_page(htm):
+    """(title, company, location, description text) from a public job page: its JobPosting data, else the page title."""
+    import json
+    from .resume_tools import html_to_text
+    title = company = place = desc = ""
+    for blob in re.findall(r'(?is)<script[^>]+application/ld\+json[^>]*>(.*?)</script>', htm or ""):
+        try:
+            d = json.loads(html.unescape(blob))
+        except ValueError:
+            continue
+        for item in d if isinstance(d, list) else [d]:
+            if isinstance(item, dict) and str(item.get("@type")) == "JobPosting":
+                title = str(item.get("title") or "")
+                org = item.get("hiringOrganization")
+                company = str(org.get("name") if isinstance(org, dict) else org or "")
+                loc = item.get("jobLocation")
+                loc = loc[0] if isinstance(loc, list) and loc else loc
+                addr = (loc or {}).get("address") if isinstance(loc, dict) else None
+                if isinstance(addr, dict):
+                    place = ", ".join(str(addr.get(k)) for k in ("addressLocality", "addressRegion") if addr.get(k))
+                desc = html_to_text(html.unescape(str(item.get("description") or "")))
+    if not company:                                   # "Acme hiring Marketing Lead in Pune | LinkedIn"
+        m = re.search(r'(?is)<title[^>]*>\s*(.*?)\s*</title>', htm or "")
+        t = html.unescape(m.group(1)) if m else ""
+        m = re.match(r"(?s)(.+?) hiring (.+?)(?: in (.+?))? \|", t)
+        if m:
+            company, title, place = m.group(1).strip(), title or m.group(2).strip(), place or (m.group(3) or "").strip()
+    return title, company, place, desc

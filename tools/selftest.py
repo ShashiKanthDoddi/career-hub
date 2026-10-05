@@ -109,12 +109,19 @@ def main():
           [("https://www.naukri.com/job-listings-seo-manager-acme-123", "SEO Manager")], "Naukri alert email: only real job links")
     check(jobsites.alert_details('<a href="https://www.linkedin.com/jobs/view/123456789">SEO Lead</a><p>Acme Corp</p><p>Pune, India</p><p>2 days ago</p>')
           == [("https://www.linkedin.com/jobs/view/123456789", "SEO Lead", "Acme Corp", "Pune, India")], "Alert email: company and city read after the job link")
-    from careerhub.finder import title_score
-    _tp = {"skills": ["seo"], "roles": ["marketing"]}
-    check(title_score("SEO Marketing Manager", _tp, 2) < title_score("SEO Marketing Executive", _tp, 2)
-          and title_score("Marketing Intern", _tp, 6) < title_score("Senior Marketing Specialist", _tp, 6)
-          and len({title_score(t, _tp, 4) for t in ("Marketing", "Marketing Director", "Junior SEO Marketing", "Sales Lead")}) == 4,
-          "Alert-email title match varies with skills, level and years")
+    check(jobsites.read_job_page('<script type="application/ld+json">{"@type":"JobPosting","title":"SEO Lead","hiringOrganization":{"name":"Acme"},'
+                                 '"jobLocation":{"address":{"addressLocality":"Pune"}},"description":"Run SEO"}</script>') == ("SEO Lead", "Acme", "Pune", "Run SEO")
+          and jobsites.read_job_page("<title>Globex hiring Growth Marketer in Remote | LinkedIn</title>")[:3] == ("Growth Marketer", "Globex", "Remote"),
+          "Job page: title, company, city and text read from public job data")
+    from careerhub.match import score_job
+    _mp = {"roles": ["seo manager"], "skills": ["seo", "google analytics"], "years": 4,
+           "text": "seo manager with 4 years of experience in seo google analytics content marketing email marketing hubspot reporting"}
+    _jd = lambda extra: ("About the role. " * 6 + "Requirements:\n" + extra + "\nBenefits: health cover and learning budget for the whole team")
+    _good = score_job("SEO Manager", _jd("3+ years of seo, google analytics, content marketing, email marketing and hubspot reporting"), "Bengaluru", _mp)["score"]
+    _poor = score_job("SEO Manager", _jd("5+ years of kubernetes, terraform, golang and python backend services on aws"), "Bengaluru", _mp)["score"]
+    _none = score_job("SEO Manager", "", "Bengaluru", _mp)["score"]
+    check(_none is None and _good is not None and _poor is not None and _good > _poor + 25,
+          f"Job match: no number without job text, and a fitting job scores well above a poor one ({_good} vs {_poor})")
     from careerhub.finder import location_ok
     check(location_ok("Remote, India", ["bengaluru", "remote"]) and location_ok("Remote", ["remote"])
           and not location_ok("Munich, Germany remote", ["bengaluru", "remote"]) and not location_ok("Remote in the US", ["remote"]),
@@ -375,7 +382,7 @@ def main():
         _got = asyncio.run(api.api_found())
         _ok = {j["title"]: j for j in _got if j.get("title")}
         check({"SEO Manager", "Marketing Lead"} <= set(_ok) and _ok["SEO Manager"]["company"] == "Acme" and not _ok["SEO Manager"]["alert"]
-              and _ok["Marketing Lead"]["alert"] and _ok["Marketing Lead"]["site"] == "LinkedIn" and _ok["Marketing Lead"]["score"] >= 40,
+              and _ok["Marketing Lead"]["alert"] and _ok["Marketing Lead"]["site"] == "LinkedIn" and _ok["Marketing Lead"]["score"] is None,
               "Find jobs list: title, company and alert fields are sent to the page")
     finally:
         for _r in _rows:

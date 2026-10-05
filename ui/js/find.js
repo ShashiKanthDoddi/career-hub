@@ -72,14 +72,15 @@ function jobBtns(j, i){
 }
 function jobCard(j, i){                          // an alert-email job as a small card: title, company, then match, site and buttons
   const co = / alert$/.test(j.company) ? "" : j.company, place = [co, j.location].filter(Boolean).join(", ");
-  const tone = j.score >= 70 ? "hi" : j.score >= 50 ? "mid" : "lo";
+  const rated = typeof j.score === "number", tone = !rated ? "lo" : j.score >= 70 ? "hi" : j.score >= 50 ? "mid" : "lo";
   return `<label class="al-card"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
       <div class="al-main"><b>${esc(j.title)}</b>${place ? `<span>${esc(place)}</span>` : ""}</div>
-      <div class="al-foot"><span class="al-match ${tone}" title="From the job title only">${j.score}% match</span><em>${esc(j.site)}</em>${jobBtns(j, i)}</div></label>`;
+      <div class="al-foot"><span class="al-match ${tone}" title="${rated ? "From the full job text and your resume" : "Press Check to read the job page and rate it"}">${rated ? j.score + "% match" : "Not rated yet"}</span><em>${esc(j.site)}</em>
+        ${j.checked ? "" : `<button class="btn sm ghost" data-chk="${i}" title="Open the job page and read the full text for a better match">Check</button>`}${jobBtns(j, i)}</div></label>`;
 }
 function jobRow(j, i){
   return `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
-      <div class="ring" style="--p:${j.score}">${j.score}</div>
+      <div class="ring" style="--p:${typeof j.score === "number" ? j.score : 0}" title="${typeof j.score === "number" ? "" : "Not enough of the job text to rate it"}">${typeof j.score === "number" ? j.score : "–"}</div>
       <div><b>${esc(j.title)}</b><span>${esc(j.company)}${j.location ? `, ${esc(j.location)}` : ""}${j.age != null ? `. Posted ${+j.age === 0 ? "today" : j.age + " days ago"}` : ""}</span>${j.dup ? `<span class="dupwarn">You already applied to this job on ${esc(j.dup.slice(0, 10))}, through another link</span>` : ""}</div>${jobBtns(j, i)}</label>`;
 }
 function drawFound(more){
@@ -95,14 +96,15 @@ function drawFound(more){
   $("#foundScope") && ($("#foundScope").onclick = e => { e.preventDefault(); ONLY_LAST = !ONLY_LAST; drawFound(); });
   const real = all.filter(([j]) => !j.alert), al = all.filter(([j]) => j.alert), shown = real.slice(0, FOUND_SHOWN);
   const open = ALERTS_OPEN || (!real.length && al.length);
-  const fit = al.filter(([j]) => !j.off).sort((a, b) => b[0].score - a[0].score), off = al.filter(([j]) => j.off);
+  const fit = al.filter(([j]) => !j.off).sort((a, b) => (b[0].score ?? -1) - (a[0].score ?? -1)), off = al.filter(([j]) => j.off);
   const alShown = fit.slice(0, ALERT_SHOWN), offShown = OFFROLE_OPEN ? off.slice(0, ALERT_SHOWN) : [];
   const grid = list => `<div class="al-grid">${list.map(([j, i]) => jobCard(j, i)).join("")}</div>`;
   let html = shown.map(([j, i]) => jobRow(j, i)).join("") +
     (real.length > shown.length ? `<button class="btn sm feed-more" id="foundMore">Show more (${real.length - shown.length} left)</button>` : "");
   if (al.length) html += `<div class="al-box"><button class="al-head" id="alToggle" aria-expanded="${open}"><b>From job alert emails</b>
-      <span>${al.length} link${al.length > 1 ? "s" : ""} from ${[...new Set(al.map(([j]) => j.site))].join(", ")}. The match is from the job title only.</span>
+      <span>${al.length} link${al.length > 1 ? "s" : ""} from ${[...new Set(al.map(([j]) => j.site))].join(", ")}. Press Check on a card to read the job page and rate it against your resume.</span>
       <span class="al-act">${open ? "Hide" : "Show"}</span></button>` +
+    (open && fit.some(([j]) => !j.checked) ? `<div class="al-tools"><button class="btn sm" id="alCheckAll" title="Opens the first 10 job pages, one every few seconds, to read the company and a better match">Check the first 10 jobs</button><span class="small muted">Reads each job page slowly to find the company and a better match.</span></div>` : "") +
     (open ? `<div class="al-body">${fit.length ? grid(alShown) : `<p class="small muted">None of these look like your kind of role.</p>`}` +
       (fit.length > alShown.length ? `<button class="btn sm feed-more" id="alMore">Show more (${fit.length - alShown.length} left)</button>` : "") +
       (off.length ? `<button class="btn sm ghost feed-more" id="offToggle">${OFFROLE_OPEN ? "Hide" : "Show"} ${off.length} job${off.length > 1 ? "s" : ""} that don't match your job titles</button>${OFFROLE_OPEN ? grid(offShown) : ""}` : "") + `</div>` : "") + `</div>`;
@@ -110,6 +112,11 @@ function drawFound(more){
     (ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")
     : emptyHTML("search", "Nothing here yet", "Choose where to search above and press Find jobs. A lower minimum match in Settings shows more."));
+  $$("#foundList [data-chk]").forEach(b => b.onclick = async e => { e.preventDefault(); e.stopPropagation(); b.disabled = true; b.textContent = "Checking…";
+    const r = await api_check_alert(FOUND[+b.dataset.chk].link); r.ok ? loadFound() : (toast(r.error, true), b.disabled = false, b.textContent = "Check"); });
+  $("#alCheckAll") && ($("#alCheckAll").onclick = async e => { e.preventDefault(); e.stopPropagation(); const todo = fit.filter(([j]) => !j.checked).slice(0, 10); let n = 0;
+    for (const [j] of todo){ $("#alCheckAll").textContent = `Checking ${++n} of ${todo.length}…`; const r = await api_check_alert(j.link); if (!r.ok){ toast(r.error, true); break; } await new Promise(res => setTimeout(res, 6000 + Math.random() * 6000)); }
+    loadFound(); });
   $("#alToggle") && ($("#alToggle").onclick = () => { ALERTS_OPEN = !open; drawFound(true); });
   $("#alMore") && ($("#alMore").onclick = () => { ALERT_SHOWN += 30; drawFound(true); });
   $("#offToggle") && ($("#offToggle").onclick = () => { OFFROLE_OPEN = !OFFROLE_OPEN; drawFound(true); });

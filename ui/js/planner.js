@@ -93,7 +93,7 @@ function renderNextUp(H){
     b.disabled = true; b.textContent = "Looking it up…";
     const r = await api_company_brief(e.company);
     if (!r.ok){ b.disabled = false; b.textContent = "About " + e.company; return toast(r.error, true); }
-    NU = {id: e.id, html: `${prepTipsHTML(r.text)}<div class="nu-src">Source: ${esc(r.source)}</div>`}; renderNextUp(H);
+    NU = {id: e.id, html: `${r.ai ? `<p style="margin:0 0 6px">${aiBadge(r.ai)}</p>` : ""}${prepTipsHTML(r.text)}<div class="nu-src">Source: ${esc(r.source)}</div>`}; renderNextUp(H);
   };
 }
 setInterval(() => { if (typeof HOME !== "undefined" && HOME && !$("#p-home").hidden) renderNextUp(HOME); }, 30000);

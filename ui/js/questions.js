@@ -10,7 +10,7 @@ function showAsk(q){
      <div class="row" style="margin-top:10px"><span class="kbdhint grow"><kbd>Enter</kbd> to save, <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span><button class="btn primary" id="askSave">Save answer</button></div>` : "";
   const choices = q.choices.map((c, i) => `<button class="btn ${c[2] === "primary" ? "primary" : c[2] === "danger" ? "danger" : ""}" data-c="${i}">${esc(c[0]).replace(/\s*→$/, "")}</button>`).join("");
   $("#layer").innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="sheet" style="--k:${color}">
-     <div class="sh"><div class="kind">${kind}</div><h2>${esc(q.title)}</h2>${q.message ? `<p class="msg">${esc(q.message)}</p>` : ""}${q.chrome ? `<p class="muted small">The Chrome window is now in front. Look there first, then come back here to answer.</p>` : ""}</div>
+     <div class="sh"><div class="kind">${kind}${q.ai ? " " + aiBadge(q.ai) : ""}</div><h2>${esc(q.title)}</h2>${q.message ? `<p class="msg">${esc(q.message)}</p>` : ""}${q.chrome ? `<p class="muted small">The Chrome window is now in front. Look there first, then come back here to answer.</p>` : ""}</div>
      <div class="sb">${table}${opts ? `<div style="margin-top:6px">${opts}</div>` : ""}${text}<div class="row" style="margin-top:14px">${choices}</div></div></div></div>`;
   $$("#layer .opt").forEach(b => b.onclick = () => reply(q.options[+b.dataset.i]));
   $$("#layer [data-c]").forEach(b => b.onclick = () => reply(q.choices[+b.dataset.c][1]));
@@ -44,7 +44,7 @@ function formField(x){
   return `<div class="field qf" data-q="${x.qid}"><label for="${id}">${esc(x.label)}${req}</label>${input}
     ${x.note ? `<div class="hint">${esc(x.note)}</div>` : ""}
     <div class="row" style="margin-top:6px;gap:8px">${x.ai ? `<button class="btn sm ghost" data-ai="${x.qid}">${icon("sparkle")}Draft with AI</button>` : ""}
-    <label class="switch small muted"><input type="checkbox" class="never"> ${x.review ? "Leave empty" : "Never ask this"}</label></div></div>`;
+    <span id="fqb${x.qid}"></span><label class="switch small muted"><input type="checkbox" class="never"> ${x.review ? "Leave empty" : "Never ask this"}</label></div></div>`;
 }
 function showForm(q){
   ASK = q;
@@ -60,7 +60,7 @@ function showForm(q){
   $("#formSkip").onclick = () => reply("__skip__");
   $$("#layer [data-ai]").forEach(b => b.onclick = async () => { const i = b.dataset.ai, x = q.questions.find(y => String(y.qid) === i);
     b.disabled = true; b.lastChild.textContent = "Writing…"; const r = await api_ai_draft(x.label); b.disabled = false; b.lastChild.textContent = "Draft with AI";
-    if (r.ok){ const el = $(`#fq${i}`); el.value = r.text; } else toast(r.error, true); });
+    if (r.ok){ const el = $(`#fq${i}`); el.value = r.text; $(`#fqb${i}`).innerHTML = aiBadge(r.ai); } else toast(r.error, true); });
   $("#layer .sheet").onkeydown = e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)){ e.preventDefault(); $("#formSave").click(); } };
   setTimeout(() => $("#layer .qf select, #layer .qf textarea, #layer .qf input[type=text]")?.focus(), 30);
 }

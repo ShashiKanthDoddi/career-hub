@@ -171,6 +171,29 @@
   <!-- REACH OUT: mail hiring teams and agencies -->
   <section class="page" id="p-reach" hidden>
     <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-mail"/></svg></div><div><h1>Reach out</h1><p>Tell companies and agencies about your skills. Paste their websites or email addresses; the app finds the hiring email, writes a personal mail and attaches your resume.</p></div></div>
+    <div class="panel" id="rcSetup">
+      <div class="panel-head"><h2 class="grow">1. Who to write to</h2><span class="muted small" id="rcLimit"></span></div>
+      <textarea id="rcInput" rows="4" placeholder="Paste company websites or email addresses, one per line"></textarea>
+      <div class="row" style="margin-top:10px">
+        <label class="grow muted small" style="display:flex;gap:8px;align-items:center">Resume to attach <select id="rcResume"></select></label>
+        <button class="btn" id="rcGmail" title="People who wrote to you, and people you wrote to before">Add from my Gmail</button><button class="btn primary" id="rcFind">Find emails</button>
+      </div>
+      <div class="hint" id="rcMailWarn" hidden>Add your Gmail address and app password in Settings, Job email, first.</div>
+    </div>
+    <div class="panel" id="rcFound" style="margin-top:16px" hidden>
+      <div class="panel-head"><h2 class="grow">2. Check the emails</h2></div>
+      <div id="rcFoundList"></div>
+      <h3 style="margin-top:18px">What should I do with the mails?</h3>
+      <label class="switch"><input type="radio" name="rcHow" value="review" checked> Let me read each mail first (recommended)</label>
+      <label class="switch"><input type="radio" name="rcHow" value="draft"> Put them in my Gmail drafts, I send them myself</label>
+      <label class="switch"><input type="radio" name="rcHow" value="send"> Send straight away, without reading</label>
+      <div class="row" style="margin-top:14px"><button class="btn primary" id="rcWrite">Write the mails</button><span class="muted small" id="rcProg"></span></div>
+    </div>
+    <div class="panel" id="rcMails" style="margin-top:16px" hidden>
+      <div class="panel-head"><h2 class="grow">3. Your mails</h2><button class="btn sm ghost" id="rcStop" hidden>Stop</button></div>
+      <div id="rcMailList"></div>
+      <div class="row" style="margin-top:14px"><button class="btn primary" id="rcSend">Send the ticked mails</button><button class="btn" id="rcDraft">Save as Gmail drafts</button><span class="muted small" id="rcSendProg"></span></div>
+    </div>
     <div class="panel" id="rcStats" style="margin-bottom:16px">
       <div class="panel-head"><h2 class="grow">How it is going</h2><button class="btn sm" id="rcCheck">Check for replies</button></div>
       <div class="funnel" id="rcTiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
@@ -201,29 +224,6 @@
       <label class="switch" style="margin-top:10px"><input type="checkbox" id="rpOptOut"> End with a polite line that they can tell me if it is not relevant</label>
       <div class="row" style="margin-top:12px"><button class="btn" id="rpSample">Show me a sample mail</button><span class="muted small" id="rpSampleNote"></span></div>
       <textarea id="rpSampleText" rows="10" hidden readonly style="margin-top:10px"></textarea>
-    </div>
-    <div class="panel" id="rcSetup">
-      <div class="panel-head"><h2 class="grow">1. Who to write to</h2><span class="muted small" id="rcLimit"></span></div>
-      <textarea id="rcInput" rows="4" placeholder="Paste company websites or email addresses, one per line"></textarea>
-      <div class="row" style="margin-top:10px">
-        <label class="grow muted small" style="display:flex;gap:8px;align-items:center">Resume to attach <select id="rcResume"></select></label>
-        <button class="btn" id="rcGmail" title="People who wrote to you, and people you wrote to before">Add from my Gmail</button><button class="btn primary" id="rcFind">Find emails</button>
-      </div>
-      <div class="hint" id="rcMailWarn" hidden>Add your Gmail address and app password in Settings, Job email, first.</div>
-    </div>
-    <div class="panel" id="rcFound" style="margin-top:16px" hidden>
-      <div class="panel-head"><h2 class="grow">2. Check the emails</h2></div>
-      <div id="rcFoundList"></div>
-      <h3 style="margin-top:18px">What should I do with the mails?</h3>
-      <label class="switch"><input type="radio" name="rcHow" value="review" checked> Let me read each mail first (recommended)</label>
-      <label class="switch"><input type="radio" name="rcHow" value="draft"> Put them in my Gmail drafts, I send them myself</label>
-      <label class="switch"><input type="radio" name="rcHow" value="send"> Send straight away, without reading</label>
-      <div class="row" style="margin-top:14px"><button class="btn primary" id="rcWrite">Write the mails</button><span class="muted small" id="rcProg"></span></div>
-    </div>
-    <div class="panel" id="rcMails" style="margin-top:16px" hidden>
-      <div class="panel-head"><h2 class="grow">3. Your mails</h2><button class="btn sm ghost" id="rcStop" hidden>Stop</button></div>
-      <div id="rcMailList"></div>
-      <div class="row" style="margin-top:14px"><button class="btn primary" id="rcSend">Send the ticked mails</button><button class="btn" id="rcDraft">Save as Gmail drafts</button><span class="muted small" id="rcSendProg"></span></div>
     </div>
     <div class="panel" style="margin-top:16px">
       <div class="panel-head"><h2 class="grow">Already mailed</h2></div>

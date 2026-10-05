@@ -39,6 +39,19 @@ async def nvidia_complete(db, prompt, max_tokens=900):
         await req.dispose()
 
 
+def ai_info(db=None, free=False):
+    """Who writes the AI text, shown behind the little i next to 'Drafted with AI'. free=True: always the keyless Pollinations AI."""
+    if db is None or free or not (db.ai_nvidia or db.ai_paid):
+        return {"provider": "Pollinations (free, no key)", "model": "openai-fast", "mode": "Free",
+                "sends": "The job or company text" + ("" if free else " and your resume text"), "where": "text.pollinations.ai"}
+    if db.ai_nvidia:
+        own = str(db.settings.get("nvidia_model") or "").strip()
+        return {"provider": "NVIDIA (build.nvidia.com)", "model": own or NVIDIA_MODELS[0] + " (others tried if it fails)", "mode": "NVIDIA",
+                "sends": "The job text and your resume text", "where": "integrate.api.nvidia.com"}
+    return {"provider": "Anthropic (Claude)", "model": str(db.settings.get("ai_model") or "claude-sonnet-5-5"), "mode": "Claude",
+            "sends": "The job text and your resume text", "where": "api.anthropic.com"}
+
+
 async def ai_complete(db, prompt, max_tokens=900):
     if db.ai_nvidia:
         return await nvidia_complete(db, prompt, max_tokens)
@@ -143,8 +156,8 @@ async def ai_cover_letter_flow(db):
     except Exception as e:
         await UI.ask(title="AI cover letter failed", message=str(e)[:300], choices=[("OK", "ok", "primary")])
         return None
-    v = await UI.ask(title=f"Cover letter for {company}", message="✨ AI draft. Read it, edit anything that isn't "
-                     "true or doesn't sound like you, then save. It becomes a PDF and is uploaded.",
+    v = await UI.ask(title=f"Cover letter for {company}", message="Read it, edit anything that isn't "
+                     "true or doesn't sound like you, then save. It becomes a PDF and is uploaded.", ai=ai_info(db),
                      text=True, value=draft, choices=[("Don't use it", "__cancel__", "ghost")], kind="text")
     if not v or v == "__cancel__":
         return None

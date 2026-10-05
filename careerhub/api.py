@@ -24,7 +24,7 @@ from .textutil import split_list
 from .store import ProfileError, app_state, data, load_profile, export_csv, folder_files, save_app_state, save_data, table_of
 from .textutil import norm, norm_link
 from .updater import check_for_update, install_latest, install_zip, prefetch_update
-from .ai import ai_answer, ai_prep
+from .ai import ai_answer, ai_info, ai_prep
 from .research import company_brief
 from .state import APP, MAIL
 from .config import UPDATE_SOURCE
@@ -558,7 +558,7 @@ async def api_resume_tailor(job, name=""):
         return {"ok": False, "error": "I couldn't read that job page. Copy the job text and paste it here instead."}
     _, info, resume = await _resume_pick(name)
     try:
-        return {"ok": True, "text": await ai_tailor(db, resume, text)}
+        return {"ok": True, "text": await ai_tailor(db, resume, text), "ai": ai_info(db)}
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 
@@ -569,7 +569,7 @@ async def api_prep(company, title, kind):
     if not db.ai_on:
         return {"ok": False, "error": "Add your Claude key in Settings, AI helper, or choose another AI, to get prep tips."}
     try:
-        return {"ok": True, "text": await ai_prep(db, company, title, kind)}
+        return {"ok": True, "text": await ai_prep(db, company, title, kind), "ai": ai_info(db)}
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 
@@ -577,14 +577,16 @@ async def api_prep(company, title, kind):
 async def api_company_brief(company, refresh=False):
     """What the company does, a marketing angle and questions to ask (Home, Next up). Free: no key needed."""
     try:
-        return {"ok": True, **await company_brief(company, bool(refresh))}
+        b = await company_brief(company, bool(refresh))
+        return {"ok": True, **b, "ai": ai_info(free=True) if b.get("ai", True) else None}
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 
 
 async def api_ai_draft(question):
     try:
-        return {"ok": True, "text": await ai_answer(Answers(), question)}
+        db = Answers()
+        return {"ok": True, "text": await ai_answer(db, question), "ai": ai_info(db)}
     except Exception as e:
         return {"ok": False, "error": str(e)[:200]}
 

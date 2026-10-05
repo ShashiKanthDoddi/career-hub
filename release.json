@@ -1,8 +1,16 @@
 {
- "version": "3.5.0",
+ "version": "3.5.1",
  "date": "2026-10-05",
  "urgent": false,
  "changelog": [
+  {
+   "version": "3.5.1",
+   "title": "Reach out fits on the screen",
+   "new": [],
+   "fixed": [
+    "Reach out: smaller boxes and buttons so the page fits, the date box matches dark mode, and Who to write to is now at the top"
+   ]
+  },
   {
    "version": "3.5.0",
    "title": "Reach out to companies and agencies",
@@ -82,21 +90,6 @@
    "fixed": [
     "Find jobs: job titles and company names were missing from the list in 3.4.2. They are back"
    ]
-  },
-  {
-   "version": "3.4.2",
-   "title": "Clearer alert-email cards, better login detection",
-   "new": [
-    "Find jobs: alert-email cards have a title, company, a colour-coded match badge and the site. Older alert links get their company from your emails at the next check",
-    "Login pages that ask for your email first, then the password, are now recognised on job sites"
-   ],
-   "pages": [
-    "find"
-   ],
-   "fixed": [
-    "Home: the Calendar and To-do panels line up, and a long To-do list scrolls inside its panel",
-    "Find jobs: the \"jobs that do not match your job titles\" box now agrees with the match shown on each card"
-   ]
   }
  ],
  "files": [
@@ -110,7 +103,7 @@
   },
   {
    "path": "careerhub/ai.py",
-   "sha256": "6b87f6eefe4326f5d331e0e5b14332ca8ef2621893da61c14a94f96e363dd796"
+   "sha256": "e187bf4dae8950e9ab47ad0780c53654cbdcf87d8c33ec8413c1f556517708db"
   },
   {
    "path": "careerhub/answers.py",
@@ -118,7 +111,7 @@
   },
   {
    "path": "careerhub/api.py",
-   "sha256": "7d15686a2af82231a5fea4d121087a6e35dc3948f0f8c7f49c9884dc93be4fe1"
+   "sha256": "3714d625d5ad98805d312dbe37a11e83d875a63384ff3fbd636f126eedab591f"
   },
   {
    "path": "careerhub/apply_run.py",
@@ -130,15 +123,15 @@
   },
   {
    "path": "careerhub/bridge.py",
-   "sha256": "8e949c441bcb3caf63c7a2b0fd338f59f65121c8e99492cc1a8775f8c0f5e116"
+   "sha256": "6df07d748add3c80eb38d85e67c407ae14174342ebff97f4717c00a5f40b9055"
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "3c5b0ab6be5890b4d9dc8a7ad194e6ee26290b8ab337638cb071907f0ff84870"
+   "sha256": "97bf9573184bbf77ade611f4ce1c32a2b2d3fec9c03be2fc980f70d95c950ca7"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "32b3bc5634171b4516d0c5cb3efc3c006d8ab8819c16d2966c15308176e2da2b"
+   "sha256": "8450b052e102fe638306359142e2b65c02560e13988b6889314cdf0edde11db4"
   },
   {
    "path": "careerhub/filler.py",
@@ -178,7 +171,7 @@
   },
   {
    "path": "careerhub/outreach.py",
-   "sha256": "8755dff6ab34da9460c11479dca3a279925726d77fe3b1f3feadf0d214b9df53"
+   "sha256": "fbcc3d8002a995d302a715408b2e5cba8d6ec6cb5dc0a656b9311b4603180296"
   },
   {
    "path": "careerhub/overview.py",
@@ -206,7 +199,7 @@
   },
   {
    "path": "careerhub/research.py",
-   "sha256": "e7f83592d5832050af6900af9a3b03d8864609f362a9de3ce0264fc45e472272"
+   "sha256": "204544dd84cec2f58ed22f4174bd2771e5e2d9049604ee4b26af8edeede0c490"
   },
   {
    "path": "careerhub/resume.py",
@@ -242,11 +235,11 @@
   },
   {
    "path": "ui/index.html",
-   "sha256": "bcac56939fd41bfc045e9e15812a7f2c059ec11543698dcfe9238e0a5150e4bb"
+   "sha256": "e1a0e51286e5df33cd2b1320ecb01a9a8aa75ffd798e994fb0e2433015e8f8c3"
   },
   {
    "path": "ui/styles.css",
-   "sha256": "11e5f92c0456e9ba3072f9062fce4becd270a46bab3b9b6019e1e76305aa31bc"
+   "sha256": "2ed256d810fe27ad26a251c4da7d66ccc7bebbcb78eb79f35466dca8efa5c6fc"
   },
   {
    "path": "ui/js/apply.js",
@@ -254,7 +247,7 @@
   },
   {
    "path": "ui/js/core.js",
-   "sha256": "c4ff26fb08d8b9d99181cc213c4e7052cc2f6a56c564aa9c1d29fbd03b2b1902"
+   "sha256": "29fd3984abf01780388a0bca3ba961a51ffd6de627daa4adc78eefc7e54bcdb4"
   },
   {
    "path": "ui/js/events.js",
@@ -278,7 +271,7 @@
   },
   {
    "path": "ui/js/jobs.js",
-   "sha256": "3a0f90eecb5449ed5f093b2a60ea937c74941296671f19eef35fcb00799b8e96"
+   "sha256": "7ac5ed06eb89cf30273b5e4378e01ddbca6b99ea2a22d9efcae1a73c8833cdfd"
   },
   {
    "path": "ui/js/palette.js",
@@ -286,19 +279,19 @@
   },
   {
    "path": "ui/js/planner.js",
-   "sha256": "8ea721f662f49f4f34c652216decc01113edd7f0b1355261b62685f84f8cf775"
+   "sha256": "7f8ea8cb1118f8c3913656ae5cf0bfe4b63a2070b515655cd0774f76377c07d7"
   },
   {
    "path": "ui/js/questions.js",
-   "sha256": "97759ddc4709976e214675feba6f53c1e3cc906e9ef041d974d6f0ef5a8a0bf9"
+   "sha256": "613e46abf2095945d3226545d2698bd352235c57e4003e26c9b7cf86e40e2d35"
   },
   {
    "path": "ui/js/reach.js",
-   "sha256": "8d26da99ed6b55fd2e3ea19de1908e601715fb23869a0af68db694a0f59e017f"
+   "sha256": "20ee11b4394ff03b024a80d117c7ca5a4631fbd6a6be7e34c38bd558154a0118"
   },
   {
    "path": "ui/js/resume.js",
-   "sha256": "cd9f0a7d316fa7bdf4f41564eb8ff91f2536fdf4388458a7a913f0d88ad51e85"
+   "sha256": "c1162b4dfafb376a6a821e6d0614f74591cbcf8f25ed957bef490f0035ab0fd7"
   },
   {
    "path": "ui/js/run.js",
@@ -349,5 +342,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "KAN1Xe5J5sgi2W941u4jM5xbeBWVt37O/+tEOA3f7Mg4jWe7Lokoztwk1PPGsRYl3oyvbniFIOZ857/cLRfuCw=="
+ "signature": "M4yb5yLufOHsZHONZ7zqaOJOCFDvxk9Aw2Pc7Q8F5Ci/uYPWakawodRG/uzE8vstKAj4HAUR9BqLOV3P0DVKCQ=="
 }

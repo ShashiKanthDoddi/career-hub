@@ -473,3 +473,35 @@ main{height:100vh}
 .rs-role .chips + .rs-learn,.rs-meter + .rs-learn{margin-top:10px}
 #rsPick{max-width:340px}
 @media (max-width:1100px){.rs-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.rs-grid{grid-template-columns:1fr}.rs-left{position:static}}
+
+/* "Drafted with AI" badge and its i pop-up */
+.aibadge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:650;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:2px 4px 2px 8px;vertical-align:middle}
+.aibadge .i{width:12px;height:12px}
+.aii{width:16px;height:16px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);font:italic 700 11px/1 Georgia,serif;cursor:pointer;padding:0;display:inline-grid;place-items:center}
+.aii:hover,.aii:focus-visible{background:var(--ink);color:var(--surface)}
+.aipop{position:fixed;z-index:500;width:min(300px,calc(100vw - 16px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.18);font-size:13px}
+.aipop dl{margin:8px 0;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}.aipop dt{color:var(--muted)}.aipop dd{margin:0;word-break:break-word}
+.aipop p{margin:0;color:var(--muted);font-size:12px}
+
+/* ===== Reach out: smaller boxes than the other pages, so the whole page fits ===== */
+#p-reach .page-head{margin-bottom:14px}
+#p-reach .page-head h1{font-size:26px}
+#p-reach .page-head p{font-size:14px;margin-top:3px}
+#p-reach .panel{padding:14px 16px;margin-bottom:12px}
+#p-reach .panel + .panel{margin-top:0}
+#p-reach .panel-head{margin-bottom:10px}
+#p-reach .panel-head h2{font-size:16px}
+#p-reach h3{font-size:13.5px;margin:0 0 6px}
+#p-reach input[type=text],#p-reach input[type=date],#p-reach select,#p-reach textarea{padding:6px 10px;font-size:13px;border-radius:8px;width:auto;min-height:0}
+#p-reach input[type=date]{background:var(--surface-2);border:1px solid var(--line-2);color:inherit;font-family:inherit}
+:root[data-mode=dark] #p-reach input[type=date]{color-scheme:dark}
+#p-reach textarea,#p-reach .field input[type=text],#p-reach .field select,#p-reach .field textarea{width:100%}
+#p-reach .formgrid{grid-template-columns:repeat(3,1fr);gap:8px 12px}
+#p-reach .field label{font-size:12px;margin-bottom:3px}
+#p-reach .btn{padding:6px 12px;font-size:13px;border-radius:8px}
+#p-reach .switch{font-size:13px}
+#p-reach .stagebox{padding:10px 12px}
+#p-reach .stagebox .n{font-size:24px}
+#p-reach .linkchip{font-size:13px}
+@media (max-width:1000px){#p-reach .formgrid{grid-template-columns:1fr 1fr}}
+#p-reach .stagebox::after{display:none}

@@ -359,6 +359,21 @@ def main():
         except Exception as e:
             check(False, f"window guard test failed: {str(e)[:150]}")
 
+    from careerhub.store import data as _data
+    _rows = [{"Date found": "2026-01-01", "Match %": 80, "Company": "Acme", "Job title": "SEO Manager", "Location": "Bengaluru", "Posted (days ago)": 2,
+              "Link": "https://x.test/a1"},
+             {"Date found": "2026-01-01", "Match %": "", "Company": "LinkedIn alert", "Job title": "Marketing Lead", "Location": "", "Posted (days ago)": "",
+              "Link": "https://www.linkedin.com/jobs/view/111111111", "Alert site": "LinkedIn"}]
+    _data()["found_jobs"].extend(_rows)
+    try:
+        _got = asyncio.run(api.api_found())
+        _ok = {j["title"]: j for j in _got if j.get("title")}
+        check({"SEO Manager", "Marketing Lead"} <= set(_ok) and _ok["SEO Manager"]["company"] == "Acme" and not _ok["SEO Manager"]["alert"]
+              and _ok["Marketing Lead"]["alert"] and _ok["Marketing Lead"]["site"] == "LinkedIn" and _ok["Marketing Lead"]["score"] >= 40,
+              "Find jobs list: title, company and alert fields are sent to the page")
+    finally:
+        for _r in _rows:
+            _data()["found_jobs"].remove(_r)
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

@@ -598,7 +598,7 @@ async def api_found():
         seen.add(k)
         is_alert = bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert")
         ascore = match_score(j.get("Job title") or "", "", aprof) if is_alert else None
-        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and ascore < 55,   # 55+: the title has one of her roles or "marketing" "title": j.get("Job title"), "company": j.get("Company"),
+        out.append({"score": ascore if is_alert else j.get("Match %"), "off": is_alert and ascore < 55, "title": j.get("Job title"), "company": j.get("Company"),   # off: below 55 = no role of hers in the title
                     "location": j.get("Location"), "age": j.get("Posted (days ago)") if j.get("Posted (days ago)") != "" else None,
                     "link": j.get("Link"), "date": j.get("Date found"), "last": k in last, "alert": bool(j.get("Alert site")) or str(j.get("Company") or "").endswith(" alert"),
                     "site": j.get("Alert site") or (str(j.get("Company") or "")[:-6] if str(j.get("Company") or "").endswith(" alert") else ""),

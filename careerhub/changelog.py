@@ -2,7 +2,11 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.2',
+CHANGELOG = [{'version': '3.4.3',
+  'title': 'Job titles back in Find jobs',
+  'new': [],
+  'fixed': ['Find jobs: job titles and company names were missing from the list in 3.4.2. They are back']},
+ {'version': '3.4.2',
   'title': 'Clearer alert-email cards, better login detection',
   'new': ['Find jobs: alert-email cards have a title, company, a colour-coded match badge and the site. Older alert links get their company from your emails at the next check',
           'Login pages that ask for your email first, then the password, are now recognised on job sites'],

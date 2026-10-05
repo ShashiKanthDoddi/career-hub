@@ -171,37 +171,6 @@
   <!-- REACH OUT: mail hiring teams and agencies -->
   <section class="page" id="p-reach" hidden>
     <div class="page-head"><div class="hero-ic" aria-hidden="true"><svg class="i"><use href="#i-mail"/></svg></div><div><h1>Reach out</h1><p>Tell companies and agencies about your skills. Paste their websites or email addresses; the app finds the hiring email, writes a personal mail and attaches your resume.</p></div></div>
-    <div class="panel" id="rcStats" style="margin-bottom:16px">
-      <div class="panel-head"><h2 class="grow">How it is going</h2><button class="btn sm" id="rcCheck">Check for replies</button></div>
-      <div class="funnel" id="rcTiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
-      <div class="cols" style="margin-top:14px">
-        <div><h3>Replied to your mails</h3><div id="rcReplies" class="muted small">Press Check for replies.</div></div>
-        <div><h3>Others who wrote to you (last 60 days)</h3><div id="rcOthers" class="muted small">Press Check for replies.</div></div>
-      </div>
-    </div>
-    <div class="panel" id="rcOtherBox" style="margin-bottom:16px">
-      <div class="panel-head"><h2 class="grow">Reached out another way?</h2><span class="muted small">WhatsApp, LinkedIn, a phone call… write it down here</span></div>
-      <div class="row" style="flex-wrap:wrap">
-        <select id="roChannel"></select><input type="text" id="roWho" class="grow" placeholder="Who or which company">
-        <input type="date" id="roDate"><input type="text" id="roNote" class="grow" placeholder="What they said, e.g. asked me to send my resume">
-        <button class="btn primary" id="roAdd">Add</button>
-      </div>
-      <div id="roList" style="margin-top:10px"></div>
-    </div>
-    <div class="panel" id="rcStyle" style="margin-bottom:16px">
-      <div class="panel-head"><h2 class="grow">How the mail should sound</h2><span class="muted small">Saved for next time</span></div>
-      <div class="formgrid">
-        <div class="field"><label for="rpTone">Tone</label><select id="rpTone"></select></div>
-        <div class="field"><label for="rpLength">Length</label><select id="rpLength"></select></div>
-        <div class="field"><label for="rpRole">Roles you want</label><input type="text" id="rpRole" placeholder="e.g. Content marketing or social media roles"></div>
-        <div class="field"><label for="rpSubject">Subject line</label><input type="text" id="rpSubject" placeholder="Leave empty for a standard one. Use {company} for the name"></div>
-        <div class="field"><label for="rpInclude">Always include</label><textarea id="rpInclude" rows="2" placeholder="e.g. I can join within 30 days. I have managed 5 brands."></textarea></div>
-        <div class="field"><label for="rpAvoid">Never include</label><textarea id="rpAvoid" rows="2" placeholder="e.g. my current salary, my notice period"></textarea></div>
-      </div>
-      <label class="switch" style="margin-top:10px"><input type="checkbox" id="rpOptOut"> End with a polite line that they can tell me if it is not relevant</label>
-      <div class="row" style="margin-top:12px"><button class="btn" id="rpSample">Show me a sample mail</button><span class="muted small" id="rpSampleNote"></span></div>
-      <textarea id="rpSampleText" rows="10" hidden readonly style="margin-top:10px"></textarea>
-    </div>
     <div class="panel" id="rcSetup">
       <div class="panel-head"><h2 class="grow">1. Who to write to</h2><span class="muted small" id="rcLimit"></span></div>
       <textarea id="rcInput" rows="4" placeholder="Paste company websites or email addresses, one per line"></textarea>
@@ -224,6 +193,37 @@
       <div class="panel-head"><h2 class="grow">3. Your mails</h2><button class="btn sm ghost" id="rcStop" hidden>Stop</button></div>
       <div id="rcMailList"></div>
       <div class="row" style="margin-top:14px"><button class="btn primary" id="rcSend">Send the ticked mails</button><button class="btn" id="rcDraft">Save as Gmail drafts</button><span class="muted small" id="rcSendProg"></span></div>
+    </div>
+    <div class="panel" id="rcStats" style="margin-bottom:16px">
+      <div class="panel-head"><h2 class="grow">How it is going</h2><button class="btn sm" id="rcCheck">Check for replies</button></div>
+      <div class="funnel" id="rcTiles" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
+      <div class="cols" style="margin-top:14px">
+        <div><h3>Replied to your mails</h3><div id="rcReplies" class="muted small">Press Check for replies.</div></div>
+        <div><h3>Others who wrote to you (last 60 days)</h3><div id="rcOthers" class="muted small">Press Check for replies.</div></div>
+      </div>
+    </div>
+    <div class="panel" id="rcOtherBox" style="margin-bottom:16px">
+      <div class="panel-head"><h2 class="grow">Reached out another way?</h2><span class="muted small">WhatsApp, LinkedIn, a phone call… write it down here. It counts as a reply.</span></div>
+      <div class="row" style="flex-wrap:wrap">
+        <select id="roChannel"></select><input type="text" id="roWho" class="grow" placeholder="Who or which company">
+        <input type="date" id="roDate"><input type="text" id="roNote" class="grow" placeholder="What they said, e.g. asked me to send my resume">
+        <button class="btn primary" id="roAdd">Add</button>
+      </div>
+      <div id="roList" style="margin-top:10px"></div>
+    </div>
+    <div class="panel" id="rcStyle" style="margin-bottom:16px">
+      <div class="panel-head"><h2 class="grow">How the mail should sound</h2><span class="muted small">Saved for next time</span></div>
+      <div class="formgrid">
+        <div class="field"><label for="rpTone">Tone</label><select id="rpTone"></select></div>
+        <div class="field"><label for="rpLength">Length</label><select id="rpLength"></select></div>
+        <div class="field"><label for="rpRole">Roles you want</label><input type="text" id="rpRole" placeholder="e.g. Content marketing or social media roles"></div>
+        <div class="field"><label for="rpSubject">Subject line</label><input type="text" id="rpSubject" placeholder="Leave empty for a standard one. Use {company} for the name"></div>
+        <div class="field"><label for="rpInclude">Always include</label><textarea id="rpInclude" rows="2" placeholder="e.g. I can join within 30 days. I have managed 5 brands."></textarea></div>
+        <div class="field"><label for="rpAvoid">Never include</label><textarea id="rpAvoid" rows="2" placeholder="e.g. my current salary, my notice period"></textarea></div>
+      </div>
+      <label class="switch" style="margin-top:10px"><input type="checkbox" id="rpOptOut"> End with a polite line that they can tell me if it is not relevant</label>
+      <div class="row" style="margin-top:12px"><button class="btn" id="rpSample">Show me a sample mail</button><span class="muted small" id="rpSampleNote"></span></div>
+      <textarea id="rpSampleText" rows="10" hidden readonly style="margin-top:10px"></textarea>
     </div>
     <div class="panel" style="margin-top:16px">
       <div class="panel-head"><h2 class="grow">Already mailed</h2></div>

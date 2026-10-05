@@ -70,7 +70,7 @@ function drawMails(){
   $("#rcMailList").innerHTML = RMAILS.map((m, i) => `<div class="panel" style="margin-bottom:10px;padding:12px">
     <div class="row"><input type="checkbox" data-mon="${i}"${m.on ? " checked" : ""}><b class="grow">${esc(m.company)} <span class="muted small">to ${esc(m.email)}</span></b>
     <button class="btn sm ghost" data-mre="${i}">Write again</button><span class="tag" id="mst${i}">${esc(m.status)}</span></div>
-    <input type="text" data-msub="${i}" value="${esc(m.subject)}" style="margin:8px 0"><textarea data-mbody="${i}" rows="8">${esc(m.body)}</textarea></div>`).join("");
+    <input type="text" data-msub="${i}" value="${esc(m.subject)}" style="margin:8px 0"><textarea data-mbody="${i}" rows="6">${esc(m.body)}</textarea></div>`).join("");
   $$("#rcMailList [data-mre]").forEach(b => b.onclick = async () => { const i = +b.dataset.mre, m = RMAILS[i]; if (m.status) return;
     b.disabled = true; b.textContent = "Writing…"; const w = await api_reach_write(m.company, m.text || "");
     if (w.ok){ m.body = w.body; m.subject = w.subject; drawMails(); } else { toast(w.error, true); b.disabled = false; b.textContent = "Write again"; } });
@@ -129,10 +129,26 @@ $("#rpSample").onclick = async () => {
 
 let RSUM = null;
 function drawTiles(){
-  const h = REACH.history || [], sent = h.filter(x => x.how === "sent").length, drafts = h.length - sent, rep = RSUM ? RSUM.replies.length : null;
-  const tile = (n, l, k) => `<div class="stagebox k-${k}"><div class="n">${n}</div><div class="l">${l}</div></div>`;
-  $("#rcTiles").innerHTML = tile(sent, "Mails sent", "applied") + tile(drafts, "Saved as drafts", "saved") + tile(rep ?? "–", "Replies", "offer")
-    + tile(rep === null || !sent ? "–" : Math.round(100 * rep / sent) + "%", "Reply rate", "heard") + tile(RSUM ? RSUM.others.length : "–", "Others wrote to you", "int") + tile((REACH.other || []).length, "Other ways", "saved");
+  const h = REACH.history || [], sent = h.filter(x => x.how === "sent").length, drafts = h.length - sent, oth = (REACH.other || []).length;
+  const mail = RSUM ? RSUM.replies.length : 0, rep = mail + oth;
+  const tile = (n, l, k, go) => `<button type="button" class="stagebox k-${k}"${go ? ` data-all="${go}" title="Click to see everything"` : ""}><div class="n">${n}</div><div class="l">${l}</div></button>`;
+  $("#rcTiles").innerHTML = tile(sent, "Mails sent", "applied") + tile(drafts, "Saved as drafts", "saved")
+    + tile(RSUM || oth ? rep : "–", "Replies", "offer", "replies") + tile(RSUM && sent ? Math.min(100, Math.round(100 * mail / sent)) + "%" : "–", "Reply rate (email)", "heard")
+    + tile(RSUM ? RSUM.others.length : "–", "Others wrote to you", "int", "others");
+  $$("#rcTiles [data-all]").forEach(b => b.onclick = showReplies);
+}
+function showReplies(){
+  const mail = RSUM ? RSUM.replies : [], oth = REACH.other || [], others = RSUM ? RSUM.others : [];
+  const sec = (title, rows, empty) => `<h3 style="margin:14px 0 4px">${title} <span class="tag">${rows.length}</span></h3>` + (rows.length ? rows.join("") : `<p class="muted small">${empty}</p>`);
+  const line = (a, b, c) => `<div style="padding:5px 0;border-bottom:1px solid var(--line)"><b>${esc(a)}</b> ${b}<br><span class="muted small">${c}</span></div>`;
+  $("#layer").innerHTML = `<div class="modal" role="dialog" aria-modal="true"><div class="sheet" style="--k:var(--green);width:min(720px,100%)">
+    <div class="sh"><div class="kind">Replies</div><h2>Everyone who answered or reached out</h2>${RSUM ? "" : `<p class="msg">Press Check for replies to include email.</p>`}</div>
+    <div class="sb" style="max-height:60vh;overflow:auto">
+      ${sec("Replied by email", mail.map(x => line(x.company, `<span class="muted">${esc(x.email)}</span>`, `${esc(when(x.date))} · ${esc(x.subject)}`)), "No email replies yet.")}
+      ${sec("Reached out another way", oth.map(x => line(x.who || "Someone", `<span class="tag">${esc(x.channel)}</span>`, `${esc(when(x.date))} · ${esc(x.note)}`)), "Nothing written down yet.")}
+      ${sec("Others who wrote to you by email (last 60 days)", others.map(x => line(x.company, `<span class="muted">${esc(x.email)}</span>`, `${esc(when(x.date))} · ${esc(x.subject)}`)), "Nobody new.")}
+    </div><div class="row" style="padding:0 20px 18px"><button class="btn primary" id="repClose">Close</button></div></div></div>`;
+  $("#repClose").onclick = () => { $("#layer").innerHTML = ""; };
 }
 const rcList = (rows, empty) => rows.length ? rows.map(x => `<div style="padding:5px 0;border-bottom:1px solid var(--line)"><b>${esc(x.company)}</b> <span class="muted">${esc(x.email)}</span><br>
   <span class="muted small">${esc(when(x.date))} · ${esc(x.subject)}</span></div>`).join("") : empty;

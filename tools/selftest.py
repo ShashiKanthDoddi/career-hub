@@ -387,6 +387,15 @@ def main():
     finally:
         for _r in _rows:
             _data()["found_jobs"].remove(_r)
+    print("4b. reach out")
+    from careerhub import outreach as _o
+    check(_o.rank_emails(["info@acme.com", "hr@acme.com", "bob@gmail.com", "noreply@acme.com", "logo@2x.png", "careers@other.org"], "www.acme.com")
+          == ["hr@acme.com", "careers@other.org", "info@acme.com", "bob@gmail.com"], "hiring emails come first, junk addresses are dropped")
+    check(_o.valid_email("a.b@x.co.in") and not _o.valid_email("a@b") and not _o.valid_email("no-reply@x.com"), "email check")
+    check(set(_o.emails_in('write to jobs [at] acme [dot] com or hr&#64;beta.org')) == {"jobs@acme.com", "hr@beta.org"}, "hidden emails are decoded")
+    _k = 0x5a; _hex = format(_k, "02x") + "".join(format(ord(c) ^ _k, "02x") for c in "hr@acme.com")
+    check("hr@acme.com" in _o.emails_in(f'<a class="__cf_email__" data-cfemail="{_hex}">[email protected]</a>'), "Cloudflare-protected email decoded")
+    check("Dear Hiring Team" in _o.template(Answers(), "Acme") and "Acme" in _o.template(Answers(), "Acme"), "mail template works without AI")
     print("5. user interface")
     html = (ROOT / "ui" / "index.html").read_text(encoding="utf-8")
     refs = re.findall(r'(?:src|href)="((?:js/)?[\w./-]+\.(?:js|css))"', html)

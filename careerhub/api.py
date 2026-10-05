@@ -800,3 +800,123 @@ async def api_open(name):
     target.mkdir(parents=True, exist_ok=True)
     os_open(target)
     return True
+
+
+# ---- Reach out page: mail the hiring teams of companies and agencies ----
+
+def _reach_resumes():
+    try:
+        return [(i, p) for i, p in _resume_versions(Answers()) if i["exists"]]
+    except ProfileError:
+        return []
+
+
+async def api_reach_page():
+    from . import outreach
+    ms = mail_settings()
+    return {"ok": True, "address": ms["addr"], "mail_ok": bool(ms["addr"] and len(ms["pw"]) == 16),
+            "resumes": [i for i, _ in _reach_resumes()], "sent_today": outreach.sent_today(), "limit": outreach.DAILY_LIMIT,
+            "history": list(reversed(outreach.history()))[:60], "prefs": outreach.get_prefs(), "tones": outreach.TONES,
+            "lengths": list(outreach.LENGTHS), "other": list(reversed(outreach.other_list())),
+            "channels": outreach.CHANNELS}
+
+
+async def api_reach_prefs(prefs):
+    from . import outreach
+    keep = {k: (bool(prefs.get(k)) if k == "opt_out" else str(prefs.get(k) or "").strip()[:600]) for k in outreach.DEFAULT_PREFS}
+    save_app_state(reach_prefs=keep)
+    return True
+
+
+async def api_reach_find(item):
+    """One pasted line: a website (find its hiring emails) or an email address."""
+    from . import outreach
+    item = str(item or "").strip().strip(",;")
+    if not item:
+        return {"ok": False, "error": "Empty."}
+    if "@" in item and " " not in item:
+        if not outreach.valid_email(item):
+            return {"ok": False, "error": "That email address does not look right."}
+        host = item.split("@")[1]
+        return {"ok": True, "company": host.split(".")[0].replace("-", " ").title(), "site": host, "emails": [item.lower()], "text": ""}
+    try:
+        return await outreach.find_site(item)
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:120] or "Couldn't read this website."}
+
+
+async def api_reach_write(company, text):
+    from . import outreach
+    try:
+        return {"ok": True, **await outreach.write_mail(Answers(), str(company or ""), str(text or ""))}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160]}
+
+
+async def api_reach_send(item, how, resume=""):
+    """One mail. how = 'send' or 'draft'. Refuses a repeat address and keeps to the daily limit."""
+    from . import outreach
+    ms = mail_settings()
+    to = str(item.get("email") or "").strip()
+    if not (ms["addr"] and len(ms["pw"]) == 16):
+        return {"ok": False, "error": "Add the Gmail address and app password in Settings, Job email."}
+    if not outreach.valid_email(to):
+        return {"ok": False, "error": "That email address does not look right."}
+    if outreach.already(to):
+        return {"ok": False, "skipped": True, "error": "Already mailed before."}
+    if how == "send" and outreach.sent_today() >= outreach.DAILY_LIMIT:
+        return {"ok": False, "limit": True, "error": f"Today's limit of {outreach.DAILY_LIMIT} mails is reached. The rest can go tomorrow."}
+    path = next((p for i, p in _reach_resumes() if i["file"] == resume), None)
+    if path is None:
+        return {"ok": False, "error": "Choose a resume to attach (Resume page, Your files)."}
+    msg = outreach.build_message(ms["addr"], to, str(item.get("subject") or ""), str(item.get("body") or ""), path)
+    try:
+        await asyncio.to_thread(outreach._smtp if how == "send" else outreach._draft, ms["addr"], ms["pw"], msg)
+    except Exception as e:
+        log(f"⚠  Reach out to {to} failed ({str(e)[:120]}).")
+        return {"ok": False, "error": outreach.friendly(e)}
+    outreach.record(to, str(item.get("company") or ""), str(item.get("site") or ""), str(item.get("subject") or ""),
+                    "sent" if how == "send" else "draft")
+    log(f"📨 {'Sent' if how == 'send' else 'Saved a Gmail draft'} for {item.get('company') or to} ({to}).")
+    return {"ok": True, "sent_today": outreach.sent_today()}
+
+
+async def api_reach_contacts():
+    """Recruiters, agencies and companies found in her own Gmail (people who wrote to her, and people she wrote to)."""
+    from . import outreach
+    ms = mail_settings()
+    if not (ms["addr"] and len(ms["pw"]) == 16):
+        return {"ok": False, "error": "Add the Gmail address and app password in Settings, Job email."}
+    try:
+        rows = await asyncio.to_thread(outreach.gmail_contacts, ms["addr"], ms["pw"])
+    except Exception as e:
+        return {"ok": False, "error": outreach.friendly(e)}
+    done = {str(r.get("email", "")).lower() for r in outreach.history()}
+    return {"ok": True, "items": [dict(r, done=r["email"] in done) for r in rows]}
+
+
+async def api_reach_summary():
+    """Replies to her Reach out mails, and others who wrote to her (headers only, from the inbox)."""
+    from . import outreach
+    ms = mail_settings()
+    if not (ms["addr"] and len(ms["pw"]) == 16):
+        return {"ok": False, "error": "Add the Gmail address and app password in Settings, Job email."}
+    try:
+        out = await asyncio.to_thread(outreach.reach_summary, ms["addr"], ms["pw"], list(outreach.history()))
+    except Exception as e:
+        return {"ok": False, "error": outreach.friendly(e)}
+    return {"ok": True, **out}
+
+
+async def api_reach_other_add(channel, who, note, date=""):
+    from . import outreach
+    if not str(who or "").strip() and not str(note or "").strip():
+        return {"ok": False, "error": "Write who it was, or a short note."}
+    outreach.add_other(str(channel or ""), who, note, date)
+    return {"ok": True, "other": list(reversed(outreach.other_list()))}
+
+
+async def api_reach_other_delete(oid):
+    from . import outreach
+    outreach.delete_other(oid)
+    return {"ok": True, "other": list(reversed(outreach.other_list()))}

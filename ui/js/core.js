@@ -26,7 +26,7 @@ document.addEventListener("pointerdown", e => { const b = e.target.closest?.(".b
   b.classList.remove("rip"); void b.offsetWidth; b.classList.add("rip"); clearTimeout(b._rip); b._rip = setTimeout(() => b.classList.remove("rip"), 650); });
 
 /* ===== navigation ===== */
-const PAGES = ["home","apply","find","jobs","resume","profile","settings"];
+const PAGES = ["home","apply","find","jobs","resume","profile","settings","reach"];   // order = keys 1-7; Reach out has no key
 function go(p, opts={}){
   if (!PAGES.includes(p)) return; PAGE = p;
   $$(".nav[data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === p));
@@ -39,6 +39,7 @@ function go(p, opts={}){
   if (p === "find"){ $("#navFound").hidden = true; if (!RESUME) loadResume(); loadFound(); }
   if (p === "settings") loadFeedback();
   if (p === "resume") loadResumePage();
+  if (p === "reach") loadReach();
   if (p === "profile"){ loadAnswers(); loadHistory(); }
 }
 $$(".nav[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));

@@ -70,11 +70,12 @@ function jobBtns(j, i){
   return `<span class="row" style="gap:4px"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open">${icon("ext")}</a>
       <button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span>`;
 }
-function jobCard(j, i){                          // an alert-email job as a small card
-  const place = (/ alert$/.test(j.company) ? "" : j.company) + (j.location ? (/ alert$/.test(j.company) ? "" : ", ") + j.location : "");
+function jobCard(j, i){                          // an alert-email job as a small card: title, company, then match, site and buttons
+  const co = / alert$/.test(j.company) ? "" : j.company, place = [co, j.location].filter(Boolean).join(", ");
+  const tone = j.score >= 70 ? "hi" : j.score >= 50 ? "mid" : "lo";
   return `<label class="al-card"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
-      <div class="ring" style="--p:${j.score}" title="From the job title only">${j.score}</div>
-      <div class="al-txt"><b>${esc(j.title)}</b><span>${place ? esc(place) : "Company shown on the job page"}</span><em>${esc(j.site)}</em></div>${jobBtns(j, i)}</label>`;
+      <div class="al-main"><b>${esc(j.title)}</b>${place ? `<span>${esc(place)}</span>` : ""}</div>
+      <div class="al-foot"><span class="al-match ${tone}" title="From the job title only">${j.score}% match</span><em>${esc(j.site)}</em>${jobBtns(j, i)}</div></label>`;
 }
 function jobRow(j, i){
   return `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
@@ -104,7 +105,7 @@ function drawFound(more){
       <span class="al-act">${open ? "Hide" : "Show"}</span></button>` +
     (open ? `<div class="al-body">${fit.length ? grid(alShown) : `<p class="small muted">None of these look like your kind of role.</p>`}` +
       (fit.length > alShown.length ? `<button class="btn sm feed-more" id="alMore">Show more (${fit.length - alShown.length} left)</button>` : "") +
-      (off.length ? `<button class="btn sm ghost feed-more" id="offToggle">${OFFROLE_OPEN ? "Hide" : "Show"} ${off.length} other kind${off.length > 1 ? "s" : ""} of role</button>${OFFROLE_OPEN ? grid(offShown) : ""}` : "") + `</div>` : "") + `</div>`;
+      (off.length ? `<button class="btn sm ghost feed-more" id="offToggle">${OFFROLE_OPEN ? "Hide" : "Show"} ${off.length} job${off.length > 1 ? "s" : ""} that don't match your job titles</button>${OFFROLE_OPEN ? grid(offShown) : ""}` : "") + `</div>` : "") + `</div>`;
   $("#foundList").innerHTML = html ||
     (ONLY_LAST && !lastN ? emptyHTML("search", "No new jobs from this search", "The note above says why. Jobs found before are still saved.")
     : jobs.length ? emptyHTML("search", "No jobs match these filters", "Clear a filter above to see more.")

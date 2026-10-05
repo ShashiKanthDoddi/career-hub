@@ -81,13 +81,14 @@ async function rateJob(j, b){                    // read the page (not LinkedIn)
   }
   if (r.ok) loadFound(); else { if (r.error) toast(r.error, true); b.disabled = false; b.textContent = "Rate it"; }
 }
-function jobCard(j, i){                          // an alert-email job as a small card: title, company, then match, site and buttons
+function jobCard(j, i){                          // an alert-email job as a small card: title and icons, where, then rating and the Rate it button
   const co = / alert$/.test(j.company) ? "" : j.company, place = [co, j.location].filter(Boolean).join(", ");
   const rated = typeof j.score === "number", tone = !rated ? "lo" : j.score >= 70 ? "hi" : j.score >= 50 ? "mid" : "lo";
   return `<label class="al-card"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>
-      <div class="al-main"><b>${esc(j.title)}</b>${place ? `<span>${esc(place)}</span>` : ""}</div>
-      <div class="al-foot"><span class="al-match ${tone}" title="${rated ? "From the full job text and your resume" : "Press Rate it to rate this job from its full text"}">${rated ? j.score + "% match" : "Not rated yet"}</span><em>${esc(j.site)}</em>
-        ${j.checked ? "" : `<button class="btn sm ghost" data-chk="${i}" title="Rate this job from its full text">Rate it</button>`}${jobBtns(j, i)}</div></label>`;
+      <div class="al-top"><b>${esc(j.title)}</b><span class="al-icons"><a class="btn sm ghost" href="${esc(j.link)}" target="_blank" onclick="event.stopPropagation()" title="Open the job">${icon("ext")}</a><button class="btn sm ghost" data-dis="${i}" title="Not interested">${icon("x")}</button></span></div>
+      <div class="al-sub">${esc(j.site)}${place ? " · " + esc(place) : ""}</div>
+      <div class="al-foot"><span class="al-match ${tone}" title="${rated ? "From the full job text and your resume" : "Press Rate it to rate this job from its full text"}">${rated ? j.score + "% match" : "Not rated"}</span>
+        ${j.checked ? "" : `<button class="btn sm" data-chk="${i}" title="Rate this job from its full text">Rate it</button>`}</div></label>`;
 }
 function jobRow(j, i){
   return `<label class="result"><input type="checkbox" class="fj" data-i="${i}"${OFF.has(i) ? "" : " checked"}>

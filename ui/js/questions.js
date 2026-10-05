@@ -22,6 +22,8 @@ function showAsk(q){
 }
 function reply(v){ if (!ASK) return; const id = ASK.id; ASK = null; $("#layer").innerHTML = "";
   if (id === -1){ window._notice && window._notice(v); return; } api_answer(id, v); }
+function askText(title, msg, placeholder){ return new Promise(res => { window._notice = res;
+  showAsk({id:-1, title, message:msg, options:[], choices:[["Cancel","__cancel__","ghost"]], text:true, value:"", placeholder, table:[], kind:"info"}); }); }
 function notice(title, msg){ return new Promise(res => { window._notice = res; showAsk({id:-1, title, message:msg, options:[], choices:[["OK","ok","primary"]], text:false, table:[], kind:"info"}); }); }
 /* Yes / Cancel inside the app. Never use confirm(): the window is driven by Playwright, which closes those at once. */
 function askYes(title, msg, yes = "Yes"){ return new Promise(res => { window._notice = v => res(v === "yes");

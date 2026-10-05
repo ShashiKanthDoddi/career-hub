@@ -2,7 +2,12 @@
 Optional 'pages': pages (home, apply, find, jobs, resume, profile, settings) that got a new feature or improvement;
 each gets a "new" tag in the left pane until she opens it. Leave it out for releases that only fix bugs."""
 
-CHANGELOG = [{'version': '3.4.7',
+CHANGELOG = [{'version': '3.4.8',
+  'title': 'Calmer cards',
+  'new': ['Find jobs: alert-email cards are tidier, with the title and icons on top, the site and place under it, and the rating and the Rate it button at the bottom'],
+  'pages': ['find'],
+  'fixed': ['Dark mode: the Home boxes are plain cards with a thin coloured bar on top instead of muddy tints']},
+ {'version': '3.4.7',
   'title': 'Rate alert-email jobs by pasting the text',
   'new': ['Find jobs: Rate it on an alert-email card. LinkedIn does not let the app read its job pages, so you paste the job description and the app rates it against your resume. Indeed and Naukri pages are read when the site allows it'],
   'pages': ['find'],

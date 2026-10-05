@@ -24,10 +24,13 @@
   --amber-soft:#36270F; --violet-soft:#2A2350; --shadow-1:none; --shadow-2:0 14px 40px rgba(0,0,0,.5);
   --teal:#4FD1C5; --green:#5FD68D; --rose:#FF8AA0; --amber:#FFB74D;
 }
-/* dark mode: bright accents and a calm tint of each accent over the card colour (the pastel tints looked muddy) */
-:root[data-mode=dark] .stagebox{--tint:var(--c)}
-:root[data-mode=dark] .stagebox.k-saved{--c:var(--ink-2);--tint:#9AA3B5}
-:root[data-mode=dark] .stagebox.k-applied,:root[data-mode=dark] .stagebox.k-heard,:root[data-mode=dark] .stagebox.k-int,:root[data-mode=dark] .stagebox.k-offer,:root[data-mode=dark] .stagebox.k-saved{background:color-mix(in srgb,var(--tint) 10%,var(--surface));border-color:color-mix(in srgb,var(--tint) 28%,var(--line))}
+/* dark mode: plain card colour, a thin bar of the box colour on top, and the colour only on the number and the progress bar (tints over dark looked muddy) */
+:root[data-mode=dark] .stagebox,:root[data-mode=dark] .stagebox.k-saved,:root[data-mode=dark] .stagebox.k-applied,:root[data-mode=dark] .stagebox.k-heard,
+:root[data-mode=dark] .stagebox.k-int,:root[data-mode=dark] .stagebox.k-offer{background:var(--surface);border-color:var(--line);border-top:3px solid var(--c,var(--line-2))}
+:root[data-mode=dark] .stagebox.k-saved{--c:#9AA3B5}
+:root[data-mode=dark] .stagebox:hover{border-color:var(--line-2);border-top-color:var(--c)}
+:root[data-mode=dark] .stagebox::after{opacity:.9;filter:saturate(.85)}
+:root[data-mode=dark] .stagebox .s{color:var(--muted)}
 :root[data-theme=emerald]{ --paper:#0E1915; --surface:#15251F; --surface-2:#1A2E27; --ink:#E8F3EE; --ink-2:#B7CFC5; --muted:#7FA093;
   --line:#243B33; --line-2:#2F4B41; --plum:#0A120F; --plum-2:#173028; --violet:#3DD9A0; --violet-soft:#12392D; --hi:#F2C14E; }
 :root[data-theme=mint]{ --paper:#DDEBE6; --surface:#F2FAF7; --surface-2:#E8F4EF; --ink:#12302B; --ink-2:#3A5A53; --muted:#4F6B64;
@@ -209,15 +212,17 @@ tbody tr:hover td{background:var(--surface-2)}
 .al-box .result{background:var(--surface);padding-left:12px;padding-right:12px}
 .al-body{padding:6px 12px 12px}.al-tools{display:flex;align-items:center;gap:12px;padding:4px 14px 10px}
 .al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:8px}
-.al-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:14px 14px 10px 40px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);cursor:pointer;transition:border-color .12s,transform .12s}
+.al-card{position:relative;display:grid;gap:6px;padding:14px 12px 12px 42px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);cursor:pointer;transition:border-color .12s,transform .12s}
 .al-card:hover{border-color:var(--line-2);transform:translateY(-1px)}
 .al-card input.fj{position:absolute;left:14px;top:16px}
-.al-main b{display:block;font-size:14.5px;line-height:1.35;overflow-wrap:anywhere}
-.al-main span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
-.al-foot{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}.al-foot .row{margin-left:auto;flex:none}.al-foot .btn{white-space:nowrap;flex:none}.al-match,.al-foot em{white-space:nowrap}
-.al-match{font-size:12px!important;font-weight:700;border-radius:99px;padding:2px 9px;background:var(--surface-2);color:var(--muted)}
+.al-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.al-top b{font-size:14.5px;line-height:1.35;overflow-wrap:anywhere;padding-top:2px}
+.al-icons{display:flex;gap:0;flex:none;margin:-4px -4px 0 0}.al-icons .btn{padding:4px 6px;min-width:0}
+.al-sub{color:var(--muted);font-size:13px}
+.al-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.al-foot .btn{white-space:nowrap}
+.al-match{font-size:12px!important;font-weight:700;border-radius:99px;padding:3px 10px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
 .al-match.hi{background:var(--green-soft);color:var(--green)}.al-match.mid{background:var(--amber-soft);color:var(--amber)}
-.al-foot em{font-style:normal;font-size:12px;color:var(--muted)}
 .al-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;width:100%;text-align:left;padding:12px 14px;background:none;border:0;color:var(--ink);cursor:pointer;font:inherit}
 .al-head span{color:var(--muted);font-size:13px;flex:1}.al-head .al-act{flex:none;color:var(--violet);font-weight:700}
 .result b{display:block}.result span{color:var(--muted);font-size:13px}

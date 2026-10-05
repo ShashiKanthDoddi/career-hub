@@ -1,8 +1,21 @@
 {
- "version": "3.4.7",
+ "version": "3.4.8",
  "date": "2026-10-05",
- "urgent": true,
+ "urgent": false,
  "changelog": [
+  {
+   "version": "3.4.8",
+   "title": "Calmer cards",
+   "new": [
+    "Find jobs: alert-email cards are tidier, with the title and icons on top, the site and place under it, and the rating and the Rate it button at the bottom"
+   ],
+   "pages": [
+    "find"
+   ],
+   "fixed": [
+    "Dark mode: the Home boxes are plain cards with a thin coloured bar on top instead of muddy tints"
+   ]
+  },
   {
    "version": "3.4.7",
    "title": "Rate alert-email jobs by pasting the text",
@@ -84,24 +97,6 @@
     "settings"
    ],
    "fixed": []
-  },
-  {
-   "version": "3.4",
-   "title": "Tidier job list, free AI choices",
-   "new": [
-    "Find jobs: links from job alert emails now sit in their own folded box under your real jobs, so they no longer fill the list. A new Alert emails choice shows all, one site (LinkedIn, Indeed...) or none",
-    "Settings, AI helper: choose Free (no key), NVIDIA (free key) or Claude (paid). Free is now the default, so answers, cover letters and prep tips work without a key",
-    "A small \"new\" tag appears in the left pane on a page that got a new feature, only on the first start after an update",
-    "Dark mode: calmer, brighter colours on the Home boxes"
-   ],
-   "pages": [
-    "find",
-    "settings",
-    "resume"
-   ],
-   "fixed": [
-    "The Last 7 days numbers and the calendar header line up better"
-   ]
   }
  ],
  "files": [
@@ -139,11 +134,11 @@
   },
   {
    "path": "careerhub/changelog.py",
-   "sha256": "65aea5cd658c64492dd3e9653ca24f50b78ed6ac1ad5b6cbaadcebec2ad88c0a"
+   "sha256": "8725584346df916489f53323511a184826befc4481b563e79330305df5ffb80c"
   },
   {
    "path": "careerhub/config.py",
-   "sha256": "df7d79fa9b94b21b56475edcc2162108198265f4a70756001b150f3b973deaad"
+   "sha256": "931dba73cacce7d20e6cbb5a13bbf0530dc66c0e04d4b33ed1d0984d4b8e82f7"
   },
   {
    "path": "careerhub/filler.py",
@@ -247,7 +242,7 @@
   },
   {
    "path": "ui/styles.css",
-   "sha256": "957dd43b2067aa533b98fcd9c68250421e44e78816e25eb82fdd95aed0330efe"
+   "sha256": "11e5f92c0456e9ba3072f9062fce4becd270a46bab3b9b6019e1e76305aa31bc"
   },
   {
    "path": "ui/js/apply.js",
@@ -263,7 +258,7 @@
   },
   {
    "path": "ui/js/find.js",
-   "sha256": "ed6269fe54aac483641c2dc07f0437f6d4c4fc2f78ee79b477f3a5e76aa55d1b"
+   "sha256": "5b220ee7b8942755cb6098a4b977e8b7789542eb92e436535189273f7fb0209b"
   },
   {
    "path": "ui/js/forms.js",
@@ -346,5 +341,5 @@
    "sha256": "b23077c31781e4fe6911fb8e2c281c2d6d88bd36aa1ba4a06fead02d302aa457"
   }
  ],
- "signature": "CvKXJyRulMn7MdfwDnUiYhqOzwnmD1FsLREzNcZIX0p8g6qqA9GRHl7acWbVeoHAZwyQhe26cbRiKRtN6pqPAQ=="
+ "signature": "yhjI5isJZ8qqWaaGAwPjzZ/w06rtawNubPfgI49EHqFqGDY+pIKRc4rml2aIiMpRmobeJFptQ4hs70rHkmO3DQ=="
 }
